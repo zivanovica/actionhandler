@@ -94,7 +94,7 @@ class Application
 
             } else if ($handler instanceof IApplicationActionHandler) {
 
-                $this->_action($action, $handler);
+                $this->_registerActionHandler($action, $handler);
             }
         }
 
@@ -150,7 +150,7 @@ class Application
      * @return Application
      * @throws ApplicationException
      */
-    private function _action(string $identifier, IApplicationActionHandler $handler): Application
+    private function _registerActionHandler(string $identifier, IApplicationActionHandler $handler): Application
     {
 
         $identifier = sprintf("%s%s", (empty($this->_group) ? '' : "{$this->_group}."), $identifier);
