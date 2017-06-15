@@ -28,7 +28,7 @@ class CreateActionHandler implements IApplicationActionHandler
     public function methods(): array
     {
         return [
-            IApplicationHandlerMethod::POST,
+            IApplicationHandlerMethod::GET,
             IApplicationHandlerMethod::DELETE
         ];
     }

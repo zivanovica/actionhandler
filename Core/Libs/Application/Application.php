@@ -92,10 +92,11 @@ class Application
 
                 $this->_group = $currentGroup;
 
-            } else if ($handler instanceof IApplicationActionHandler) {
+                continue;
 
-                $this->_registerActionHandler($action, $handler);
             }
+
+            $this->_registerActionHandler($action, $handler);
         }
 
         return $this;
