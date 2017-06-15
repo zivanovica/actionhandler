@@ -13,7 +13,8 @@ use Core\CoreUtils\ValueTransformer\Transformers\StringTransformer;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
 use Core\Libs\Request;
-use Core\Libs\Response;
+use Core\Libs\Response\IResponseStatus;
+use Core\Libs\Response\Response;
 
 class Application
 {
@@ -28,7 +29,7 @@ class Application
     /** @var string */
     private $_group = '';
 
-    /** @var array */
+    /** @var IApplicationActionHandler[] */
     private $_actions;
 
     /** @var Request */
@@ -91,7 +92,7 @@ class Application
 
                 $this->_group = $currentGroup;
 
-            } else if ($handler instanceof IApplicationHandler) {
+            } else if ($handler instanceof IApplicationActionHandler) {
 
                 $this->_action($action, $handler);
             }
@@ -115,25 +116,26 @@ class Application
             $this->_response->status(404)->errors(['action' => "Action '{$identifier}' not found"])->end();
 
             return;
-
         }
 
-        /** @var IApplicationHandler $handler */
-        $handler = $this->_actions[$identifier];
+        if (false === in_array($this->_request->method(), $this->_actions[$identifier]->methods())) {
 
-        if (false === $handler->before($this->_request, $this->_response)) {
+            $this->_response
+                ->setError('method', 'Method not allowed')->status(IResponseStatus::METHOD_NOT_ALLOWED)->end();
+
+            return;
+        }
+
+        if (false === $this->_actions[$identifier]->before($this->_request, $this->_response)) {
 
             $this->_response->setError('_handle.before', "Before action of '{$identifier}' failed")->end();
 
             return;
         }
 
-        $handler->handle($this->_request, $this->_response);
+        $this->_actions[$identifier]->handle($this->_request, $this->_response);
 
-        if (false === $handler->after()) {
-
-            $this->_response->setError('_handle.after', "After action of '{$identifier}' failed");
-        }
+        $this->_actions[$identifier]->after();
 
         $this->_response->end();
     }
@@ -144,16 +146,16 @@ class Application
      * Registers handler for given action in current group
      *
      * @param string $identifier
-     * @param IApplicationHandler $handler
+     * @param IApplicationActionHandler $handler
      * @return Application
      * @throws ApplicationException
      */
-    private function _action(string $identifier, IApplicationHandler $handler): Application
+    private function _action(string $identifier, IApplicationActionHandler $handler): Application
     {
 
         $identifier = sprintf("%s%s", (empty($this->_group) ? '' : "{$this->_group}."), $identifier);
 
-        if (isset($this->_actions[$identifier]) && $this->_actions[$identifier] instanceof IApplicationHandler) {
+        if (isset($this->_actions[$identifier]) && $this->_actions[$identifier] instanceof IApplicationActionHandler) {
 
             throw new ApplicationException(ApplicationException::ERROR_DUPLICATE_ACTION_HANDLER, $identifier);
         }

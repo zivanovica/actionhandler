@@ -10,14 +10,23 @@ namespace Api\Handlers\User;
 
 
 use Core\CoreUtils\Singleton;
-use Core\Libs\Application\IApplicationHandler;
+use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Request;
-use Core\Libs\Response;
+use Core\Libs\Response\Response;
 
-class RegisterHandler implements IApplicationHandler
+class RegisterActionHandler implements IApplicationActionHandler
 {
 
     use Singleton;
+
+    public function methods(): array
+    {
+        return [
+            IApplicationHandlerMethod::GET,
+            IApplicationHandlerMethod::DELETE
+        ];
+    }
 
     /**
      *

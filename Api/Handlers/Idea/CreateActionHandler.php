@@ -12,17 +12,26 @@ namespace Api\Handlers\Idea;
 use Core\CoreUtils\Singleton;
 use Core\CoreUtils\ValueTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\ValueTransformer\Transformers\StringTransformer;
-use Core\Libs\Application\IApplicationHandler;
+use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Database;
 use Core\Libs\Request;
-use Core\Libs\Response;
+use Core\Libs\Response\Response;
 
-class CreateHandler implements IApplicationHandler
+class CreateActionHandler implements IApplicationActionHandler
 {
 
     use Singleton;
 
     private const MINIMUM_IDEA_LENGTH = 150;
+
+    public function methods(): array
+    {
+        return [
+            IApplicationHandlerMethod::POST,
+            IApplicationHandlerMethod::DELETE
+        ];
+    }
 
     /**
      *
@@ -64,9 +73,9 @@ class CreateHandler implements IApplicationHandler
 
         $idea = $request->data('idea', null, StringTransformer::getSharedInstance());
 
-        if (CreateHandler::MINIMUM_IDEA_LENGTH > strlen($idea)) {
+        if (CreateActionHandler::MINIMUM_IDEA_LENGTH > strlen($idea)) {
 
-            $response->setError('idea', 'field idea must have length of minimum ' . CreateHandler::MINIMUM_IDEA_LENGTH);
+            $response->setError('idea', 'field idea must have length of minimum ' . CreateActionHandler::MINIMUM_IDEA_LENGTH);
         }
 
         return false === $response->hasErrors();

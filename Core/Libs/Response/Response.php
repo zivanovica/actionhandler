@@ -6,10 +6,9 @@
  * Time: 3:10 PM
  */
 
-namespace Core\Libs;
+namespace Core\Libs\Response;
 
 
-use Core\CoreUtils\IResponseStatus;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ResponseException;
 
@@ -34,7 +33,9 @@ class Response
     private function __construct()
     {
 
-        Response::$_commonStatusCodes = array_flip((new \ReflectionClass(IResponseStatus::class))->getConstants());
+        Response::$_commonStatusCodes = array_flip(
+            (new \ReflectionClass(IResponseStatus::class))->getConstants()
+        );
     }
 
 

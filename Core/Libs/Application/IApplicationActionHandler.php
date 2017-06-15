@@ -3,43 +3,38 @@
  * Created by IntelliJ IDEA.
  * User: coa
  * Date: 6/14/17
- * Time: 10:21 PM
+ * Time: 9:44 PM
  */
 
-namespace Api\Handlers\Idea;
+namespace Core\Libs\Application;
 
-
-use Core\CoreUtils\Singleton;
-use Core\Libs\Application\IApplicationHandler;
 use Core\Libs\Request;
-use Core\Libs\Response;
+use Core\Libs\Response\Response;
 
-class UpdateHandler implements IApplicationHandler
+interface IApplicationActionHandler
 {
 
-    use Singleton;
+    /**
+     * @return array All acceptable request methods for current handler
+     */
+    public function methods(): array;
 
     /**
      *
      * Executes before "handle" method, if FALSE is returned "handle" won't be called and request will be finished
+     *
      * @param Request $request
      * @param Response $response
      * @return bool
      */
-    public function before(Request $request, Response $response): bool
-    {
-        return true;
-    }
+    public function before(Request $request, Response $response): bool;
 
     /**
      *
      * Executes after "handle" method, doesn't affect on "handle" execution nor request
      *
      */
-    public function after(): void
-    {
-        // TODO: Implement after() method.
-    }
+    public function after(): void;
 
     /**
      *
@@ -48,8 +43,7 @@ class UpdateHandler implements IApplicationHandler
      * @param Request $request
      * @param Response $response
      */
-    public function handle(Request $request, Response $response): void
-    {
-        // TODO: Implement handle() method.
-    }
+    public function handle(Request $request, Response $response): void;
+
+
 }
