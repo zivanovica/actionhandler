@@ -25,6 +25,6 @@ class StringTransformer implements IValueTransformer
             return $value;
         }
 
-        return (string) $value;
+        return (string)$value;
     }
 }
