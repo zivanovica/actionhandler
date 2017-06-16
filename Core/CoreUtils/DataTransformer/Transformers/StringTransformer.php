@@ -6,13 +6,13 @@
  * Time: 4:42 PM
  */
 
-namespace Core\CoreUtils\ValueTransformer\Transformers;
+namespace Core\CoreUtils\DataTransformer\Transformers;
 
 
 use Core\CoreUtils\Singleton;
-use Core\CoreUtils\ValueTransformer\IValueTransformer;
+use Core\CoreUtils\DataTransformer\IDataTransformer;
 
-class StringTransformer implements IValueTransformer
+class StringTransformer implements IDataTransformer
 {
 
     use Singleton;

@@ -9,7 +9,7 @@
 namespace Core\Libs\Application;
 
 use Core\CoreUtils\Singleton;
-use Core\CoreUtils\ValueTransformer\Transformers\StringTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
 use Core\Libs\Request;

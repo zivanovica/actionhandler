@@ -9,18 +9,18 @@
 namespace Api\Handlers\Idea;
 
 
+use Core\CoreUtils\DataTransformer\Transformers\BoolTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\Singleton;
-use Core\CoreUtils\ValueTransformer\Transformers\IntTransformer;
-use Core\CoreUtils\ValueTransformer\Transformers\StringTransformer;
-use Core\Libs\Application\IApplicationActionAfterHandler;
-use Core\Libs\Application\IApplicationActionBeforeHandler;
+use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Database;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
-class CreateActionHandler implements IApplicationActionHandler, IApplicationActionBeforeHandler, IApplicationActionAfterHandler
+class CreateActionHandler implements IApplicationActionHandler
 {
 
     use Singleton;
@@ -107,6 +107,14 @@ class CreateActionHandler implements IApplicationActionHandler, IApplicationActi
 
         /** @var Database $db */
         $db = Database::getSharedInstance();
+
+        $val = $request->query('category', null, new WaterfallTransformer([
+            StringTransformer::getSharedInstance(),
+            IntTransformer::getSharedInstance(),
+            BoolTransformer::getSharedInstance(),
+        ]));
+
+        var_dump($val);
 
         $response->data(['name' => 'coa']);
 

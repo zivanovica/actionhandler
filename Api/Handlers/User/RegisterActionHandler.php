@@ -30,28 +30,6 @@ class RegisterActionHandler implements IApplicationActionHandler
 
     /**
      *
-     * Executes before "handle" method, if FALSE is returned "handle" won't be called and request will be finished
-     * @param Request $request
-     * @param Response $response
-     * @return bool
-     */
-    public function before(Request $request, Response $response): bool
-    {
-        return true;
-    }
-
-    /**
-     *
-     * Executes after "handle" method, doesn't affect on "handle" execution nor request
-     *
-     */
-    public function after(): void
-    {
-        // TODO: Implement after() method.
-    }
-
-    /**
-     *
      * Executes when related action is requested
      *
      * @param Request $request

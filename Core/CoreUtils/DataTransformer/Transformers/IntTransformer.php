@@ -1,11 +1,11 @@
 <?php
 
-namespace Core\CoreUtils\ValueTransformer\Transformers;
+namespace Core\CoreUtils\DataTransformer\Transformers;
 
 use Core\CoreUtils\Singleton;
-use Core\CoreUtils\ValueTransformer\IValueTransformer;
+use Core\CoreUtils\DataTransformer\IDataTransformer;
 
-class IntTransformer implements IValueTransformer
+class IntTransformer implements IDataTransformer
 {
 
     use Singleton;

@@ -6,10 +6,10 @@
  * Time: 4:35 PM
  */
 
-namespace Core\CoreUtils\ValueTransformer;
+namespace Core\CoreUtils\DataTransformer;
 
 
-interface IValueTransformer
+interface IDataTransformer
 {
 
     public function transform($value);

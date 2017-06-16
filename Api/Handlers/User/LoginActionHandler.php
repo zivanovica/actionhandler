@@ -28,24 +28,6 @@ class LoginActionHandler implements IApplicationActionHandler
         ];
     }
 
-    /**
-     *
-     * Executes before "handle" method, if FALSE is returned "handle" won't be called and request will be finished
-     * @param Request $request
-     * @param Response $response
-     * @return bool
-     */
-    public function before(Request $request, Response $response): bool
-    {
-
-        return true;
-    }
-
-    public function after(): void
-    {
-        // TODO: Implement after() method.
-    }
-
     public function handle(Request $request, Response $response): void
     {
         $response->data([

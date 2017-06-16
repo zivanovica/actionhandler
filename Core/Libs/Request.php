@@ -10,7 +10,7 @@
 namespace Core\Libs;
 
 use Core\CoreUtils\Singleton;
-use Core\CoreUtils\ValueTransformer\IValueTransformer;
+use Core\CoreUtils\DataTransformer\IDataTransformer;
 
 class Request
 {
@@ -52,10 +52,10 @@ class Request
      *
      * @param string $key
      * @param mixed $default
-     * @param IValueTransformer $transformer
+     * @param IDataTransformer $transformer
      * @return null|string
      */
-    public function query(string $key, $default = null, IValueTransformer $transformer)
+    public function query(string $key, $default = null, IDataTransformer $transformer)
     {
 
         return $this->_getTransformedValue($transformer, isset($this->_query[$key]) ? $this->_query[$key] : $default);
@@ -67,10 +67,10 @@ class Request
      *
      * @param string $key
      * @param mixed $default
-     * @param IValueTransformer $transformer
+     * @param IDataTransformer $transformer
      * @return mixed
      */
-    public function data(string $key, $default = null, IValueTransformer $transformer)
+    public function data(string $key, $default = null, IDataTransformer $transformer)
     {
 
         return $this->_getTransformedValue($transformer, isset($this->_data[$key]) ? $this->_data[$key] : $default);
@@ -80,11 +80,11 @@ class Request
      *
      * Retrieve transformed value if transformator is set, otherwise return original value
      *
-     * @param IValueTransformer $transformer
+     * @param IDataTransformer $transformer
      * @param $value
      * @return mixed
      */
-    private function _getTransformedValue(IValueTransformer $transformer, $value)
+    private function _getTransformedValue(IDataTransformer $transformer, $value)
     {
 
         if (null === $transformer) {
