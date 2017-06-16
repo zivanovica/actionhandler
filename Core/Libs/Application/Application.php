@@ -29,7 +29,7 @@ class Application
     /** @var string */
     private $_group = '';
 
-    /** @var IApplicationActionHandler[] */
+    /** @var IApplicationActionHandler[]|IApplicationActionBeforeHandler[]|IApplicationActionAfterHandler[] */
     private $_actions;
 
     /** @var Request */
@@ -119,28 +119,81 @@ class Application
             return;
         }
 
-        if (false === in_array($this->_request->method(), $this->_actions[$identifier]->methods())) {
-
-            $this->_response
-                ->setError('method', 'Method not allowed')->status(IResponseStatus::METHOD_NOT_ALLOWED)->end();
+        if (false === $this->_validateRequestMethod($this->_actions[$identifier])) {
 
             return;
         }
 
-        if (false === $this->_actions[$identifier]->before($this->_request, $this->_response)) {
-
-            $this->_response->setError('_handle.before', "Before action of '{$identifier}' failed")->end();
+        if (false === $this->_executeBeforeHandler($this->_actions[$identifier])) {
 
             return;
         }
 
         $this->_actions[$identifier]->handle($this->_request, $this->_response);
 
-        $this->_actions[$identifier]->after();
+        $this->_executeAfterHandler($this->_actions[$identifier]);
 
         $this->_response->end();
     }
 
+    /**
+     *
+     * Validates request method for current action handler
+     *
+     * @param IApplicationActionHandler $handler
+     * @return bool
+     */
+    private function _validateRequestMethod(IApplicationActionHandler $handler): bool
+    {
+
+        if (false === in_array($this->_request->method(), $handler->methods())) {
+
+            $this->_response
+                ->setError('method', 'Method not allowed')
+                ->status(IResponseStatus::METHOD_NOT_ALLOWED)
+                ->end();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * Executes "before" handle if action handler implements correct interface
+     *
+     * @param null|IApplicationActionBeforeHandler $handler
+     * @return bool
+     */
+    private function _executeBeforeHandler($handler): bool
+    {
+
+        if ($handler instanceof IApplicationActionBeforeHandler && false === $handler->before($this->_request, $this->_response)) {
+
+            $this->_response->setError('_handle.before', 'Before action failed')->end();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * Executes "after" handle if action handler implements correct interface
+     *
+     * @param null|IApplicationActionAfterHandler $handler
+     * @return void
+     */
+    private function _executeAfterHandler($handler): void
+    {
+
+        if ($handler instanceof IApplicationActionAfterHandler) {
+
+            $handler->after();
+        }
+    }
 
     /**
      *

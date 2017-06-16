@@ -11,6 +11,7 @@ namespace Core\Libs\Application;
 
 interface IApplicationHandlerMethod
 {
+
     const GET = 'GET';
     const POST = 'POST';
     const PUT = 'PUT';

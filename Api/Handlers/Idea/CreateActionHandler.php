@@ -12,13 +12,15 @@ namespace Api\Handlers\Idea;
 use Core\CoreUtils\Singleton;
 use Core\CoreUtils\ValueTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\ValueTransformer\Transformers\StringTransformer;
+use Core\Libs\Application\IApplicationActionAfterHandler;
+use Core\Libs\Application\IApplicationActionBeforeHandler;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Database;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
-class CreateActionHandler implements IApplicationActionHandler
+class CreateActionHandler implements IApplicationActionHandler, IApplicationActionBeforeHandler, IApplicationActionAfterHandler
 {
 
     use Singleton;
@@ -43,6 +45,8 @@ class CreateActionHandler implements IApplicationActionHandler
      */
     public function before(Request $request, Response $response): bool
     {
+
+        var_dump('handling before');
 
         /** @var \PDO $db */
         $db = Database::getSharedInstance()->connection;
@@ -88,7 +92,7 @@ class CreateActionHandler implements IApplicationActionHandler
      */
     public function after(): void
     {
-        // TODO: Implement after() method.
+        var_dump('handling after');
     }
 
     /**
@@ -104,6 +108,7 @@ class CreateActionHandler implements IApplicationActionHandler
         /** @var Database $db */
         $db = Database::getSharedInstance();
 
+        $response->data(['name' => 'coa']);
 
 //        $db->connection->prepare('INSERT INTO `ideas` (`user_id`, `idea`, `type`)');
 
