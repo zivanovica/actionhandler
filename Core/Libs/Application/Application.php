@@ -8,10 +8,11 @@
 
 namespace Core\Libs\Application;
 
-use Core\CoreUtils\Singleton;
 use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
+use Core\CoreUtils\Singleton;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
+use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
@@ -26,10 +27,14 @@ class Application
     /** @var array */
     private $_config;
 
+    private $_dbConfig;
+
+    private $_appConfig;
+
     /** @var string */
     private $_group = '';
 
-    /** @var IApplicationActionHandler[]|IApplicationActionBeforeHandler[]|IApplicationActionAfterHandler[] */
+    /** @var IApplicationActionHandler[]|IApplicationActionValidator[]|IApplicationActionMiddleware|IApplicationActionAfterHandler[] */
     private $_actions;
 
     /** @var Request */
@@ -50,9 +55,17 @@ class Application
             throw new ApplicationException(ApplicationException::ERROR_INVALID_CONFIG);
         }
 
-        $db = $this->_config['database'];
+        $this->_appConfig = $this->_config['application'];
 
-        Database::getSharedInstance($db['host'], $db['dbname'], $db['username'], $db['password'], $db['port']);
+        $this->_dbConfig = $this->_config['database'];
+
+        Database::getSharedInstance(
+            $this->_dbConfig['host'],
+            $this->_dbConfig['dbname'],
+            $this->_dbConfig['username'],
+            $this->_dbConfig['password'],
+            $this->_dbConfig['port']
+        );
 
         $this->_request = Request::getSharedInstance();
 
@@ -108,13 +121,9 @@ class Application
     public function run(): void
     {
 
-        $identifier = $this->_request->query(
-            $this->_config['application']['actionIdentifier'], null, StringTransformer::getSharedInstance()
-        );
+        $identifier = $this->_request->query($this->_appConfig['actionIdentifier'], null, StringTransformer::getSharedInstance());
 
-        if (false === isset($this->_actions[$identifier])) {
-
-            $this->_response->status(404)->errors(['action' => "Action '{$identifier}' not found"])->end();
+        if (false === $this->_validateRequestAction($identifier)) {
 
             return;
         }
@@ -124,7 +133,12 @@ class Application
             return;
         }
 
-        if (false === $this->_executeBeforeHandler($this->_actions[$identifier])) {
+        if (false === $this->_executeMiddlewares($this->_actions[$identifier])) {
+
+            return;
+        }
+
+        if (false === $this->_executeValidator($this->_actions[$identifier])) {
 
             return;
         }
@@ -134,6 +148,26 @@ class Application
         $this->_executeAfterHandler($this->_actions[$identifier]);
 
         $this->_response->end();
+    }
+
+    /**
+     *
+     * Validates existence of given action
+     *
+     * @param string $actionIdentifier
+     * @return bool
+     */
+    private function _validateRequestAction(string $actionIdentifier)
+    {
+
+        if (false === isset($this->_actions[$actionIdentifier])) {
+
+            $this->_response->status(404)->errors(['action' => "Action '{$actionIdentifier}' not found"])->end();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -160,21 +194,44 @@ class Application
     }
 
     /**
-     *
-     * Executes "before" handle if action handler implements correct interface
-     *
-     * @param null|IApplicationActionBeforeHandler $handler
+     * @param null|IApplicationActionValidator $handler
      * @return bool
      */
-    private function _executeBeforeHandler($handler): bool
+    private function _executeValidator($handler): bool
     {
 
-        if ($handler instanceof IApplicationActionBeforeHandler && false === $handler->before($this->_request, $this->_response)) {
+        if (false === $handler instanceof IApplicationActionValidator) {
 
-            $this->_response->setError('_handle.before', 'Before action failed')->end();
+            return true;
+        }
+
+        return $handler->validate($this->_request);
+
+    }
+
+    /**
+     * @param null|IApplicationActionMiddleware $handler
+     * @return bool
+     */
+    private function _executeMiddlewares($handler): bool
+    {
+
+        if (false === $handler instanceof IApplicationActionMiddleware) {
+
+            return true;
+        }
+
+        $middleware = $handler->middleware(Middleware::getNewInstance($this->_request));
+
+        $middleware->next();
+
+        if (false === $middleware->finished()) {
+
+            $this->_response->setError('_handle.middleware', 'Middlewares did not finished.')->end();
 
             return false;
         }
+
 
         return true;
     }

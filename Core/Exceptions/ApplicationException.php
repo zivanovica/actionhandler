@@ -12,8 +12,8 @@ namespace Core\Exceptions;
 class ApplicationException extends AFrameworkException
 {
 
-    const ERROR_DUPLICATE_ACTION_HANDLER = 20001;
-    const ERROR_INVALID_CONFIG = 20002;
+    const ERROR_DUPLICATE_ACTION_HANDLER = 10001;
+    const ERROR_INVALID_CONFIG = 10002;
 
     protected $_errors = [
         ApplicationException::ERROR_DUPLICATE_ACTION_HANDLER => 'Duplicate action',

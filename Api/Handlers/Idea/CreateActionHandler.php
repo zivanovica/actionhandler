@@ -9,18 +9,22 @@
 namespace Api\Handlers\Idea;
 
 
+use Api\Middlewares\AuthenticateMiddleware;
+use Api\Middlewares\AuthorizeMiddleware;
 use Core\CoreUtils\DataTransformer\Transformers\BoolTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
-use Core\CoreUtils\Singleton;
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
+use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationActionMiddleware;
 use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Database;
+use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
-class CreateActionHandler implements IApplicationActionHandler
+class CreateActionHandler implements IApplicationActionHandler, IApplicationActionMiddleware
 {
 
     use Singleton;
@@ -108,17 +112,25 @@ class CreateActionHandler implements IApplicationActionHandler
         /** @var Database $db */
         $db = Database::getSharedInstance();
 
-        $val = $request->query('category', null, new WaterfallTransformer([
-            StringTransformer::getSharedInstance(),
-            IntTransformer::getSharedInstance(),
-            BoolTransformer::getSharedInstance(),
-        ]));
+        $val = $request->query(
+            'category',
+            null,
+            new WaterfallTransformer([
+                StringTransformer::getSharedInstance(),// transforms value to string
+                IntTransformer::getSharedInstance(),// transforms string transformed value to integer
+                BoolTransformer::getSharedInstance(),// transforms integer value to boolean
+            ])
+        );
 
-        var_dump($val);
 
         $response->data(['name' => 'coa']);
 
 //        $db->connection->prepare('INSERT INTO `ideas` (`user_id`, `idea`, `type`)');
 
+    }
+
+    public function middleware(Middleware $middleware): Middleware
+    {
+        return $middleware->add(new AuthenticateMiddleware())->add(new AuthorizeMiddleware());
     }
 }

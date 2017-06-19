@@ -22,6 +22,7 @@ $handlers = [
     ]
 ];
 
-$application = \Core\Libs\Application\Application::getSharedInstance(__DIR__ . '/config.json');
-
-$application->register($handlers)->run();
+\Core\Libs\Application\Application::getSharedInstance(__DIR__ . '/config.json')
+    ->register($handlers)
+    ->run()
+;
