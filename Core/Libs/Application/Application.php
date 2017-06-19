@@ -205,8 +205,14 @@ class Application
             return true;
         }
 
-        return $handler->validate($this->_request);
+        if (false === $handler->validate($this->_request)) {
 
+            $this->_response->setError('_handle.validate', 'Action did not pass validation.')->end();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

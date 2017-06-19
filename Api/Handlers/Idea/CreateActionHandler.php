@@ -18,13 +18,14 @@ use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationActionMiddleware;
+use Core\Libs\Application\IApplicationActionValidator;
 use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Database;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
-class CreateActionHandler implements IApplicationActionHandler, IApplicationActionMiddleware
+class CreateActionHandler implements IApplicationActionHandler, IApplicationActionMiddleware, IApplicationActionValidator
 {
 
     use Singleton;
@@ -132,5 +133,19 @@ class CreateActionHandler implements IApplicationActionHandler, IApplicationActi
     public function middleware(Middleware $middleware): Middleware
     {
         return $middleware->add(new AuthenticateMiddleware())->add(new AuthorizeMiddleware());
+    }
+
+    /**
+     *
+     * Validates should current action be handled or not.
+     *
+     * NOTE: this is executed AFTER middlewares
+     *
+     * @param Request $request
+     * @return bool
+     */
+    public function validate(Request $request): bool
+    {
+        return true;
     }
 }
