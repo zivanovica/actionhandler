@@ -20,14 +20,6 @@ class UpdateActionHandler implements IApplicationActionHandler
 
     use Singleton;
 
-    public function methods(): array
-    {
-        return [
-            IApplicationHandlerMethod::GET,
-            IApplicationHandlerMethod::DELETE
-        ];
-    }
-
     /**
      *
      * Executes when related action is requested
@@ -37,6 +29,6 @@ class UpdateActionHandler implements IApplicationActionHandler
      */
     public function handle(Request $request, Response $response): void
     {
-        // TODO: Implement handle() method.
+        $response->data(['action' => 'Idea Update']);
     }
 }

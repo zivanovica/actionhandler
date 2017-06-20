@@ -16,6 +16,8 @@ use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
+use Core\Libs\Router\IRoute;
+use Core\Libs\Router\Router;
 
 class Application
 {
@@ -34,8 +36,8 @@ class Application
     /** @var string */
     private $_group = '';
 
-    /** @var IApplicationActionHandler[]|IApplicationActionValidator[]|IApplicationActionMiddleware|IApplicationActionAfterHandler[] */
-    private $_actions;
+    /** @var Router */
+    private $_router;
 
     /** @var Request */
     private $_request;
@@ -70,49 +72,8 @@ class Application
         $this->_request = Request::getSharedInstance();
 
         $this->_response = Response::getSharedInstance();
-    }
 
-    /**
-     *
-     * Register handlers for groped actions
-     *
-     * e.g
-     *
-     * [
-     *  'user' => [
-     *      'info' => new UserInfoHandler(), // -> action is "user.info"
-     *      'profile' => [
-     *          'create' => new CreateProfileHandler(), // -> action is "user.profile.create"
-     *          ..... and so on
-     *      ]
-     *  ]
-     * ]
-     *
-     * @param array $actions
-     * @return Application
-     */
-    public function register(array $actions): Application
-    {
-        foreach ($actions as $action => $handler) {
-
-            if (is_array($handler)) {
-
-                $currentGroup = $this->_group;
-
-                $this->_group = sprintf("%s%s", (empty($currentGroup) ? '' : "{$currentGroup}."), $action);
-
-                $this->register($handler);
-
-                $this->_group = $currentGroup;
-
-                continue;
-
-            }
-
-            $this->_registerActionHandler($action, $handler);
-        }
-
-        return $this;
+        $this->_router = Router::getSharedInstance();
     }
 
     /**
@@ -121,76 +82,34 @@ class Application
     public function run(): void
     {
 
-        $identifier = $this->_request->query($this->_appConfig['actionIdentifier'], null, StringTransformer::getSharedInstance());
+        $requestRoute = $this->_request->query(
+            $this->_appConfig['actionIdentifier'], Application::DEFAULT_ACTION_IDENTIFIER, StringTransformer::getSharedInstance()
+        );
 
-        if (false === $this->_validateRequestAction($identifier)) {
+        $route = $this->_router->route($requestRoute);
 
-            return;
-        }
+        if (null === $route) {
 
-        if (false === $this->_validateRequestMethod($this->_actions[$identifier])) {
-
-            return;
-        }
-
-        if (false === $this->_executeMiddlewares($this->_actions[$identifier])) {
+            $this->_response->status(404)->errors(['action' => "Action '{$requestRoute}' not found"])->end();
 
             return;
         }
 
-        if (false === $this->_executeValidator($this->_actions[$identifier])) {
+        if (false === $this->_executeMiddlewares($route->handler())) {
 
             return;
         }
 
-        $this->_actions[$identifier]->handle($this->_request, $this->_response);
+        if (false === $this->_executeValidator($route->handler())) {
 
-        $this->_executeAfterHandler($this->_actions[$identifier]);
+            return;
+        }
+
+        $route->handler()->handle($this->_request, $this->_response);
+
+        $this->_executeAfterHandler($route->handler());
 
         $this->_response->end();
-    }
-
-    /**
-     *
-     * Validates existence of given action
-     *
-     * @param string $actionIdentifier
-     * @return bool
-     */
-    private function _validateRequestAction(string $actionIdentifier)
-    {
-
-        if (false === isset($this->_actions[$actionIdentifier])) {
-
-            $this->_response->status(404)->errors(['action' => "Action '{$actionIdentifier}' not found"])->end();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     *
-     * Validates request method for current action handler
-     *
-     * @param IApplicationActionHandler $handler
-     * @return bool
-     */
-    private function _validateRequestMethod(IApplicationActionHandler $handler): bool
-    {
-
-        if (false === in_array($this->_request->method(), $handler->methods())) {
-
-            $this->_response
-                ->setError('method', 'Method not allowed')
-                ->status(IResponseStatus::METHOD_NOT_ALLOWED)
-                ->end();
-
-            return false;
-        }
-
-        return true;
     }
 
     /**

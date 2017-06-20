@@ -24,6 +24,8 @@ class Middleware
     /** @var Request */
     private $_request;
 
+    private $_finished = false;
+
     private function __construct(Request $request)
     {
 
@@ -37,7 +39,7 @@ class Middleware
         
         return $this;
     }
-    
+
     public function next(): void
     {
 
@@ -45,6 +47,8 @@ class Middleware
         $middleware = array_shift($this->_middlewares);
 
         if (null === $middleware && empty($this->_middlewares)) {
+
+            $this->_finished = true;
 
             return;
         }
@@ -60,7 +64,7 @@ class Middleware
     public function finished(): bool
     {
 
-        return empty($this->_middlewares);
+        return $this->_finished;
     }
 
 }

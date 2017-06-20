@@ -124,7 +124,7 @@ class CreateActionHandler implements IApplicationActionHandler, IApplicationActi
         );
 
 
-        $response->data(['name' => 'coa']);
+        $response->data(['action' => 'Idea Create']);
 
 //        $db->connection->prepare('INSERT INTO `ideas` (`user_id`, `idea`, `type`)');
 

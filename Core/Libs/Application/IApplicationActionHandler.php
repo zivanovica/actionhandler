@@ -15,11 +15,6 @@ interface IApplicationActionHandler
 {
 
     /**
-     * @return array All acceptable request methods for current handler
-     */
-    public function methods(): array;
-
-    /**
      *
      * Executes when related action is requested
      *

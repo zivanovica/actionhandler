@@ -22,6 +22,15 @@ $handlers = [
     ]
 ];
 
-\Core\Libs\Application\Application::getSharedInstance(__DIR__ . '/config.json')
-    ->register($handlers)
-    ->run();
+$router = \Core\Libs\Router\Router::getSharedInstance(\Core\Libs\Request::getSharedInstance());
+
+$router
+    ->get('/user/login', new \Api\Handlers\User\LoginActionHandler())
+    ->post('/user/register', new \Api\Handlers\User\RegisterActionHandler())
+    ->get('/idea/list', new \Api\Handlers\Idea\ListActionHandler())
+    ->put('/idea/:id/update', new \Api\Handlers\Idea\UpdateActionHandler())
+    ->post('/idea/create', new \Api\Handlers\Idea\CreateActionHandler())
+;
+
+\Core\Libs\Application\Application::getSharedInstance(__DIR__ . '/config.json')->run();
+
