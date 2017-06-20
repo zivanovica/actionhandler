@@ -9,9 +9,9 @@
 namespace Api\Handlers\Idea;
 
 
+use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
@@ -24,11 +24,12 @@ class UpdateActionHandler implements IApplicationActionHandler
      *
      * Executes when related action is requested
      *
-     * @param Request $request
-     * @param Response $response
      */
     public function handle(Request $request, Response $response): void
     {
+
+        var_dump($request->parameter('id', null, IntTransformer::getNewInstance()), $request->parameter('step'));
+
         $response->data(['action' => 'Idea Update']);
     }
 }

@@ -22,6 +22,8 @@ interface IRoute
      */
     public function handler(): IApplicationActionHandler;
 
-    public function valid(string $route): bool;
+    public function parameters(): array;
+
+    public function valid(string $method, string $route): bool;
 
 }

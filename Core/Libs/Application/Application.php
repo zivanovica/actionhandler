@@ -86,7 +86,7 @@ class Application
             $this->_appConfig['actionIdentifier'], Application::DEFAULT_ACTION_IDENTIFIER, StringTransformer::getSharedInstance()
         );
 
-        $route = $this->_router->route($requestRoute);
+        $route = $this->_router->route($this->_request->method(), $requestRoute);
 
         if (null === $route) {
 

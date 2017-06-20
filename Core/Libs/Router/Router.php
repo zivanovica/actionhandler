@@ -19,12 +19,13 @@ class Router
 
     use Singleton;
 
-    /** @var IRoute[] */
+    /** @var array */
     private $_routes;
 
-    private function __construct()
-    {
-    }
+    /** @var IRoute */
+    private $_currentRoute;
+
+    private function __construct() {}
 
     public function post(string $route, IApplicationActionHandler $handler): Router
     {
@@ -83,7 +84,7 @@ class Router
         $this->_routes[$order][$subOrder][] = [$regex, $methods, $parameters, $handler];
     }
 
-    public function route(string $route): ?IRoute
+    public function route(string $method, string $route): ?IRoute
     {
 
         ksort($this->_routes);
@@ -94,12 +95,11 @@ class Router
 
             foreach ($routes as $routeData) {
 
-                /** @var IRoute $routeInstance */
-                $routeInstance = $this->_route($route, $routeData);
+                $this->_currentRoute = $this->_route($method, $route, $routeData);
 
-                if (null !== $routeInstance) {
+                if (null !== $this->_currentRoute) {
 
-                    return $routeInstance;
+                    return $this->_currentRoute;
                 }
             }
         }
@@ -107,14 +107,21 @@ class Router
         return null;
     }
 
-    private function _route(string $route, array $routes): ?IRoute
+    public function currentRoute(): IRoute
+    {
+
+        return $this->_currentRoute;
+    }
+
+
+    private function _route(string $method, string $route, array $routes): ?IRoute
     {
 
         foreach ($routes as $routeData) {
 
             $routeInstance = call_user_func_array([$this, '_getIRouteInstance'], $routeData);
 
-            if (false === $routeInstance->valid($route)) {
+            if (false === $routeInstance->valid($method, $route)) {
 
                 unset($routeInstance);
 
@@ -149,7 +156,7 @@ class Router
 
                 $this->_handler = $handler;
 
-                $this->_parameters;
+                $this->_parameters = $parameters;
             }
 
             public function handler(): IApplicationActionHandler
@@ -157,9 +164,43 @@ class Router
                 return $this->_handler;
             }
 
-            public function valid(string $route): bool
+            public function parameters(): array
             {
-                return (bool)preg_match($this->_regex, $route) && in_array(Request::getSharedInstance()->method(), $this->_methods);
+                return $this->_parameters;
+            }
+
+            public function valid(string $method, string $route): bool
+            {
+
+                if (false === in_array($method, $this->_methods)) {
+
+                    return false;
+                }
+
+                $matches = [];
+
+                $found = (bool) preg_match_all($this->_regex, $route, $matches);
+
+                if (false === $found) {
+
+                    return false;
+                }
+
+                $parameters = $this->_parameters;
+
+                $this->_parameters = [];
+
+                array_shift($matches);
+
+                if (false === empty($matches)) {
+
+                    foreach ($parameters as $offset => $parameter) {
+
+                        $this->_parameters[$parameter] = isset($matches[$offset][0]) ? $matches[$offset][0] : null;
+                    }
+                }
+
+                return true;
             }
         };
     }
