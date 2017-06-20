@@ -2,8 +2,8 @@
 
 namespace Core\CoreUtils\DataTransformer\Transformers;
 
-use Core\CoreUtils\Singleton;
 use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\Singleton;
 
 class IntTransformer implements IDataTransformer
 {

@@ -34,9 +34,9 @@ class Middleware
 
     public function add(IMiddleware $middleware): Middleware
     {
-        
+
         $this->_middlewares[] = $middleware;
-        
+
         return $this;
     }
 

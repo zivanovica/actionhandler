@@ -12,7 +12,6 @@ namespace Core\Libs\Router;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationHandlerMethod;
-use Core\Libs\Request;
 
 class Router
 {
@@ -25,8 +24,18 @@ class Router
     /** @var IRoute */
     private $_currentRoute;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
+    /**
+     *
+     * Register POST route
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
     public function post(string $route, IApplicationActionHandler $handler): Router
     {
 
@@ -35,6 +44,14 @@ class Router
         return $this;
     }
 
+    /**
+     *
+     * Register GET route
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
     public function get(string $route, IApplicationActionHandler $handler): Router
     {
 
@@ -43,6 +60,14 @@ class Router
         return $this;
     }
 
+    /**
+     *
+     * Register PUT route
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
     public function put(string $route, IApplicationActionHandler $handler): Router
     {
 
@@ -51,6 +76,14 @@ class Router
         return $this;
     }
 
+    /**
+     *
+     * Register DELETE route
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
     public function delete(string $route, IApplicationActionHandler $handler): Router
     {
 
@@ -59,6 +92,14 @@ class Router
         return $this;
     }
 
+    /**
+     *
+     * Register PATCH route
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
     public function patch(string $route, IApplicationActionHandler $handler): Router
     {
 
@@ -67,6 +108,39 @@ class Router
         return $this;
     }
 
+    /**
+     *
+     * Register route on any request method
+     *
+     * @param string $route
+     * @param IApplicationActionHandler $handler
+     * @return Router
+     */
+    public function any(string $route, IApplicationActionHandler $handler): Router
+    {
+
+        $methods = [
+            IApplicationHandlerMethod::GET,
+            IApplicationHandlerMethod::POST,
+            IApplicationHandlerMethod::PUT,
+            IApplicationHandlerMethod::PATCH,
+            IApplicationHandlerMethod::DELETE
+        ];
+
+        $this->add($route, $methods, $handler);
+
+        return $this;
+
+    }
+
+    /**
+     *
+     * Register route for all given methods
+     *
+     * @param string $route
+     * @param array $methods
+     * @param IApplicationActionHandler $handler
+     */
     public function add(string $route, array $methods, IApplicationActionHandler $handler): void
     {
 
@@ -179,7 +253,7 @@ class Router
 
                 $matches = [];
 
-                $found = (bool) preg_match_all($this->_regex, $route, $matches);
+                $found = (bool)preg_match_all($this->_regex, $route, $matches);
 
                 if (false === $found) {
 

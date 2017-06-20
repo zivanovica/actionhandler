@@ -14,9 +14,7 @@ use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
-use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
-use Core\Libs\Router\IRoute;
 use Core\Libs\Router\Router;
 
 class Application
@@ -29,15 +27,11 @@ class Application
     /** @var array */
     private $_config;
 
+    /** @var array */
     private $_dbConfig;
 
+    /** @var array */
     private $_appConfig;
-
-    /** @var string */
-    private $_group = '';
-
-    /** @var Router */
-    private $_router;
 
     /** @var Request */
     private $_request;
@@ -73,20 +67,21 @@ class Application
 
         $this->_response = Response::getSharedInstance();
 
-        $this->_router = Router::getSharedInstance();
     }
 
     /**
      * Executes handler for requested action
+     *
+     * @param Router $router
      */
-    public function run(): void
+    public function run(Router $router): void
     {
 
         $requestRoute = $this->_request->query(
             $this->_appConfig['actionIdentifier'], Application::DEFAULT_ACTION_IDENTIFIER, StringTransformer::getSharedInstance()
         );
 
-        $route = $this->_router->route($this->_request->method(), $requestRoute);
+        $route = $router->route($this->_request->method(), $requestRoute);
 
         if (null === $route) {
 
@@ -175,30 +170,6 @@ class Application
 
             $handler->after();
         }
-    }
-
-    /**
-     *
-     * Registers handler for given action in current group
-     *
-     * @param string $identifier
-     * @param IApplicationActionHandler $handler
-     * @return Application
-     * @throws ApplicationException
-     */
-    private function _registerActionHandler(string $identifier, IApplicationActionHandler $handler): Application
-    {
-
-        $identifier = sprintf("%s%s", (empty($this->_group) ? '' : "{$this->_group}."), $identifier);
-
-        if (isset($this->_actions[$identifier]) && $this->_actions[$identifier] instanceof IApplicationActionHandler) {
-
-            throw new ApplicationException(ApplicationException::ERROR_DUPLICATE_ACTION_HANDLER, $identifier);
-        }
-
-        $this->_actions[$identifier] = $handler;
-
-        return $this;
     }
 
     /**

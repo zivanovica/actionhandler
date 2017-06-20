@@ -19,6 +19,6 @@ class BoolTransformer implements IDataTransformer
 
     public function transform($value)
     {
-        return (bool) $value;
+        return (bool)$value;
     }
 }

@@ -45,7 +45,6 @@ class LoginActionHandler implements IApplicationActionHandler, IApplicationActio
     {
         return $middleware
             ->add(new AuthenticateMiddleware())
-            ->add(new AuthorizeMiddleware())
-        ;
+            ->add(new AuthorizeMiddleware());
     }
 }
