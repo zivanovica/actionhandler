@@ -55,10 +55,14 @@ class WaterfallTransformer implements IDataTransformer
      * @param IDataTransformer $transformer
      * @param $value
      */
-    private function _transform(IDataTransformer $transformer, &$value)
+    private function _transform(?IDataTransformer $transformer, &$value)
     {
 
-        $value = $transformer->transform($value);
+        if (null === $transformer) {
 
+            return;
+        }
+
+        $value = $transformer->transform($value);
     }
 }

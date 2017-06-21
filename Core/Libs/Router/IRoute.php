@@ -17,6 +17,10 @@ use Core\Libs\Application\IApplicationActionValidator;
 interface IRoute
 {
 
+    const VALIDATOR_VALID = 0;
+    const VALIDATOR_URL = 1;
+    const VALIDATOR_METHOD = 2;
+
     /**
      * @return IApplicationActionHandler|IApplicationActionMiddleware|IApplicationActionAfterHandler|IApplicationActionValidator
      */

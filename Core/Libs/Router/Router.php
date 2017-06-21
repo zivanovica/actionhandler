@@ -8,7 +8,6 @@
 
 namespace Core\Libs\Router;
 
-
 use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationHandlerMethod;
@@ -144,7 +143,7 @@ class Router
     public function add(string $route, array $methods, IApplicationActionHandler $handler): void
     {
 
-        list($regex, $parameters) = $this->_parseRoute($route);
+        list($regex, $parameters) = $this->_prepareRoute($route);
 
         $order = count($parameters);
 
@@ -158,6 +157,14 @@ class Router
         $this->_routes[$order][$subOrder][] = [$regex, $methods, $parameters, $handler];
     }
 
+    /**
+     *
+     * Decides and retrieves corresponding IRoute for current request
+     *
+     * @param string $method
+     * @param string $route
+     * @return IRoute|null
+     */
     public function route(string $method, string $route): ?IRoute
     {
 
@@ -188,6 +195,15 @@ class Router
     }
 
 
+    /**
+     *
+     * Retrieves valid IRoute for current request
+     *
+     * @param string $method
+     * @param string $route
+     * @param array $routes
+     * @return IRoute|null
+     */
     private function _route(string $method, string $route, array $routes): ?IRoute
     {
 
@@ -208,6 +224,16 @@ class Router
         return null;
     }
 
+    /**
+     *
+     * Creates instance of IRoute
+     *
+     * @param string $regex Route regular expression
+     * @param array $methods Allowed route methods
+     * @param array $parameters Dynamic route parameters
+     * @param IApplicationActionHandler $handler Route handler
+     * @return IRoute
+     */
     private function _getIRouteInstance($regex, array $methods, array $parameters, IApplicationActionHandler $handler): IRoute
     {
         return new class($regex, $methods, $parameters, $handler) implements IRoute
@@ -279,7 +305,14 @@ class Router
         };
     }
 
-    private function _parseRoute(string $route): array
+    /**
+     *
+     * Parse given route, creates regex and array of route parameters
+     *
+     * @param string $route
+     * @return array
+     */
+    private function _prepareRoute(string $route): array
     {
 
         $matches = [];

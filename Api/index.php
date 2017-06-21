@@ -13,25 +13,6 @@ use Core\Libs\Router\Router;
 
 Application::getSharedInstance(__DIR__ . '/config.json')->run(
     Router::getSharedInstance()
-        ->get('/idea/create', new \Api\Handlers\Idea\CreateHandler())
-        ->any('/idea', new class implements \Core\Libs\Application\IApplicationActionHandler {
-
-            /**
-             *
-             * Executes when related action is requested
-             *
-             * @param \Core\Libs\Request $request
-             * @param \Core\Libs\Response\Response $response
-             */
-            public function handle(\Core\Libs\Request $request, \Core\Libs\Response\Response $response): void
-            {
-
-
-                $response->data([
-                    'REQUEST_METHOD' => $request->method(),
-                    'ALLOWED_METHODS' => Router::getSharedInstance()->currentRoute()
-                ]);
-            }
-        })
+        ->post('/idea/create', new \Api\Handlers\Idea\CreateHandler())
 );
 

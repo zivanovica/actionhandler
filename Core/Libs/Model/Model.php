@@ -10,6 +10,8 @@ namespace Core\Libs\Model;
 
 
 use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelException;
 use Core\Libs\Database;
@@ -65,6 +67,18 @@ abstract class Model
     {
 
         return $this->getAttribute($name);
+    }
+
+    /**
+     * Retrieves value of primary key for current entity
+     *
+     * @param IDataTransformer $transformer
+     * @return mixed
+     */
+    public function primaryValue(?IDataTransformer $transformer = null)
+    {
+
+        return $this->getAttribute($this->primary(), $transformer);
     }
 
     /**
@@ -154,6 +168,8 @@ abstract class Model
 
         if ($id) {
 
+            $this->setAttribute($this->primary(), $id);
+
             $this->_isDirty = false;
         }
 
@@ -222,6 +238,11 @@ abstract class Model
             throw new ModelException(ModelException::ERROR_INVALID_FIELD, $name);
         }
 
+        if ($value instanceof Model) {
+
+            $value = $value->primaryValue();
+        }
+
         $value = null === $transformer ? $value : $transformer->transform($value);
 
         if (false === isset($this->_attributes[$name]) || $this->_attributes[$name] !== $value) {
@@ -261,6 +282,12 @@ abstract class Model
     {
 
         return array_intersect_key(array_flip($attributes), $this->_attributes);
+    }
+
+    public function toArray(): array
+    {
+
+        return $this->_attributes;
     }
 
     /**
