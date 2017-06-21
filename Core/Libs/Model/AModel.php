@@ -120,6 +120,26 @@ abstract class AModel implements IModel
         return $id;
     }
 
+    public function delete(): bool
+    {
+
+        if (empty($this->primary())) {
+
+            throw new ModelException(ModelException::ERROR_MISSING_PRIMARY, 'Primary key is required for deleting.');
+        }
+
+        $id = isset($this->_attributes[$this->primary()]) ? $this->_attributes[$this->primary()] : null;
+
+        if (null === $id) {
+
+            throw new ModelException(ModelException::ERROR_MISSING_PRIMARY, 'Primary key value is required for deleting.');
+        }
+
+        $deleted = (bool)$this->_db->delete("DELETE FROM `{$this->table()}` WHERE `{$this->primary()}` = ?;", [$id]);
+
+        return $this->_isDirty = $deleted;
+    }
+
     /**
      *
      * Bulk set of model values

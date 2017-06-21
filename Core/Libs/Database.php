@@ -56,6 +56,14 @@ class Database
         return $this->connection->lastInsertId();
     }
 
+    public function delete(string $query, array $bindings): int
+    {
+
+        $statement = $this->_executeQuery($query, $bindings);
+
+        return $statement->rowCount();
+    }
+
     private function _executeQuery(string $query, array $bindings): \PDOStatement
     {
 

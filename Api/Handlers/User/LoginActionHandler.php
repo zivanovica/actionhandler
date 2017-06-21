@@ -28,17 +28,9 @@ class LoginActionHandler implements IApplicationActionHandler, IApplicationActio
     public function handle(Request $request, Response $response): void
     {
 
-        $user = UserModel::getNewInstance()->find(1);
-
-        $user->email = 'test';
-
-        var_dump($user->save());
-
         $newUser = UserModel::getNewInstance()->find(7);
 
-        $newUser->email = 'coabrt@gmail.com';
-
-        var_dump($newUser->save());
+        var_dump($newUser);
 
         $response->data([
             'message' => 'Login handler good.'
