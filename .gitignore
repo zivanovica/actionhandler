@@ -1,6 +1,6 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
 
 .idea
-.idea/*
 AppIdea.iml
 .DS_Store
+Public/idea/node_modules
