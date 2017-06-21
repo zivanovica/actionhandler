@@ -9,6 +9,7 @@
 namespace Api\Models;
 
 
+use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\Libs\Model\Model;
 
 class IdeaCategory extends Model
@@ -36,5 +37,12 @@ class IdeaCategory extends Model
     public function fields(): array
     {
         return ['id', 'name', 'active', 'updated_at'];
+    }
+
+    public function getIdeas(): array
+    {
+
+        $id = $this->getAttribute('id', IntTransformer::getSharedInstance());
+
     }
 }

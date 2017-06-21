@@ -47,6 +47,16 @@ class Database
         return is_array($results) ? $results : null;
     }
 
+    public function fetchAll(string $query, array $bindings = []): ?array
+    {
+
+        $statement = $this->_executeQuery($query, $bindings);
+
+        $results = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        return is_array($results) ? $results : null;
+    }
+
 
     public function store(string $query, array $bindings): int
     {

@@ -34,7 +34,7 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
      */
     public function handle(Request $request, Response $response): void
     {
-        var_dump($this->_ideaCategory);
+        var_dump(IdeaCategory::getSharedInstance()->all());
     }
 
     /**
@@ -60,7 +60,7 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
 
             $response->setError('category', 'Idea category not found.');
 
-            return IResponseStatus::NOT_FOUND;
+            return IResponseStatus::OK;
         }
 
         return IResponseStatus::OK;

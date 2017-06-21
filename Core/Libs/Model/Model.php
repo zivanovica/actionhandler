@@ -89,6 +89,46 @@ abstract class Model
 
     /**
      *
+     * Retrieve single entity with given criteria
+     *
+     * @param array $criteria
+     * @return Model|null
+     */
+    public function findOneWhere(array $criteria): ?Model
+    {
+        $results = $this->_db->fetch($this->_buildCriteriaSelectQuery($this->table(), $criteria), array_values($criteria));
+
+        if (false === is_array($results)) {
+
+            return null;
+        }
+
+        return new $this($results);
+    }
+
+    /**
+     *
+     * Retrieve multiple entities with given criteria
+     *
+     * @param array $criteria
+     * @return Model[]|null
+     */
+    public function findWhere(array $criteria): ?array
+    {
+
+        return $this->_getModelsArray(
+            $this->_db->fetchAll($this->_buildCriteriaSelectQuery($this->table(), $criteria), array_values($criteria))
+        );
+    }
+
+    public function all(): ?array
+    {
+
+        return $this->_getModelsArray($this->_db->fetchAll("SELECT * FROM `{$this->table()}`;"));
+    }
+
+    /**
+     *
      * Save current entity into database
      *
      * @return int
@@ -256,6 +296,49 @@ abstract class Model
         $query = "INSERT INTO `{$table}` SET {$fieldsString} ON DUPLICATE KEY UPDATE {$updateFieldsString};";
 
         return $query;
+    }
+
+    /**
+     * @param string $table
+     * @param array $criteria
+     * @return string
+     */
+    private function _buildCriteriaSelectQuery(string $table, array $criteria): string
+    {
+
+        $mapFunction = function (string $field): string {
+            return "`{$field}` = ?";
+        };
+
+        $fields = implode(' AND ', array_map($mapFunction, array_keys($criteria)));
+
+        return "SELECT * FROM `{$table}` WHERE {$fields};";
+    }
+
+    /**
+     *
+     * Will convert RAW array data to collection of models
+     *
+     * @param array|null $results
+     * @return array|null
+     */
+    private function _getModelsArray(?array $results = null): ?array
+    {
+
+        if (null === $results) {
+
+            return null;
+        }
+
+
+        $resultModels = [];
+
+        foreach ($results as $result) {
+
+            $resultModels[] = new $this($result);
+        }
+
+        return $resultModels;
     }
 
     /**
