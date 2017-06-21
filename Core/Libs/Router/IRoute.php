@@ -22,8 +22,19 @@ interface IRoute
      */
     public function handler(): IApplicationActionHandler;
 
+    /**
+     * @return array Route parameters
+     */
     public function parameters(): array;
 
+    /**
+     *
+     * Validates is current route one client requested
+     *
+     * @param string $method GET, POST, PUT, DELETE, PATCH
+     * @param string $route Route
+     * @return bool
+     */
     public function valid(string $method, string $route): bool;
 
 }

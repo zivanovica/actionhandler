@@ -15,9 +15,6 @@ Application::getSharedInstance(__DIR__ . '/config.json')->run(
     Router::getSharedInstance()
         ->get('/user/login', new \Api\Handlers\User\LoginActionHandler())
         ->post('/user/register', new \Api\Handlers\User\RegisterActionHandler())
-        ->get('/idea/list', new \Api\Handlers\Idea\ListActionHandler())
-        ->get('/idea/:id/update/:step', new \Api\Handlers\Idea\UpdateActionHandler())
-        ->post('/idea/create', new \Api\Handlers\Idea\CreateActionHandler())
         ->any('/idea', new class implements \Core\Libs\Application\IApplicationActionHandler {
 
             /**

@@ -2,31 +2,19 @@
 /**
  * Created by IntelliJ IDEA.
  * User: coa
- * Date: 6/14/17
- * Time: 10:21 PM
+ * Date: 6/21/17
+ * Time: 12:41 PM
  */
 
 namespace Api\Handlers\Idea;
 
 
-use Core\CoreUtils\Singleton;
 use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationHandlerMethod;
 use Core\Libs\Request;
 use Core\Libs\Response\Response;
 
-class ListActionHandler implements IApplicationActionHandler
+class CreateHandler implements IApplicationActionHandler
 {
-
-    use Singleton;
-
-    public function methods(): array
-    {
-        return [
-            IApplicationHandlerMethod::GET,
-            IApplicationHandlerMethod::DELETE
-        ];
-    }
 
     /**
      *
@@ -37,8 +25,6 @@ class ListActionHandler implements IApplicationActionHandler
      */
     public function handle(Request $request, Response $response): void
     {
-
-        $response->data(['action' => 'Idea List']);
-
+        // TODO: Implement handle() method.
     }
 }
