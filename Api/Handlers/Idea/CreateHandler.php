@@ -9,12 +9,21 @@
 namespace Api\Handlers\Idea;
 
 
+use Api\Models\IdeaCategory;
+use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationActionValidator;
 use Core\Libs\Request;
+use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class CreateHandler implements IApplicationActionHandler
+class CreateHandler implements IApplicationActionHandler, IApplicationActionValidator
 {
+
+    /** @var IdeaCategory */
+    private $_ideaCategory;
 
     /**
      *
@@ -25,6 +34,35 @@ class CreateHandler implements IApplicationActionHandler
      */
     public function handle(Request $request, Response $response): void
     {
-        // TODO: Implement handle() method.
+        var_dump($this->_ideaCategory);
+    }
+
+    /**
+     *
+     * Validates should current action be handled or not.
+     *
+     * NOTE: this is executed AFTER middlewares
+     *
+     * @return int
+     */
+    public function validate(): int
+    {
+
+        $request = Request::getSharedInstance();
+        $response = Response::getSharedInstance();
+
+        $this->_ideaCategory = $request->query('category', null, new WaterfallTransformer([
+            IntTransformer::getSharedInstance(),
+            ModelTransformer::getNewInstance(IdeaCategory::class)
+        ]));
+
+        if (false === $this->_ideaCategory instanceof IdeaCategory) {
+
+            $response->setError('category', 'Idea category not found.');
+
+            return IResponseStatus::NOT_FOUND;
+        }
+
+        return IResponseStatus::OK;
     }
 }

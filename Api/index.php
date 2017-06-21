@@ -13,8 +13,7 @@ use Core\Libs\Router\Router;
 
 Application::getSharedInstance(__DIR__ . '/config.json')->run(
     Router::getSharedInstance()
-        ->get('/user/login', new \Api\Handlers\User\LoginActionHandler())
-        ->post('/user/register', new \Api\Handlers\User\RegisterActionHandler())
+        ->get('/idea/create', new \Api\Handlers\Idea\CreateHandler())
         ->any('/idea', new class implements \Core\Libs\Application\IApplicationActionHandler {
 
             /**

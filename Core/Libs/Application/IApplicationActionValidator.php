@@ -8,20 +8,18 @@
 
 namespace Core\Libs\Application;
 
-
-use Core\Libs\Request;
-
 interface IApplicationActionValidator
 {
 
     /**
      *
      * Validates should current action be handled or not.
+     * Status code returned from validate will be used as response status code.
+     * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @param Request $request
-     * @return bool
+     * @return int If everything is good this MUST return 200 or IResponseStatus::OK
      */
-    public function validate(Request $request): bool;
+    public function validate(): int;
 }

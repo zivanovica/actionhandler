@@ -8,12 +8,15 @@
 
 namespace Core\Libs\Application;
 
+use Core\CoreUtils\DataTransformer\Transformers\RouteTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
+use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
+use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 use Core\Libs\Router\Router;
 
@@ -119,9 +122,11 @@ class Application
             return true;
         }
 
-        if (false === $handler->validate($this->_request)) {
+        $status = $handler->validate();
 
-            $this->_response->setError('_handle.validate', 'Action did not pass validation.')->end();
+        if (IResponseStatus::OK !== $status) {
+
+            $this->_response->status($status)->setError('_handle.validate', 'Action did not pass validation.')->end();
 
             return false;
         }

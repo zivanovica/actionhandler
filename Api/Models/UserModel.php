@@ -9,9 +9,9 @@
 namespace Api\Models;
 
 
-use Core\Libs\Model\AModel;
+use Core\Libs\Model\Model;
 
-class UserModel extends AModel
+class UserModel extends Model
 {
 
     public function table(): string

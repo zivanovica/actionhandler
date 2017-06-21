@@ -14,7 +14,7 @@ use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelException;
 use Core\Libs\Database;
 
-abstract class AModel implements IModel
+abstract class Model
 {
 
     use Singleton;
@@ -72,9 +72,9 @@ abstract class AModel implements IModel
      * Will retrieve single entity from database
      *
      * @param $primaryValue
-     * @return AModel|null
+     * @return Model|null
      */
-    public function find($primaryValue): ?AModel
+    public function find($primaryValue): ?Model
     {
 
         $results = $this->_db->fetch("SELECT * FROM `{$this->table()}` WHERE `{$this->primary()}` = ?;", [$primaryValue]);
@@ -120,6 +120,13 @@ abstract class AModel implements IModel
         return $id;
     }
 
+    /**
+     *
+     * Removes current entity from database
+     *
+     * @return bool
+     * @throws ModelException
+     */
     public function delete(): bool
     {
 
@@ -145,9 +152,9 @@ abstract class AModel implements IModel
      * Bulk set of model values
      *
      * @param array $data
-     * @return AModel
+     * @return Model
      */
-    public function setAttributes(array $data): AModel
+    public function setAttributes(array $data): Model
     {
 
         foreach ($data as $name => $value) {
@@ -165,10 +172,10 @@ abstract class AModel implements IModel
      * @param string $name Field name
      * @param mixed $value Value of field
      * @param IDataTransformer|null $transformer
-     * @return AModel
+     * @return Model
      * @throws ModelException
      */
-    public function setAttribute(string $name, $value, ?IDataTransformer $transformer = null): AModel
+    public function setAttribute(string $name, $value, ?IDataTransformer $transformer = null): Model
     {
         if (false === in_array($name, $this->fields())) {
 
@@ -250,5 +257,20 @@ abstract class AModel implements IModel
 
         return $query;
     }
+
+    /**
+     * @return string Table name
+     */
+    public abstract function table(): string;
+
+    /**
+     * @return string Name of primary key field
+     */
+    public abstract function primary(): string;
+
+    /**
+     * @return array Fields (columns) of table
+     */
+    public abstract function fields(): array;
 
 }

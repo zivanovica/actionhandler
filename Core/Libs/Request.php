@@ -63,7 +63,6 @@ class Request
      */
     public function query(string $key, $default = null, IDataTransformer $transformer = null)
     {
-
         return $this->_getTransformedValue($transformer, isset($this->_query[$key]) ? $this->_query[$key] : $default);
     }
 
