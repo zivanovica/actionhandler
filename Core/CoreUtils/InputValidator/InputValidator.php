@@ -137,7 +137,7 @@ class InputValidator
      *
      * @return bool
      */
-    public function anyError(): bool
+    public function hasErrors(): bool
     {
 
         return false === empty($this->errors);

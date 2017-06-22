@@ -10,10 +10,13 @@ namespace Api\Models;
 
 
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
 class IdeaCategory extends Model
 {
+
+    use Singleton;
 
     /**
      * @return string Table name

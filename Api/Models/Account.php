@@ -9,10 +9,13 @@
 namespace Api\Models;
 
 
+use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
 class Account extends Model
 {
+
+    use Singleton;
 
     /**
      * @return string Table name

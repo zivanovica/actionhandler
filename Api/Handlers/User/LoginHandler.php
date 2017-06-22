@@ -3,13 +3,13 @@
  * Created by IntelliJ IDEA.
  * User: coa
  * Date: 6/22/17
- * Time: 12:56 PM
+ * Time: 6:19 PM
  */
 
 namespace Api\Handlers\User;
 
 
-use Api\Models\Account;
+use Api\Models\Token;
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
@@ -18,7 +18,7 @@ use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class RegisterHandler implements IApplicationActionHandler, IApplicationActionValidator
+class LoginHandler implements IApplicationActionHandler, IApplicationActionValidator
 {
 
     /**
@@ -30,21 +30,29 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      */
     public function handle(Request $request, Response $response): void
     {
-        $user = User::getNewInstance()->createProfile(
-            $request->data('email'), $request->data('password'),
-            $request->data('first_name'), $request->data('last_name')
+
+        $user = User::getSharedInstance()->getUserByEmailAndPassword(
+            $request->data('email'),
+            $request->data('password')
         );
 
         if (false === $user instanceof User) {
 
-            $response
-                ->status(500)
-                ->setError('user.create', 'Failed to create user.');
+            $response->status(IResponseStatus::UNAUTHORIZED)->setError('credentials', 'Invalid login credentials.');
 
             return;
         }
 
-        $response->setData('message', 'User successfully created');
+        $token = Token::getSharedInstance()->create($user);
+
+        if (false === $token instanceof Token) {
+
+            $response->status(IResponseStatus::INTERNAL_ERROR)->setError('internal', 'There were some issues.');
+
+            return;
+        }
+
+        $response->setData('token', $token->getAttribute('value'));
     }
 
     /**
@@ -60,14 +68,12 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
     public function validate(): int
     {
 
-        $validator = InputValidator::getSharedInstance();
+        $validator = InputValidator::getSharedInstance(Request::getSharedInstance()->allData());
 
         $validator->validate([
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'first_name' => 'required|min:2|max:64',
-            'last_name' => 'required|min:2|max:64'
-        ], Request::getSharedInstance()->allData());
+            'email' => 'required',
+            'password' => 'required'
+        ]);
 
         if (false === $validator->hasErrors()) {
 
@@ -77,6 +83,5 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
         Response::getSharedInstance()->errors($validator->getErrors());
 
         return IResponseStatus::BAD_REQUEST;
-
     }
 }

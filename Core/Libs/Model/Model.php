@@ -10,8 +10,6 @@ namespace Core\Libs\Model;
 
 
 use Core\CoreUtils\DataTransformer\IDataTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelException;
 use Core\Libs\Database;
@@ -93,12 +91,12 @@ abstract class Model
 
         $results = $this->_db->fetch("SELECT * FROM `{$this->table()}` WHERE `{$this->primary()}` = ?;", [$primaryValue]);
 
-        if (is_array($results)) {
+        if (false === is_array($results)) {
 
-            return new $this($results);
+            return null;
         }
 
-        return null;
+        return new $this($results);
     }
 
     /**
@@ -173,7 +171,7 @@ abstract class Model
             $this->_isDirty = false;
         }
 
-        return (int) $id;
+        return (int)$id;
     }
 
     /**

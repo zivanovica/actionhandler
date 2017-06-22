@@ -9,10 +9,13 @@
 namespace Api\Models;
 
 
+use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
 class User extends Model
 {
+
+    use Singleton;
 
     const STATUS_ACTIVE = 'ACTIVE';
     const STATUS_INACTIVE = 'INACTIVE';
@@ -67,6 +70,33 @@ class User extends Model
         if (0 === $account->save()) {
 
             $user->delete();
+
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     *
+     * Retrieves user with given email if credentials match
+     *
+     * @param string $email
+     * @param string $password
+     * @return User|null
+     */
+    public function getUserByEmailAndPassword(string $email, string $password): ?User
+    {
+
+        /** @var User $user */
+        $user = $this->findOneWhere(['email' => $email]);
+
+        if (false === $user instanceof User) {
+
+            return null;
+        }
+
+        if (false === password_verify($password, $user->getAttribute('password'))) {
 
             return null;
         }
