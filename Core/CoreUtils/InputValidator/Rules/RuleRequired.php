@@ -6,7 +6,7 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleRequired
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleRequired extends InputValidatorRule
 {

@@ -6,15 +6,15 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleFieldSameAsOther
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleFieldSameAsOther extends InputValidatorRule
 {
 
-    const PARAMETER_FIELD = 0;
+    private const PARAMETER_FIELD = 0;
 
     /** @var string */
-    private $field;
+    private $_field;
 
     /**
      * @param mixed $value
@@ -22,11 +22,11 @@ class RuleFieldSameAsOther extends InputValidatorRule
      */
     public function validate($value): bool
     {
-        if (empty($this->InputValidator->getInput()[$this->field])) {
+        if (empty($this->inputValidator->getInput()[$this->_field])) {
             return false;
         }
 
-        $fieldValue = $this->InputValidator->getInput()[$this->field];
+        $fieldValue = $this->inputValidator->getInput()[$this->_field];
 
         return 0 === strcmp($value, $fieldValue);
     }
@@ -39,7 +39,7 @@ class RuleFieldSameAsOther extends InputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_FIELD])) {
 
-            $this->field = $parameters[self::PARAMETER_FIELD];
+            $this->_field = $parameters[self::PARAMETER_FIELD];
         } else {
 
             throw new \RuntimeException('Missing parameter');
@@ -53,7 +53,7 @@ class RuleFieldSameAsOther extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return "Field must be same as {$this->field}";
+        return "Must be same as {$this->_field}";
     }
 
 }

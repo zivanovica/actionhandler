@@ -6,15 +6,15 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleMaximumLength
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleMaximumLength extends InputValidatorRule
 {
 
-    const PARAMETER_MAX = 0;
+    private const PARAMETER_MAX = 0;
 
     /** @var int */
-    private $max;
+    private $_max;
 
     /**
      * @param mixed $value
@@ -22,7 +22,7 @@ class RuleMaximumLength extends InputValidatorRule
      */
     public function validate($value): bool
     {
-        return strlen($value) <= $this->max;
+        return strlen($value) <= $this->_max;
     }
 
     /**
@@ -31,11 +31,11 @@ class RuleMaximumLength extends InputValidatorRule
      */
     public function setParameters(array $parameters): InputValidatorRule
     {
-        $this->max = PHP_INT_MAX;
+        $this->_max = PHP_INT_MAX;
 
         if (isset($parameters[self::PARAMETER_MAX])) {
 
-            $this->max = $parameters[self::PARAMETER_MAX];
+            $this->_max = $parameters[self::PARAMETER_MAX];
         }
 
         return $this;
@@ -46,7 +46,7 @@ class RuleMaximumLength extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return "Field can not contain more than {$this->max} characters";
+        return "Field can not contain more than {$this->_max} characters";
     }
 
 }

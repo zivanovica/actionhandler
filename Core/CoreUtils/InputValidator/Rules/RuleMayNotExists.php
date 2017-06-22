@@ -6,7 +6,7 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleMayNotExists
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleMayNotExists extends InputValidatorRule
 {

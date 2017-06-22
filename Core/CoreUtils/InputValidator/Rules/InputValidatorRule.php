@@ -8,13 +8,13 @@ use Core\CoreUtils\InputValidator\InputValidator;
 /**
  * Description of InputValidatorRule
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 abstract class InputValidatorRule
 {
 
     /** @var InputValidator */
-    protected $InputValidator;
+    protected $inputValidator;
 
     /**
      * InputValidatorRule constructor.
@@ -24,7 +24,7 @@ abstract class InputValidatorRule
     public function __construct(InputValidator $InputValidator)
     {
 
-        $this->InputValidator = $InputValidator;
+        $this->inputValidator = $InputValidator;
     }
 
     /**

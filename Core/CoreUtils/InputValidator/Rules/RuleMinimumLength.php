@@ -6,15 +6,15 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleMinimum
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleMinimumLength extends InputValidatorRule
 {
 
-    const PARAMETER_MIN = 0;
+    private const PARAMETER_MIN = 0;
 
     /** @var int */
-    private $min = 0;
+    private $_min = 0;
 
     /**
      * @param mixed $value
@@ -22,7 +22,7 @@ class RuleMinimumLength extends InputValidatorRule
      */
     public function validate($value): bool
     {
-        return strlen($value) >= $this->min;
+        return strlen($value) >= $this->_min;
     }
 
     /**
@@ -33,7 +33,7 @@ class RuleMinimumLength extends InputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_MIN])) {
 
-            $this->min = $parameters[self::PARAMETER_MIN];
+            $this->_min = $parameters[self::PARAMETER_MIN];
         }
 
         return $this;
@@ -44,7 +44,7 @@ class RuleMinimumLength extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return "Field must contain at least {$this->min} characters";
+        return "Field must contain at least {$this->_min} characters";
     }
 
 }

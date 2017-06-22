@@ -8,19 +8,21 @@ use Core\Libs\Database;
 /**
  * Description of RuleEntityExists
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleEntityExists extends InputValidatorRule
 {
 
-    const PARAMETER_TABLE = 0;
-    const PARAMETER_FIELD = 1;
+    private const PARAMETER_TABLE = 0;
+    private const PARAMETER_FIELD = 1;
 
     /** @var string */
-    private $table;
+    private $_table;
 
     /** @var string */
-    private $field;
+    private $_field;
+
+    private $_value;
 
     /**
      * @param mixed $value
@@ -29,8 +31,10 @@ class RuleEntityExists extends InputValidatorRule
     public function validate($value): bool
     {
 
+        $this->_value = $value;
+
         $results = Database::getSharedInstance()
-            ->fetchAll("SELECT `{$this->field}` FROM `{$this->table}` WHERE `{$this->field}` = ?;", [$value]);
+            ->fetchAll("SELECT `{$this->_field}` FROM `{$this->_table}` WHERE `{$this->_field}` = ?;", [$value]);
 
         return false === empty($results);
     }
@@ -44,7 +48,7 @@ class RuleEntityExists extends InputValidatorRule
     {
         if (false === empty($parameters[self::PARAMETER_TABLE])) {
 
-            $this->table = $parameters[self::PARAMETER_TABLE];
+            $this->_table = $parameters[self::PARAMETER_TABLE];
         } else {
 
             throw new \RuntimeException('Exists Rule: Table must be defined');
@@ -52,7 +56,7 @@ class RuleEntityExists extends InputValidatorRule
 
         if (false === empty($parameters[self::PARAMETER_FIELD])) {
 
-            $this->field = $parameters[self::PARAMETER_FIELD];
+            $this->_field = $parameters[self::PARAMETER_FIELD];
         } else {
 
             throw new \RuntimeException('Exists Rule: Field must be defined');
@@ -66,6 +70,6 @@ class RuleEntityExists extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return 'Entry not found';
+        return "{$this->_field} {$this->_value} in {$this->_table} nt found";
     }
 }

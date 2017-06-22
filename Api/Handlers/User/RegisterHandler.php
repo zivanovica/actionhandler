@@ -9,8 +9,8 @@
 namespace Api\Handlers\User;
 
 
+use Api\Models\Account;
 use Api\Models\User;
-use Core\CoreUtils\DataTransformer\Transformers\EmailTransformer;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationActionValidator;
@@ -21,8 +21,6 @@ use Core\Libs\Response\Response;
 class RegisterHandler implements IApplicationActionHandler, IApplicationActionValidator
 {
 
-    private $_email;
-
     /**
      *
      * Executes when related action is requested
@@ -32,7 +30,82 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      */
     public function handle(Request $request, Response $response): void
     {
-        // TODO: Implement handle() method.
+        $user = $this->_createUser($request->data('email'), $request->data('password'));
+
+        if (false === $user instanceof User) {
+
+            $response
+                ->status(500)
+                ->setError('user.create', 'Failed to create user.');
+
+            return;
+        }
+
+        $account = $this->_createAccount($user, $request->data('first_name'), $request->data('last_name'));
+
+        if (false === $account instanceof Account) {
+
+            $user->delete();
+
+            $response
+                ->status(500)
+                ->setError('user.account_create', 'Failed to create user account.');
+
+            return;
+        }
+
+        $response->setData('message', 'User successfully created');
+    }
+
+    /**
+     *
+     * Creates user profile with given email, hashed password, activation code and status
+     *
+     * @param string $email Email user will use to login
+     * @param string $password Unhashed password
+     * @return User|null
+     */
+    private function _createUser(string $email, string $password): ?User
+    {
+        $user = User::getNewInstance([
+            'email' => $email,
+            'password' => password_hash($password, PASSWORD_BCRYPT),
+            'code' => hash('sha256', uniqid('', true)),
+            'status' => User::STATUS_INACTIVE
+        ]);
+
+        if ($user->save()) {
+
+            return $user;
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * Creates account for given user
+     *
+     * @param User $user User to whom account belongs to
+     * @param string $firstName User first name
+     * @param string $lastName User last name
+     * @return Account|null
+     */
+    private function _createAccount(User $user, string $firstName, string $lastName): ?Account
+    {
+
+        $account = Account::getNewInstance([
+            'user_id' => $user,
+            'first_name' => $firstName,
+            'last_name' => $lastName
+        ]);
+
+        if ($account->save()) {
+
+            return $account;
+        }
+
+        return null;
     }
 
     /**
@@ -48,18 +121,23 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
     public function validate(): int
     {
 
-        $request = Request::getSharedInstance();
-        $response = Response::getSharedInstance();
-
         $validator = InputValidator::getSharedInstance();
 
         $validator->validate([
-            'email' => 'required|email|unique:users,email'
-        ], $request->allData());
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'first_name' => 'required|min:2|max:64',
+            'last_name' => 'required|min:2|max:64'
+        ], Request::getSharedInstance()->allData());
 
-        var_dump($validator->getErrors());
+        if (empty($validator->getErrors())) {
 
-        return IResponseStatus::OK;
+            return IResponseStatus::OK;
+        }
+
+        Response::getSharedInstance()->errors($validator->getErrors());
+
+        return IResponseStatus::BAD_REQUEST;
 
     }
 }

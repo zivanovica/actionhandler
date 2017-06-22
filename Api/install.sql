@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 21, 2017 at 06:11 PM
+-- Generation Time: Jun 22, 2017 at 02:58 PM
 -- Server version: 5.6.34
 -- PHP Version: 7.1.0
 
@@ -13,6 +13,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `idea`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `first_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -40,17 +53,31 @@ CREATE TABLE `idea_categories` (
   `updated_at` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `idea_categories`
+-- Table structure for table `users`
 --
 
-INSERT INTO `idea_categories` (`id`, `name`, `active`, `updated_at`) VALUES
-(1, 'User Profile', 1, 0),
-(2, 'User Images', 1, 0);
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` enum('INACTIVE','ACTIVE','BANNED') COLLATE utf8_unicode_ci DEFAULT 'INACTIVE',
+  `code` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+  ADD KEY `full_name` (`first_name`,`last_name`);
 
 --
 -- Indexes for table `ideas`
@@ -65,16 +92,9 @@ ALTER TABLE `idea_categories`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- Indexes for table `users`
 --
-
---
--- AUTO_INCREMENT for table `ideas`
---
-ALTER TABLE `ideas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
--- AUTO_INCREMENT for table `idea_categories`
---
-ALTER TABLE `idea_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email_UNIQUE` (`email`),
+  ADD KEY `code_IDX` (`code`);

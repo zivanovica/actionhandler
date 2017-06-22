@@ -8,19 +8,21 @@ use Core\Libs\Database;
 /**
  * Description of RuleUniqueEntity
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleUniqueEntity extends InputValidatorRule
 {
 
-    const PARAMETER_TABLE = 0;
-    const PARAMETER_FIELD = 1;
+    private const PARAMETER_TABLE = 0;
+    private const PARAMETER_FIELD = 1;
 
     /** @var string */
-    private $table;
+    private $_table;
 
     /** @var string */
-    private $field;
+    private $_field;
+
+    private $_value;
 
     /**
      * @param mixed $value
@@ -29,8 +31,10 @@ class RuleUniqueEntity extends InputValidatorRule
     public function validate($value): bool
     {
 
+        $this->_value = $value;
+
         $results = Database::getSharedInstance()
-            ->fetchAll("SELECT `{$this->field}` FROM `{$this->table}` WHERE `{$this->field}` = ?;", [$value]);
+            ->fetchAll("SELECT `{$this->_field}` FROM `{$this->_table}` WHERE `{$this->_field}` = ?;", [$value]);
 
         return empty($results);
     }
@@ -43,7 +47,7 @@ class RuleUniqueEntity extends InputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_TABLE])) {
 
-            $this->table = $parameters[self::PARAMETER_TABLE];
+            $this->_table = $parameters[self::PARAMETER_TABLE];
         } else {
 
             throw new \RuntimeException('Rule table must be defined');
@@ -51,7 +55,7 @@ class RuleUniqueEntity extends InputValidatorRule
 
         if (isset($parameters[self::PARAMETER_FIELD])) {
 
-            $this->field = $parameters[self::PARAMETER_FIELD];
+            $this->_field = $parameters[self::PARAMETER_FIELD];
         } else {
 
             throw new \RuntimeException('Rule field must be defined');
@@ -65,6 +69,6 @@ class RuleUniqueEntity extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return 'Field must be unique';
+        return "{$this->_field} {$this->_value} already exists";
     }
 }

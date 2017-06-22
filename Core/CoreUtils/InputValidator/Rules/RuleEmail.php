@@ -6,7 +6,7 @@ namespace Core\CoreUtils\InputValidator\Rules;
 /**
  * Description of RuleEmail
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class RuleEmail extends InputValidatorRule
 {

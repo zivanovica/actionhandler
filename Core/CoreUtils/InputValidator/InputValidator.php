@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Core\CoreUtils\InputValidator;
 
 use Core\CoreUtils\InputValidator\Rules\InputValidatorRule;
@@ -23,7 +17,7 @@ use RuntimeException;
 /**
  * Description of InputValidator
  *
- * @author Zvekete
+ * @author Aleksandar Zivanovic
  */
 class InputValidator
 {
@@ -168,10 +162,12 @@ class InputValidator
     public function hasError(string $field, ?string $errorType = null): bool
     {
         if (false == $errorType) {
+
             return false === empty($this->errors[$field]);
         }
 
         if (class_exists($errorType)) {
+
             return false === empty($this->errors[$field][$errorType]);
         }
 

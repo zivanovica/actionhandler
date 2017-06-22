@@ -35,9 +35,13 @@ class Request
 
         $this->_method = $_SERVER['REQUEST_METHOD'];
 
-        $this->_query = filter_input_array(INPUT_GET);
+        $query = filter_input_array(INPUT_GET);
 
-        $this->_data = filter_input_array(INPUT_POST);
+        $this->_query = null === $query ? [] : $query;
+
+        $data = filter_input_array(INPUT_POST);
+
+        $this->_data = null === $data ? [] : $data;
 
         $this->_router = Router::getSharedInstance();
 
