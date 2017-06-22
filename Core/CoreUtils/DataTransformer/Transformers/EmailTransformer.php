@@ -2,8 +2,8 @@
 /**
  * Created by IntelliJ IDEA.
  * User: coa
- * Date: 6/16/17
- * Time: 3:07 PM
+ * Date: 6/22/17
+ * Time: 1:05 PM
  */
 
 namespace Core\CoreUtils\DataTransformer\Transformers;
@@ -12,7 +12,7 @@ namespace Core\CoreUtils\DataTransformer\Transformers;
 use Core\CoreUtils\DataTransformer\IDataTransformer;
 use Core\CoreUtils\Singleton;
 
-class BoolTransformer implements IDataTransformer
+class EmailTransformer implements IDataTransformer
 {
 
     use Singleton;
@@ -20,6 +20,6 @@ class BoolTransformer implements IDataTransformer
     public function transform($value)
     {
 
-        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 }

@@ -11,12 +11,15 @@ namespace Api\Models;
 
 use Core\Libs\Model\Model;
 
-class UserModel extends Model
+class User extends Model
 {
+
+    const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_INACTIVE = 'INACTIVE';
+    const STATUS_BANNED = 'BANNED';
 
     public function table(): string
     {
-
         return 'users';
     }
 
@@ -28,6 +31,6 @@ class UserModel extends Model
 
     public function fields(): array
     {
-        return ['id', 'email', 'password', 'status', 'code', 'remember_token', 'created_at', 'updated_at'];
+        return ['id', 'email', 'password', 'code', 'status'];
     }
 }

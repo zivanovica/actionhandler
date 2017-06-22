@@ -21,10 +21,15 @@ class ModelTransformer implements IDataTransformer
     /** @var string */
     private $_modelName;
 
-    private function __construct(string $modelName)
+    /** @var string */
+    private $_field;
+
+    private function __construct(string $modelName, ?string $field = null)
     {
 
         $this->_modelName = $modelName;
+
+        $this->_field = $field;
     }
 
     public function transform($value)
@@ -38,7 +43,7 @@ class ModelTransformer implements IDataTransformer
             throw new ModelTransformerException(ModelTransformerException::ERROR_INVALID_MODEL_CLASS, $this->_modelName);
         }
 
-        return $model->find($value);
+        return empty($this->_field) ? $model->find($value) : $model->findOneWhere([$this->_field => $value]);
 
     }
 }

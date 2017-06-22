@@ -89,6 +89,18 @@ class Request
         return $this->_getTransformedValue($transformer, isset($this->_data[$key]) ? $this->_data[$key] : $default);
     }
 
+    public function allData(): array
+    {
+
+        return $this->_data;
+    }
+
+    public function allQuery(): array
+    {
+
+        return $this->_query;
+    }
+
     /**
      *
      * Retrieve transformed value if transformator is set, otherwise return original value
