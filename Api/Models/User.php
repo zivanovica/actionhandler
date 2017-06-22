@@ -33,4 +33,44 @@ class User extends Model
     {
         return ['id', 'email', 'password', 'code', 'status'];
     }
+
+    /**
+     *
+     * Creates user and its account
+     *
+     * @param string $email
+     * @param string $password
+     * @param string $firstName
+     * @param string $lastName
+     * @return User|null
+     */
+    public function createProfile(string $email, string $password, string $firstName, string $lastName): ?User
+    {
+        $user = User::getNewInstance([
+            'email' => $email,
+            'password' => password_hash($password, PASSWORD_BCRYPT),
+            'code' => hash('sha256', uniqid('', true)),
+            'status' => User::STATUS_INACTIVE
+        ]);
+
+        if (0 === $user->save()) {
+
+            return null;
+        }
+
+        $account = Account::getNewInstance([
+            'user_id' => $user,
+            'first_name' => $firstName,
+            'last_name' => $lastName
+        ]);
+
+        if (0 === $account->save()) {
+
+            $user->delete();
+
+            return null;
+        }
+
+        return $user;
+    }
 }

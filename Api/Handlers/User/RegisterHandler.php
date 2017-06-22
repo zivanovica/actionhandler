@@ -30,7 +30,10 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      */
     public function handle(Request $request, Response $response): void
     {
-        $user = $this->_createUser($request->data('email'), $request->data('password'));
+        $user = User::getNewInstance()->createProfile(
+            $request->data('email'), $request->data('password'),
+            $request->data('first_name'), $request->data('last_name')
+        );
 
         if (false === $user instanceof User) {
 
@@ -41,71 +44,7 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
             return;
         }
 
-        $account = $this->_createAccount($user, $request->data('first_name'), $request->data('last_name'));
-
-        if (false === $account instanceof Account) {
-
-            $user->delete();
-
-            $response
-                ->status(500)
-                ->setError('user.account_create', 'Failed to create user account.');
-
-            return;
-        }
-
         $response->setData('message', 'User successfully created');
-    }
-
-    /**
-     *
-     * Creates user profile with given email, hashed password, activation code and status
-     *
-     * @param string $email Email user will use to login
-     * @param string $password Unhashed password
-     * @return User|null
-     */
-    private function _createUser(string $email, string $password): ?User
-    {
-        $user = User::getNewInstance([
-            'email' => $email,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'code' => hash('sha256', uniqid('', true)),
-            'status' => User::STATUS_INACTIVE
-        ]);
-
-        if ($user->save()) {
-
-            return $user;
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * Creates account for given user
-     *
-     * @param User $user User to whom account belongs to
-     * @param string $firstName User first name
-     * @param string $lastName User last name
-     * @return Account|null
-     */
-    private function _createAccount(User $user, string $firstName, string $lastName): ?Account
-    {
-
-        $account = Account::getNewInstance([
-            'user_id' => $user,
-            'first_name' => $firstName,
-            'last_name' => $lastName
-        ]);
-
-        if ($account->save()) {
-
-            return $account;
-        }
-
-        return null;
     }
 
     /**

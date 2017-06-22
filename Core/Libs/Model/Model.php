@@ -173,7 +173,7 @@ abstract class Model
             $this->_isDirty = false;
         }
 
-        return $id;
+        return (int) $id;
     }
 
     /**
