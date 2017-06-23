@@ -104,7 +104,7 @@ abstract class Model
      * Retrieve single entity with given criteria
      *
      * @param array $criteria
-     * @return Model|null
+     * @return $this|Model|null
      */
     public function findOneWhere(array $criteria): ?Model
     {
@@ -123,7 +123,7 @@ abstract class Model
      * Retrieve multiple entities with given criteria
      *
      * @param array $criteria
-     * @return Model[]|null
+     * @return $this[]|Model[]|null
      */
     public function findWhere(array $criteria): ?array
     {
@@ -206,7 +206,7 @@ abstract class Model
      * Bulk set of model values
      *
      * @param array $data
-     * @return Model
+     * @return $this|Model
      */
     public function setAttributes(array $data): Model
     {
@@ -226,7 +226,7 @@ abstract class Model
      * @param string $name Field name
      * @param mixed $value Value of field
      * @param IDataTransformer|null $transformer
-     * @return Model
+     * @return $this|Model
      * @throws ModelException
      */
     public function setAttribute(string $name, $value, ?IDataTransformer $transformer = null): Model
@@ -261,7 +261,7 @@ abstract class Model
      * @param IDataTransformer|null $transformer
      * @return mixed|null
      */
-    public function getAttribute($name, ?IDataTransformer $transformer = null)
+    public function getAttribute(string $name, ?IDataTransformer $transformer = null)
     {
 
         $value = isset($this->_attributes[$name]) ? $this->_attributes[$name] : null;

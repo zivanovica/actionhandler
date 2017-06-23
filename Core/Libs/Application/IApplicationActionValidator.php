@@ -8,6 +8,9 @@
 
 namespace Core\Libs\Application;
 
+use Core\Libs\Request;
+use Core\Libs\Response\Response;
+
 interface IApplicationActionValidator
 {
 
@@ -19,7 +22,9 @@ interface IApplicationActionValidator
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @return int If everything is good this MUST return 200 or IResponseStatus::OK
+     * @param Request $request
+     * @param Response $response
+     * @return bool
      */
-    public function validate(): int;
+    public function validate(Request $request, Response $response): bool ;
 }

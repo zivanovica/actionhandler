@@ -47,7 +47,7 @@ class Response
      * @param $value
      * @return Response
      */
-    public function setData(string $key, $value): Response
+    public function addData(string $key, $value): Response
     {
 
         $this->_data[$key] = $value;

@@ -122,11 +122,9 @@ class Application
             return true;
         }
 
-        $status = $handler->validate();
+        if (false === $handler->validate($this->_request, $this->_response)) {
 
-        if (IResponseStatus::OK !== $status) {
-
-            $this->_response->status($status)->addError('_handle.validate', 'Action did not pass validation.')->end();
+            $this->_response->addError('_handle.validate', 'Action did not pass validation.')->end();
 
             return false;
         }

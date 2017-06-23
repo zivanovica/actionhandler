@@ -70,6 +70,6 @@ class RuleEntityExists extends InputValidatorRule
      */
     public function getMessage(): string
     {
-        return "{$this->_field} {$this->_value} in {$this->_table} nt found";
+        return "{$this->_field} {$this->_value} in {$this->_table} not found";
     }
 }

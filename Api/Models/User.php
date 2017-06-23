@@ -9,6 +9,7 @@
 namespace Api\Models;
 
 
+use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
@@ -102,5 +103,19 @@ class User extends Model
         }
 
         return $user;
+    }
+
+    /**
+     *
+     * Get account associated to current user
+     *
+     * @return Account
+     */
+    public function getAccount(): Account
+    {
+
+        $id = $this->getAttribute('id', IntTransformer::getSharedInstance());
+
+        return Account::getSharedInstance()->findOneWhere(['user_id' => $id]);
     }
 }

@@ -12,6 +12,7 @@ namespace Core\Libs\Response;
 interface IResponseStatus
 {
     const OK = 200;
+    const CREATED = 201;
     const MULTIPLE_CHOICES = 300;
     const MOVED_PERMANENTLY = 301;
     const FOUND = 302;
@@ -22,6 +23,7 @@ interface IResponseStatus
     const FORBIDDEN = 403;
     const NOT_FOUND = 404;
     const METHOD_NOT_ALLOWED = 405;
+    const CONFLICT = 409;
     const GONE = 410;
     const INTERNAL_ERROR = 500;
     const NOT_IMPLEMENTED = 501;

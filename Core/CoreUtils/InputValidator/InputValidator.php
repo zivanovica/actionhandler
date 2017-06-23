@@ -5,6 +5,7 @@ namespace Core\CoreUtils\InputValidator;
 use Core\CoreUtils\InputValidator\Rules\InputValidatorRule;
 use Core\CoreUtils\InputValidator\Rules\RuleEmail;
 use Core\CoreUtils\InputValidator\Rules\RuleEntityExists;
+use Core\CoreUtils\InputValidator\Rules\RuleEqual;
 use Core\CoreUtils\InputValidator\Rules\RuleFieldSameAsOther;
 use Core\CoreUtils\InputValidator\Rules\RuleMaximumLength;
 use Core\CoreUtils\InputValidator\Rules\RuleMayNotExists;
@@ -85,7 +86,7 @@ class InputValidator
 
             $ruleValidator->setParameters($parameters);
 
-            $field = empty($this->fields[$fieldName]) ? null : $this->fields[$fieldName];
+            $field = false === isset($this->fields[$fieldName]) ? null : $this->fields[$fieldName];
 
             if (false === $ruleValidator->validate($field)) {
 
@@ -184,7 +185,8 @@ class InputValidator
             'required' => RuleRequired::class,
             'exists' => RuleEntityExists::class,
             'may-not-exists' => RuleMayNotExists::class,
-            'email' => RuleEmail::class
+            'email' => RuleEmail::class,
+            'equal' => RuleEqual::class,
         ];
     }
 

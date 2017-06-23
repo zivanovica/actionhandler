@@ -13,7 +13,8 @@ use Core\Libs\Router\Router;
 
 Application::getSharedInstance(__DIR__ . '/config.json')->run(
     Router::getSharedInstance()
-        ->post('/idea/create', new \Api\Handlers\Idea\CreateHandler())
+        ->post('/idea', new \Api\Handlers\Idea\CreateHandler())
+        ->patch('/idea/:id', new \Api\Handlers\Idea\UpdateHandler())
         ->post('/user/register', new \Api\Handlers\User\RegisterHandler())
         ->post('/user/login', new \Api\Handlers\User\LoginHandler())
 );

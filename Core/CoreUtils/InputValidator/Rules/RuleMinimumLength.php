@@ -22,7 +22,8 @@ class RuleMinimumLength extends InputValidatorRule
      */
     public function validate($value): bool
     {
-        return strlen($value) >= $this->_min;
+
+        return null === $value || ($value && strlen($value) >= $this->_min);
     }
 
     /**

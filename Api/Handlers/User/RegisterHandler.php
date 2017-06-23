@@ -8,8 +8,6 @@
 
 namespace Api\Handlers\User;
 
-
-use Api\Models\Account;
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
@@ -38,13 +36,13 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
         if (false === $user instanceof User) {
 
             $response
-                ->status(500)
+                ->status(IResponseStatus::INTERNAL_ERROR)
                 ->addError('user.create', 'Failed to create user.');
 
             return;
         }
 
-        $response->setData('message', 'User successfully created');
+        $response->status(IResponseStatus::CREATED)->addData('message', 'User successfully created');
     }
 
     /**
@@ -55,9 +53,11 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @return int If everything is good this MUST return 200 or IResponseStatus::OK
+     * @param Request $request
+     * @param Response $response
+     * @return bool
      */
-    public function validate(): int
+    public function validate(Request $request, Response $response): bool
     {
 
         $validator = InputValidator::getSharedInstance();
@@ -67,16 +67,15 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
             'password' => 'required|min:6',
             'first_name' => 'required|min:2|max:64',
             'last_name' => 'required|min:2|max:64'
-        ], Request::getSharedInstance()->allData());
+        ], $request->allData());
 
-        if (false === $validator->hasErrors()) {
+        if ($validator->hasErrors()) {
 
-            return IResponseStatus::OK;
+            $request->errors($validator->getErrors());
+
+            return false;
         }
 
-        Response::getSharedInstance()->errors($validator->getErrors());
-
-        return IResponseStatus::BAD_REQUEST;
-
+        return true;
     }
 }

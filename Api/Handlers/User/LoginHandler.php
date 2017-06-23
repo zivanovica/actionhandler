@@ -55,37 +55,7 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
             return;
         }
 
-        $response->setData('token', $token->getAttribute('value'));
-    }
-
-    /**
-     *
-     * Validates should current action be handled or not.
-     * Status code returned from validate will be used as response status code.
-     * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
-     *
-     * NOTE: this is executed AFTER middlewares
-     *
-     * @return int If everything is good this MUST return 200 or IResponseStatus::OK
-     */
-    public function validate(): int
-    {
-
-        $validator = InputValidator::getSharedInstance(Request::getSharedInstance()->allData());
-
-        $validator->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-
-        if (false === $validator->hasErrors()) {
-
-            return IResponseStatus::OK;
-        }
-
-        Response::getSharedInstance()->errors($validator->getErrors());
-
-        return IResponseStatus::BAD_REQUEST;
+        $response->addData('token', $token->getAttribute('value'));
     }
 
     /**
@@ -97,6 +67,34 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
      */
     public function middleware(Middleware $middleware): Middleware
     {
+
         return $middleware->add(new AuthenticateMiddleware());
+    }
+
+    /**
+     *
+     * Validates should current action be handled or not.
+     * Status code returned from validate will be used as response status code.
+     * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
+     *
+     * NOTE: this is executed AFTER middlewares
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return bool
+     */
+    public function validate(Request $request, Response $response): bool
+    {
+
+        $validator = InputValidator::getSharedInstance($request->allData());
+
+        if (false === $validator->validate(['email' => 'required', 'password' => 'required'])) {
+
+            $response->status(IResponseStatus::BAD_REQUEST)->errors($validator->getErrors());
+
+            return false;
+        }
+
+        return true;
     }
 }

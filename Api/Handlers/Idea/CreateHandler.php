@@ -9,29 +9,20 @@
 namespace Api\Handlers\Idea;
 
 
+use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
-use Api\Models\IdeaCategory;
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
+use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationActionMiddleware;
 use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class CreateHandler implements IApplicationActionHandler, IApplicationActionValidator
+class CreateHandler implements IApplicationActionHandler, IApplicationActionValidator, IApplicationActionMiddleware
 {
-
-    const MIN_IDEA_LENGTH = 20;
-
-    const MAX_IDEA_LENGTH = 400;
-
-    /** @var IdeaCategory */
-    private $_ideaCategory;
-
-    private $_ideaDescription;
 
     /**
      *
@@ -44,17 +35,20 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
     {
 
         $idea = Idea::getNewInstance([
-            'idea_category' => $this->_ideaCategory,
-            'description' => $this->_ideaDescription,
+            'idea_category' => $request->data('idea_category', null, IntTransformer::getSharedInstance()),
+            'creator_id' => $request->token()->user(),
+            'description' => $request->data('description'),
             'status' => Idea::STATUS_OPEN
         ]);
 
         if ($idea->save()) {
 
-            $response->data([
-                'message' => 'Idea successfully created.',
-                'idea' => $idea->toArray()
-            ]);
+            $response
+                ->status(IResponseStatus::CREATED)
+                ->data([
+                    'message' => 'Idea successfully created.',
+                    'idea' => $idea->toArray()
+                ]);
 
             return;
         }
@@ -64,40 +58,57 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
 
     /**
      *
+     * Used to register all middlewares that should be executed before handling acton
+     *
+     * @param Middleware $middleware
+     * @return Middleware
+     */
+    public function middleware(Middleware $middleware): Middleware
+    {
+
+        return $middleware->add(new AuthenticateMiddleware());
+    }
+
+    /**
+     *
      * Validates should current action be handled or not.
+     * Status code returned from validate will be used as response status code.
+     * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @return int
+     * @param Request $request
+     * @param Response $response
+     * @return bool
      */
-    public function validate(): int
+    public function validate(Request $request, Response $response): bool
     {
+        $idea = Idea::getSharedInstance()->findOneWhere([
+            'creator_id' => $request->token()->user()->getAttribute('id'),
+            'status' => Idea::STATUS_OPEN
+        ]);
 
-        $request = Request::getSharedInstance();
-        $response = Response::getSharedInstance();
+        if (null !== $idea) {
 
-        $this->_ideaCategory = $request->data('category', null, new WaterfallTransformer([
-            IntTransformer::getSharedInstance(),
-            ModelTransformer::getNewInstance(IdeaCategory::class)
-        ]));
+            $response->status(IResponseStatus::CONFLICT)->addError('idea.exists', 'Open idea already pending');
 
-        if (false === $this->_ideaCategory instanceof IdeaCategory) {
-
-            $response->addError('category', 'Idea category not found.');
+            return false;
         }
 
-        $this->_ideaDescription = $request->data('idea', null, StringTransformer::getSharedInstance());
+        $validator = InputValidator::getSharedInstance();
 
-        $length = strlen($this->_ideaDescription);
+        $validator->validate([
+            'description' => 'required|min:' . Idea::MIN_DESCRIPTION_LENGTH . '|max:' . Idea::MAX_DESCRIPTION_LENGTH,
+            'idea_category' => 'required|exists:idea_categories,id'
+        ], $request->allData());
 
-        if (CreateHandler::MIN_IDEA_LENGTH > $length || CreateHandler::MAX_IDEA_LENGTH < $length) {
+        if ($validator->hasErrors()) {
 
-            $response->addError(
-                'idea',
-                'Idea length must be between ' . self::MIN_IDEA_LENGTH . ' and ' . self::MAX_IDEA_LENGTH . ' chars long.'
-            );
+            $response->status(IResponseStatus::BAD_REQUEST)->errors($validator->getErrors());
+
+            return false;
         }
 
-        return $response->hasErrors() ? IResponseStatus::BAD_REQUEST : IResponseStatus::OK;
+        return true;
     }
 }

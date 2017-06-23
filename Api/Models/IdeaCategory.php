@@ -42,10 +42,10 @@ class IdeaCategory extends Model
         return ['id', 'name', 'active', 'updated_at'];
     }
 
-    public function getIdeas(): array
+    public function getIdeas(): ?array
     {
 
-        $id = $this->getAttribute('id', IntTransformer::getSharedInstance());
-
+        return Idea::getSharedInstance()
+            ->findWhere(['idea_category' => $this->getAttribute('id', IntTransformer::getSharedInstance())]);
     }
 }

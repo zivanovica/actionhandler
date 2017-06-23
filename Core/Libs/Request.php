@@ -9,6 +9,7 @@
 
 namespace Core\Libs;
 
+use Api\Models\Token;
 use Core\CoreUtils\DataTransformer\IDataTransformer;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Router\Router;
@@ -30,6 +31,9 @@ class Request
     /** @var Router */
     private $_router;
 
+    /** @var Token */
+    private $_token;
+
     public function __construct()
     {
 
@@ -39,9 +43,9 @@ class Request
 
         $this->_query = null === $query ? [] : $query;
 
-        $data = filter_input_array(INPUT_POST);
+        parse_str(file_get_contents('php://input'), $data);
 
-        $this->_data = null === $data ? [] : $data;
+        $this->_data = false === is_array($data) ? [] : $data;
 
         $this->_router = Router::getSharedInstance();
 
@@ -93,16 +97,55 @@ class Request
         return $this->_getTransformedValue($transformer, isset($this->_data[$key]) ? $this->_data[$key] : $default);
     }
 
+    /**
+     *
+     * Get all POST body data
+     *
+     * @return array
+     */
     public function allData(): array
     {
 
         return $this->_data;
     }
 
+    /**
+     *
+     * Get all url query data
+     *
+     * @return array
+     */
     public function allQuery(): array
     {
 
         return $this->_query;
+    }
+
+    /**
+     *
+     * Set valid token for current request
+     *
+     * @param Token $token
+     * @return Request
+     */
+    public function setToken(Token $token): Request
+    {
+
+        $this->_token = $token;
+
+        return $this;
+    }
+
+    /**
+     *
+     * Get current request token
+     *
+     * @return Token|null
+     */
+    public function token(): ?Token
+    {
+
+        return $this->_token;
     }
 
     /**

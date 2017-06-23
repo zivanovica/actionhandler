@@ -22,7 +22,7 @@ class RuleMaximumLength extends InputValidatorRule
      */
     public function validate($value): bool
     {
-        return strlen($value) <= $this->_max;
+        return null === $value || ($value && strlen($value) <= $this->_max);
     }
 
     /**

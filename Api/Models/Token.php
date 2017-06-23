@@ -105,7 +105,7 @@ class Token extends Model
      *
      * @return User
      */
-    public function getUser(): ?User
+    public function user(): ?User
     {
 
         if (false === $this->_user instanceof User) {

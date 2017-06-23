@@ -36,16 +36,19 @@ class AuthenticateMiddleware implements IMiddleware
         } else if ($token->hasExpired()) {
 
             $this->_fail($response, $token, 'token.lifespan', 'Token has expired');
-        } else if (false === $token->getUser() instanceof User) {
+        } else if (false === $token->user() instanceof User) {
 
             $this->_fail($response, $token, 'token.owner', 'Invalid token owner');
         }
 
         if (false === $response->hasErrors()) {
 
+            $token->refresh();
+
+            $request->setToken($token);
+
             $middleware->next();
         }
-
     }
 
     /**
