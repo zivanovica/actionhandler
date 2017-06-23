@@ -9,16 +9,19 @@
 namespace Api\Handlers\User;
 
 
+use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Token;
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
+use Core\Libs\Application\IApplicationActionMiddleware;
 use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class LoginHandler implements IApplicationActionHandler, IApplicationActionValidator
+class LoginHandler implements IApplicationActionHandler, IApplicationActionValidator, IApplicationActionMiddleware
 {
 
     /**
@@ -38,7 +41,7 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
 
         if (false === $user instanceof User) {
 
-            $response->status(IResponseStatus::UNAUTHORIZED)->setError('credentials', 'Invalid login credentials.');
+            $response->status(IResponseStatus::UNAUTHORIZED)->addError('credentials', 'Invalid login credentials.');
 
             return;
         }
@@ -47,7 +50,7 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
 
         if (false === $token instanceof Token) {
 
-            $response->status(IResponseStatus::INTERNAL_ERROR)->setError('internal', 'There were some issues.');
+            $response->status(IResponseStatus::INTERNAL_ERROR)->addError('internal', 'There were some issues.');
 
             return;
         }
@@ -83,5 +86,17 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
         Response::getSharedInstance()->errors($validator->getErrors());
 
         return IResponseStatus::BAD_REQUEST;
+    }
+
+    /**
+     *
+     * Used to register all middlewares that should be executed before handling acton
+     *
+     * @param Middleware $middleware
+     * @return Middleware
+     */
+    public function middleware(Middleware $middleware): Middleware
+    {
+        return $middleware->add(new AuthenticateMiddleware());
     }
 }

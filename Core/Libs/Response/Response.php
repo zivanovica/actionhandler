@@ -78,7 +78,7 @@ class Response
      * @param string $message
      * @return Response
      */
-    public function setError(string $error, string $message): Response
+    public function addError(string $error, string $message): Response
     {
 
         $this->_errors[$error] = $message;

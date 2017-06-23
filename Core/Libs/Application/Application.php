@@ -126,7 +126,7 @@ class Application
 
         if (IResponseStatus::OK !== $status) {
 
-            $this->_response->status($status)->setError('_handle.validate', 'Action did not pass validation.')->end();
+            $this->_response->status($status)->addError('_handle.validate', 'Action did not pass validation.')->end();
 
             return false;
         }
@@ -146,17 +146,16 @@ class Application
             return true;
         }
 
-        $middleware = $handler->middleware(Middleware::getNewInstance($this->_request));
+        $middleware = $handler->middleware(Middleware::getNewInstance($this->_request, $this->_response));
 
         $middleware->next();
 
         if (false === $middleware->finished()) {
 
-            $this->_response->setError('_handle.middleware', 'Middlewares did not finished.')->end();
+            $this->_response->addError('_handle.middleware', 'Middlewares did not finished.')->end();
 
             return false;
         }
-
 
         return true;
     }

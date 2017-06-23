@@ -10,9 +10,10 @@ namespace Core\Libs\Middleware;
 
 
 use Core\Libs\Request;
+use Core\Libs\Response\Response;
 
 interface IMiddleware
 {
 
-    public function run(Request $request, Middleware $middleware): void;
+    public function run(Request $request, Response $response, Middleware $middleware): void;
 }

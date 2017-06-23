@@ -12,6 +12,7 @@ namespace Core\Libs\Middleware;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\MiddlewareException;
 use Core\Libs\Request;
+use Core\Libs\Response\Response;
 
 class Middleware
 {
@@ -24,12 +25,16 @@ class Middleware
     /** @var Request */
     private $_request;
 
+    private $_response;
+
     private $_finished = false;
 
-    private function __construct(Request $request)
+    private function __construct(Request $request, Response $response)
     {
 
         $this->_request = $request;
+
+        $this->_response = $response;
     }
 
     public function add(IMiddleware $middleware): Middleware
@@ -58,7 +63,7 @@ class Middleware
             throw new MiddlewareException(MiddlewareException::ERROR_INVALID_MIDDLEWARE, $middleware);
         }
 
-        $middleware->run($this->_request, $this);
+        $middleware->run($this->_request, $this->_response, $this);
     }
 
     public function finished(): bool

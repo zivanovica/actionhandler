@@ -84,7 +84,7 @@ abstract class Model
      * Will retrieve single entity from database
      *
      * @param $primaryValue
-     * @return Model|null
+     * @return $this|Model|null
      */
     public function find($primaryValue): ?Model
     {

@@ -20,6 +20,9 @@ class Token extends Model
 
     const DEFAULT_EXPIRE_TIMEOUT = 3600;
 
+    /** @var User */
+    private $_user;
+
     /**
      * @return string Table name
      */
@@ -80,7 +83,7 @@ class Token extends Model
     public function hasExpired(): bool
     {
 
-        return time() - $this->getAttribute('updated_at', IntTransformer::getSharedInstance()) < Token::DEFAULT_EXPIRE_TIMEOUT;
+        return time() - $this->getAttribute('updated_at', IntTransformer::getSharedInstance()) > Token::DEFAULT_EXPIRE_TIMEOUT;
     }
 
     /**
@@ -94,5 +97,22 @@ class Token extends Model
         $this->setAttribute('updated_at', time());
 
         return (bool)$this->save();
+    }
+
+    /**
+     *
+     * Get user associated to current token
+     *
+     * @return User
+     */
+    public function getUser(): ?User
+    {
+
+        if (false === $this->_user instanceof User) {
+
+            $this->_user = User::getSharedInstance()->find($this->getAttribute('user_id'));
+        }
+
+        return $this->_user;
     }
 }

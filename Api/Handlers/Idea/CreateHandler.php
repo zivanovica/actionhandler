@@ -59,7 +59,7 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
             return;
         }
 
-        $response->status(500)->setError('message', 'Failed to create idea, please try again.');
+        $response->status(500)->addError('message', 'Failed to create idea, please try again.');
     }
 
     /**
@@ -83,7 +83,7 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
 
         if (false === $this->_ideaCategory instanceof IdeaCategory) {
 
-            $response->setError('category', 'Idea category not found.');
+            $response->addError('category', 'Idea category not found.');
         }
 
         $this->_ideaDescription = $request->data('idea', null, StringTransformer::getSharedInstance());
@@ -92,7 +92,7 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
 
         if (CreateHandler::MIN_IDEA_LENGTH > $length || CreateHandler::MAX_IDEA_LENGTH < $length) {
 
-            $response->setError(
+            $response->addError(
                 'idea',
                 'Idea length must be between ' . self::MIN_IDEA_LENGTH . ' and ' . self::MAX_IDEA_LENGTH . ' chars long.'
             );

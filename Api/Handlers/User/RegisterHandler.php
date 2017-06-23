@@ -39,7 +39,7 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
 
             $response
                 ->status(500)
-                ->setError('user.create', 'Failed to create user.');
+                ->addError('user.create', 'Failed to create user.');
 
             return;
         }
