@@ -22,6 +22,8 @@ class Middleware
     /** @var array IMiddleware[] */
     private $_middlewares = [];
 
+    private $_bag = [];
+
     /** @var Request */
     private $_request;
 
@@ -43,6 +45,20 @@ class Middleware
         $this->_middlewares[] = $middleware;
 
         return $this;
+    }
+
+    public function put(string $identifier, $object): Middleware
+    {
+
+        $this->_bag[$identifier] = $object;
+
+        return $this;
+    }
+
+    public function get(string $identifier, $default = null)
+    {
+
+        return isset($this->_bag[$identifier]) ? $this->_bag[$identifier] : $default;
     }
 
     public function next(): void

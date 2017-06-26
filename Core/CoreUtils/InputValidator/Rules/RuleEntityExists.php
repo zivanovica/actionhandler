@@ -31,6 +31,11 @@ class RuleEntityExists extends InputValidatorRule
     public function validate($value): bool
     {
 
+        if (null === $value) {
+
+            return true;
+        }
+
         $this->_value = $value;
 
         $results = Database::getSharedInstance()

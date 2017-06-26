@@ -53,29 +53,20 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * @param InputValidator $validator
+     * @return InputValidator
      */
-    public function validate(Request $request, Response $response): bool
+    public function validate(InputValidator $validator): InputValidator
     {
 
-        $validator = InputValidator::getSharedInstance();
 
         $validator->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'first_name' => 'required|min:2|max:64',
             'last_name' => 'required|min:2|max:64'
-        ], $request->allData());
+        ]);
 
-        if ($validator->hasErrors()) {
-
-            $request->errors($validator->getErrors());
-
-            return false;
-        }
-
-        return true;
+        return $validator;
     }
 }

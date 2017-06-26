@@ -11,6 +11,7 @@ namespace Core\Libs\Application;
 use Core\CoreUtils\DataTransformer\Transformers\RouteTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
+use Core\CoreUtils\InputValidator\InputValidator;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
@@ -93,12 +94,12 @@ class Application
             return;
         }
 
-        if (false === $this->_executeMiddlewares($route->handler())) {
+        if (false === $this->_executeValidator($route->handler())) {
 
             return;
         }
 
-        if (false === $this->_executeValidator($route->handler())) {
+        if (false === $this->_executeMiddlewares($route->handler())) {
 
             return;
         }
@@ -122,9 +123,16 @@ class Application
             return true;
         }
 
-        if (false === $handler->validate($this->_request, $this->_response)) {
+        $input = array_merge($this->_request->allParameters(), $this->_request->allQuery(), $this->_request->allData());
 
-            $this->_response->addError('_handle.validate', 'Action did not pass validation.')->end();
+        $validator = $handler->validate(InputValidator::getNewInstance($input));
+
+        if ($validator->hasErrors()) {
+
+            $this->_response
+                ->errors($validator->getErrors())
+                ->addError('_handle.validate', 'Action did not pass validation.')
+                ->end();
 
             return false;
         }
@@ -144,7 +152,7 @@ class Application
             return true;
         }
 
-        $middleware = $handler->middleware(Middleware::getNewInstance($this->_request, $this->_response));
+        $middleware = $handler->middleware(Middleware::getSharedInstance($this->_request, $this->_response));
 
         $middleware->next();
 

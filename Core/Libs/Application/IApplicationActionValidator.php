@@ -8,23 +8,20 @@
 
 namespace Core\Libs\Application;
 
-use Core\Libs\Request;
-use Core\Libs\Response\Response;
+use Core\CoreUtils\InputValidator\InputValidator;
 
 interface IApplicationActionValidator
 {
 
     /**
      *
-     * Validates should current action be handled or not.
-     * Status code returned from validate will be used as response status code.
-     * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
+     * Validator is used to perform simple request input validations
+     * This is executed before middlewares and provides simple way of validating request input before doing anything else.
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * @param InputValidator $validator
+     * @return InputValidator
      */
-    public function validate(Request $request, Response $response): bool ;
+    public function validate(InputValidator $validator): InputValidator;
 }

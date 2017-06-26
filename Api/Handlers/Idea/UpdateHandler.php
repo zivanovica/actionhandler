@@ -11,14 +11,13 @@ namespace Api\Handlers\Idea;
 
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
-use Api\Models\IdeaCategory;
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationActionMiddleware;
 use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
@@ -26,9 +25,6 @@ use Core\Libs\Response\Response;
 
 class UpdateHandler implements IApplicationActionHandler, IApplicationActionMiddleware, IApplicationActionValidator
 {
-
-    /** @var Idea */
-    private $_idea;
 
     /**
      *
@@ -40,21 +36,10 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
     public function handle(Request $request, Response $response): void
     {
 
-        $data = [];
+        /** @var Idea $idea */
+        $idea = Middleware::getSharedInstance()->get('idea');
 
-        $category = $request->data('category', null, IntTransformer::getSharedInstance());
-
-        if ($this->_idea->getAttribute('idea_category', IntTransformer::getSharedInstance()) !== $category) {
-
-            $data['idea_category'] = $category;
-        }
-
-        $description = $request->data('description');
-
-        if ($this->_idea->getAttribute('description') !== $description) {
-
-            $data['description'] = $description;
-        }
+        $data = $this->_getUpdateData($idea, $request);
 
         if (empty($data)) {
 
@@ -63,11 +48,11 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
             return;
         }
 
-        $this->_idea->setAttributes($data);
+        $idea->setAttributes($data);
 
-        if ($this->_idea->save()) {
+        if ($idea->getAttribute('id', IntTransformer::getSharedInstance()) === $idea->save()) {
 
-            $response->data(['message', 'Idea successfully updated', 'idea' => $this->_idea->toArray()]);
+            $response->data(['message', 'Idea successfully updated', 'idea' => $idea->toArray()]);
 
             return;
         }
@@ -84,7 +69,36 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
     public function middleware(Middleware $middleware): Middleware
     {
 
-        return $middleware->add(new AuthenticateMiddleware());
+        return $middleware
+            ->add(new AuthenticateMiddleware())
+            ->add(new class implements IMiddleware
+            {
+
+                public function run(Request $request, Response $response, Middleware $middleware): void
+                {
+
+                    /** @var Idea $idea */
+                    $idea = $request->parameter('id', null, ModelTransformer::getNewInstance(Idea::class));
+
+                    $creatorId = $idea->user()->getAttribute('id', IntTransformer::getSharedInstance());
+                    $tokenUserId = $request->token()->user()->getAttribute('id', IntTransformer::getSharedInstance());
+
+                    if ($creatorId === $tokenUserId) {
+
+                        $middleware->put('idea', $idea);
+
+                        $middleware->next();
+
+                        return;
+                    }
+
+                    $response
+                        ->status(IResponseStatus::FORBIDDEN)
+                        ->addError('owner', 'You are not owner of this idea.');
+
+                    return;
+                }
+            });
     }
 
     /**
@@ -95,42 +109,42 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * @param InputValidator $validator
+     * @return InputValidator
      */
-    public function validate(Request $request, Response $response): bool
+    public function validate(InputValidator $validator): InputValidator
     {
 
-        /** @var Idea $idea */
-        $this->_idea = $request->parameter('id', null, ModelTransformer::getNewInstance(Idea::class));
-
-        if (null === $this->_idea) {
-
-            $response->status(IResponseStatus::NOT_FOUND)->addError('idea', 'Idea not found');
-
-            return false;
-        }
-
-        $rules = [
+        $validator->validate([
+            'id' => 'required|exists:ideas,id',
             'description' => 'min:' . Idea::MIN_DESCRIPTION_LENGTH . '|max:' . Idea::MAX_DESCRIPTION_LENGTH,
-            'category' => 'exists:idea_categories,id', 'creator' => 'same:user_id', 'status' => 'equal:' . Idea::STATUS_OPEN
-        ];
+            'idea_category' => 'exists:idea_categories,id'
+        ]);
 
-        $inputs = [
-            'description' => $request->data('description'), 'status' => $this->_idea->getAttribute('status'),
-            'category' => $request->data('category', null, IntTransformer::getSharedInstance()),
-            'user_id' => $request->token()->user()->getAttribute('id', IntTransformer::getSharedInstance()),
-            'creator' => $this->_idea->user()->getAttribute('id', IntTransformer::getSharedInstance()),
-        ];
+        return $validator;
+    }
 
-        if (false === InputValidator::getSharedInstance()->validate($rules, $inputs)) {
+    private function _getUpdateData(Idea $idea, Request $request): array
+    {
 
-            $response->status(IResponseStatus::BAD_REQUEST)->errors(InputValidator::getSharedInstance()->getErrors());
+        $data = [];
 
-            return false;
+        $ideaCategoryId = $idea->getAttribute('idea_category', IntTransformer::getSharedInstance());
+
+        $data['idea_category'] = $request->data('idea_category', $ideaCategoryId, IntTransformer::getSharedInstance());
+
+        if ($data['idea_category'] === $ideaCategoryId) {
+
+            unset($data['idea_category']);
         }
 
-        return true;
+        $data['description'] = $request->data('description', $idea->getAttribute('description'));
+
+        if ($idea->getAttribute('description') === $data['description']) {
+
+            unset($data['description']);
+        }
+
+        return $data;
     }
 }

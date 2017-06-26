@@ -43,7 +43,12 @@ class Request
 
         $this->_query = null === $query ? [] : $query;
 
-        parse_str(file_get_contents('php://input'), $data);
+        $data = filter_input_array(INPUT_POST);
+
+        if (empty($data) || false === is_array($data)) {
+
+            parse_str(file_get_contents('php://input'), $data);
+        }
 
         $this->_data = false === is_array($data) ? [] : $data;
 
@@ -119,6 +124,12 @@ class Request
     {
 
         return $this->_query;
+    }
+
+    public function allParameters(): array
+    {
+
+        return $this->_router->currentRoute()->parameters();
     }
 
     /**

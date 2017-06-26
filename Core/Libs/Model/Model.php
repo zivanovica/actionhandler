@@ -20,7 +20,10 @@ abstract class Model
     use Singleton;
 
     /** @var array */
-    protected $_attributes;
+    protected $_attributes = [];
+
+    /** @var array */
+    protected $_updatedAttributes = [];
 
     /** @var bool */
     protected $_isDirty;
@@ -153,22 +156,25 @@ abstract class Model
             return false;
         }
 
-        $query = $this->_buildSaveQuery($this->table(), $this->primary(), $this->_attributes);
+        $query = $this->_buildSaveQuery($this->table(), $this->primary(), $this->_updatedAttributes);
 
-        $updateBindings = $this->_attributes;
+        $updateBindings = $this->_updatedAttributes;
 
         if (isset($updateBindings[$this->primary()])) {
 
             unset($updateBindings[$this->primary()]);
         }
 
-        $id = $this->_db->store($query, array_merge(array_values($this->_attributes), array_values($updateBindings)));
+        $id = $this->_db->store($query, array_merge(array_values($this->_updatedAttributes), array_values($updateBindings)));
 
         if ($id) {
 
+            $this->_attributes = array_merge($this->_attributes, $this->_updatedAttributes);
+
             $this->setAttribute($this->primary(), $id);
 
-            $this->_isDirty = false;
+            $this->reset();
+
         }
 
         return (int)$id;
@@ -231,6 +237,7 @@ abstract class Model
      */
     public function setAttribute(string $name, $value, ?IDataTransformer $transformer = null): Model
     {
+
         if (false === in_array($name, $this->fields())) {
 
             throw new ModelException(ModelException::ERROR_INVALID_FIELD, $name);
@@ -241,14 +248,9 @@ abstract class Model
             $value = $value->primaryValue();
         }
 
-        $value = null === $transformer ? $value : $transformer->transform($value);
+        $this->_isDirty = true;
 
-        if (false === isset($this->_attributes[$name]) || $this->_attributes[$name] !== $value) {
-
-            $this->_isDirty = true;
-        }
-
-        $this->_attributes[$name] = $value;
+        $this->_updatedAttributes[$name] = null === $transformer ? $value : $transformer->transform($value);
 
         return $this;
     }
@@ -264,7 +266,9 @@ abstract class Model
     public function getAttribute(string $name, ?IDataTransformer $transformer = null)
     {
 
-        $value = isset($this->_attributes[$name]) ? $this->_attributes[$name] : null;
+        $attributes = array_merge($this->_attributes, $this->_updatedAttributes);
+
+        $value = isset($attributes[$name]) ? $attributes[$name] : null;
 
         return null === $transformer ? $value : $transformer->transform($value);
     }
@@ -273,19 +277,29 @@ abstract class Model
      *
      * Get bulk of field values
      *
+     * TODO: Investigate could this anyhow result in false existance
+     *
      * @param array $attributes
      * @return array
      */
     public function getAttributes(array $attributes): array
     {
 
-        return array_intersect_key(array_flip($attributes), $this->_attributes);
+        return array_intersect_key(array_flip($attributes), array_merge($this->_attributes, $this->_updatedAttributes));
     }
 
     public function toArray(): array
     {
 
-        return $this->_attributes;
+        return array_merge($this->_attributes, $this->_updatedAttributes);
+    }
+
+    public function reset(): void
+    {
+
+        $this->_updatedAttributes = [];
+
+        $this->_isDirty = false;
     }
 
     /**

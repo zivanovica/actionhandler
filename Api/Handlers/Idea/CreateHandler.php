@@ -16,6 +16,7 @@ use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationActionHandler;
 use Core\Libs\Application\IApplicationActionMiddleware;
 use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
@@ -66,7 +67,31 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
     public function middleware(Middleware $middleware): Middleware
     {
 
-        return $middleware->add(new AuthenticateMiddleware());
+        return $middleware
+            ->add(new AuthenticateMiddleware())
+            ->add(new class implements IMiddleware {
+
+                public function run(Request $request, Response $response, Middleware $middleware): void
+                {
+                    $idea = Idea::getSharedInstance()->findOneWhere([
+                        'creator_id' => $request->token()->user()->getAttribute('id'),
+                        'status' => Idea::STATUS_OPEN
+                    ]);
+
+                    if (null === $idea) {
+
+                        $middleware->next();
+
+                        return;
+                    }
+
+                    $response
+                        ->status(IResponseStatus::CONFLICT)
+                        ->addError('idea.exists', 'Open idea already pending')
+                    ;
+                }
+            })
+        ;
     }
 
     /**
@@ -77,38 +102,17 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
      *
      * NOTE: this is executed AFTER middlewares
      *
-     * @param Request $request
-     * @param Response $response
-     * @return bool
+     * @param InputValidator $validator
+     * @return InputValidator
      */
-    public function validate(Request $request, Response $response): bool
+    public function validate(InputValidator $validator): InputValidator
     {
-        $idea = Idea::getSharedInstance()->findOneWhere([
-            'creator_id' => $request->token()->user()->getAttribute('id'),
-            'status' => Idea::STATUS_OPEN
-        ]);
-
-        if (null !== $idea) {
-
-            $response->status(IResponseStatus::CONFLICT)->addError('idea.exists', 'Open idea already pending');
-
-            return false;
-        }
-
-        $validator = InputValidator::getSharedInstance();
 
         $validator->validate([
             'description' => 'required|min:' . Idea::MIN_DESCRIPTION_LENGTH . '|max:' . Idea::MAX_DESCRIPTION_LENGTH,
             'idea_category' => 'required|exists:idea_categories,id'
-        ], $request->allData());
+        ]);
 
-        if ($validator->hasErrors()) {
-
-            $response->status(IResponseStatus::BAD_REQUEST)->errors($validator->getErrors());
-
-            return false;
-        }
-
-        return true;
+        return $validator;
     }
 }
