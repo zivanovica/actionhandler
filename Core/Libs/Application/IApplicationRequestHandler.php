@@ -20,6 +20,7 @@ interface IApplicationActionHandler
      *
      * @param Request $request
      * @param Response $response
+     * @return Response
      */
-    public function handle(Request $request, Response $response): void;
+    public function handle(Request $request, Response $response): Response;
 }
