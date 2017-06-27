@@ -109,6 +109,8 @@ class Application
         $this->_executeAfterHandler($route->handler());
 
         $this->_sendResponse($response);
+
+        return;
     }
 
     /**
@@ -123,16 +125,14 @@ class Application
             return true;
         }
 
-        $input = array_merge($this->_request->allParameters(), $this->_request->allQuery(), $this->_request->allData());
-
-        $validator = $handler->validate(InputValidator::getNewInstance($input));
+        $validator = $handler->validate(InputValidator::getNewInstance($this->_request->getAll()));
 
         if ($validator->hasErrors()) {
 
             $this->_sendResponse(
                 $this->_response
                     ->errors($validator->getErrors())
-                    ->addError('_handle.validate', 'Action did not pass validation.')
+                    ->addError('_request.validate', 'Action did not pass validation.')
             );
 
             return false;
@@ -159,7 +159,7 @@ class Application
 
         if (false === $middleware->finished()) {
 
-            $this->_sendResponse($this->_response->addError('_handle.middleware', 'Middlewares did not finished.'));
+            $this->_sendResponse($this->_response->addError('_request.middleware', 'Middlewares did not finished.'));
 
             return false;
         }
@@ -181,6 +181,8 @@ class Application
 
             $handler->after();
         }
+
+        return;
     }
 
     /**
@@ -210,6 +212,12 @@ class Application
         return true;
     }
 
+    /**
+     *
+     * Will finish request with proper data/errors and status code
+     *
+     * @param Response $response
+     */
     private function _sendResponse(Response $response): void
     {
 

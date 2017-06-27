@@ -31,6 +31,14 @@ class Request
     /** @var Router */
     private $_router;
 
+    /**
+     *
+     * Holds Route Parameters, Query Parameters and Form Body Data as merged array
+     *
+     * @var array
+     */
+    private $_all;
+
     /** @var Token */
     private $_token;
 
@@ -79,6 +87,15 @@ class Request
         return $this->_getTransformedValue($transformer, isset($this->_query[$key]) ? $this->_query[$key] : $default);
     }
 
+    /**
+     *
+     * Retrieve specific parameter value from url
+     *
+     * @param string $key
+     * @param null $default
+     * @param IDataTransformer|null $transformer
+     * @return mixed
+     */
     public function parameter(string $key, $default = null, IDataTransformer $transformer = null)
     {
 
@@ -108,7 +125,7 @@ class Request
      *
      * @return array
      */
-    public function allData(): array
+    public function getData(): array
     {
 
         return $this->_data;
@@ -120,16 +137,67 @@ class Request
      *
      * @return array
      */
-    public function allQuery(): array
+    public function getQuery(): array
     {
 
         return $this->_query;
     }
 
-    public function allParameters(): array
+    /**
+     *
+     * Retrieve all URL parameters values
+     *
+     * @return array
+     */
+    public function getParameters(): array
     {
 
         return $this->_router->currentRoute()->parameters();
+    }
+
+    /**
+     *
+     * Get value matching key in any of input arrays POST, GET, URL Parameters
+     *
+     * NOTE: In case that there are multiple keys with same name on different arrays e.g "id" in both URL and Form Body
+     * following system of prioritizing is applied
+     *  1. POST
+     *  2. If not in POST look GET
+     *  3. If not in none of above look in URL Parameters
+     *
+     * @param string $key
+     * @param null $default
+     * @param IDataTransformer|null $transformer
+     * @return mixed
+     */
+    public function get(string $key, $default = null, ?IDataTransformer $transformer = null)
+    {
+        $all = $this->getAll();
+
+        return $this->_getTransformedValue($transformer, isset($all[$key]) ? $all[$key] : $default);
+    }
+
+    /**
+     *
+     * Get all key => value pairs from any input POST, GET, URL Parameter
+     *
+     * NOTE: In case that there are multiple keys with same name on different arrays (e.g "id" in both URL and Form Body)
+     * following system of prioritizing is applied
+     *  1. POST
+     *  2. If not in POST look GET
+     *  3. If not in none of above look in URL Parameters
+     *
+     * @return array
+     */
+    public function getAll(): array
+    {
+
+        if (empty($this->_all)) {
+
+            $this->_all = array_merge($this->getParameters(), $this->_query, $this->_data);
+        }
+
+        return $this->_all;
     }
 
     /**
