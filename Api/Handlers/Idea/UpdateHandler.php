@@ -14,16 +14,16 @@ use Api\Models\Idea;
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
 use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationActionMiddleware;
-use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestMiddleware;
+use Core\Libs\Application\IApplicationRequestValidator;
 use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class UpdateHandler implements IApplicationActionHandler, IApplicationActionMiddleware, IApplicationActionValidator
+class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMiddleware, IApplicationRequestValidator
 {
 
     /**
@@ -32,8 +32,9 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
      *
      * @param Request $request
      * @param Response $response
+     * @return Response
      */
-    public function handle(Request $request, Response $response): void
+    public function handle(Request $request, Response $response): Response
     {
 
         /** @var Idea $idea */
@@ -43,21 +44,17 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
 
         if (empty($data)) {
 
-            $response->status(IResponseStatus::OK)->addData('message', 'Nothing to update');
-
-            return;
+            return $response->status(IResponseStatus::OK)->addData('message', 'Nothing to update');
         }
 
         $idea->setAttributes($data);
 
         if ($idea->getAttribute('id', IntTransformer::getSharedInstance()) === $idea->save()) {
 
-            $response->data(['message', 'Idea successfully updated', 'idea' => $idea->toArray()]);
-
-            return;
+            return $response->data(['message', 'Idea successfully updated', 'idea' => $idea->toArray()]);
         }
 
-        $response->status(IResponseStatus::INTERNAL_ERROR)->addError('update', 'Failed to update idea');
+        return $response->status(IResponseStatus::INTERNAL_ERROR)->addError('update', 'Failed to update idea');
     }
 
     /**
@@ -81,6 +78,7 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
                     $idea = $request->parameter('id', null, ModelTransformer::getNewInstance(Idea::class));
 
                     $creatorId = $idea->user()->getAttribute('id', IntTransformer::getSharedInstance());
+
                     $tokenUserId = $request->token()->user()->getAttribute('id', IntTransformer::getSharedInstance());
 
                     if ($creatorId === $tokenUserId) {
@@ -115,13 +113,11 @@ class UpdateHandler implements IApplicationActionHandler, IApplicationActionMidd
     public function validate(InputValidator $validator): InputValidator
     {
 
-        $validator->validate([
+        return $validator->validate([
             'id' => 'required|exists:ideas,id',
             'description' => 'min:' . Idea::MIN_DESCRIPTION_LENGTH . '|max:' . Idea::MAX_DESCRIPTION_LENGTH,
             'idea_category' => 'exists:idea_categories,id'
         ]);
-
-        return $validator;
     }
 
     private function _getUpdateData(Idea $idea, Request $request): array

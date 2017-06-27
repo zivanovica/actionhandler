@@ -13,16 +13,16 @@ use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
 use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
 use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationActionMiddleware;
-use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestMiddleware;
+use Core\Libs\Application\IApplicationRequestValidator;
 use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class CreateHandler implements IApplicationActionHandler, IApplicationActionValidator, IApplicationActionMiddleware
+class CreateHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestMiddleware
 {
 
     /**
@@ -31,8 +31,9 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
      *
      * @param Request $request
      * @param Response $response
+     * @return Response
      */
-    public function handle(Request $request, Response $response): void
+    public function handle(Request $request, Response $response): Response
     {
 
         $idea = Idea::getNewInstance([
@@ -44,17 +45,15 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
 
         if ($idea->save()) {
 
-            $response
+            return $response
                 ->status(IResponseStatus::CREATED)
                 ->data([
                     'message' => 'Idea successfully created.',
                     'idea' => $idea->toArray()
                 ]);
-
-            return;
         }
 
-        $response->status(500)->addError('message', 'Failed to create idea, please try again.');
+        return $response->status(500)->addError('message', 'Failed to create idea, please try again.');
     }
 
     /**
@@ -108,11 +107,9 @@ class CreateHandler implements IApplicationActionHandler, IApplicationActionVali
     public function validate(InputValidator $validator): InputValidator
     {
 
-        $validator->validate([
+        return $validator->validate([
             'description' => 'required|min:' . Idea::MIN_DESCRIPTION_LENGTH . '|max:' . Idea::MAX_DESCRIPTION_LENGTH,
             'idea_category' => 'required|exists:idea_categories,id'
         ]);
-
-        return $validator;
     }
 }

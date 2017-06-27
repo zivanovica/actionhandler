@@ -51,9 +51,9 @@ class InputValidator
     /**
      * @param array $fieldRules
      * @param array $fields
-     * @return bool
+     * @return InputValidator
      */
-    public function validate(array $fieldRules, array $fields = []): bool
+    public function validate(array $fieldRules, array $fields = []): InputValidator
     {
         $this->fields = empty($fields) ? $this->fields : $fields;
 
@@ -62,7 +62,7 @@ class InputValidator
             $this->validateField($fieldName, explode('|', $rules));
         }
 
-        return empty($this->errors);
+        return $this;
     }
 
     /**

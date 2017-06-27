@@ -13,9 +13,9 @@ use Core\Libs\Router\Router;
 
 Application::getSharedInstance(__DIR__ . '/config.json')->run(
     Router::getSharedInstance()
-        ->post('/idea', new \Api\Handlers\Idea\CreateHandler())
-        ->patch('/idea/:id', new \Api\Handlers\Idea\UpdateHandler())
-        ->post('/user/register', new \Api\Handlers\User\RegisterHandler())
-        ->post('/user/login', new \Api\Handlers\User\LoginHandler())
+        ->post('/idea', \Api\Handlers\Idea\CreateHandler::class)
+        ->patch('/idea/:id', \Api\Handlers\Idea\UpdateHandler::class)
+        ->post('/user/register', \Api\Handlers\User\RegisterHandler::class)
+        ->post('/user/login', \Api\Handlers\User\LoginHandler::class)
 );
 

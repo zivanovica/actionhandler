@@ -9,7 +9,7 @@
 namespace Core\Libs\Application;
 
 
-interface IApplicationActionAfterHandler
+interface IApplicationRequestAfterHandler
 {
 
     /**

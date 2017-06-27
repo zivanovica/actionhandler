@@ -10,13 +10,13 @@ namespace Api\Handlers\User;
 
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestValidator;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class RegisterHandler implements IApplicationActionHandler, IApplicationActionValidator
+class RegisterHandler implements IApplicationRequestHandler, IApplicationRequestValidator
 {
 
     /**
@@ -25,8 +25,9 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
      *
      * @param Request $request
      * @param Response $response
+     * @return Response
      */
-    public function handle(Request $request, Response $response): void
+    public function handle(Request $request, Response $response): Response
     {
         $user = User::getNewInstance()->createProfile(
             $request->data('email'), $request->data('password'),
@@ -35,14 +36,11 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
 
         if (false === $user instanceof User) {
 
-            $response
-                ->status(IResponseStatus::INTERNAL_ERROR)
-                ->addError('user.create', 'Failed to create user.');
-
-            return;
+            return $response
+                ->status(IResponseStatus::INTERNAL_ERROR)->addError('user.create', 'Failed to create user.');
         }
 
-        $response->status(IResponseStatus::CREATED)->addData('message', 'User successfully created');
+        return $response->status(IResponseStatus::CREATED)->addData('message', 'User successfully created');
     }
 
     /**
@@ -59,14 +57,11 @@ class RegisterHandler implements IApplicationActionHandler, IApplicationActionVa
     public function validate(InputValidator $validator): InputValidator
     {
 
-
-        $validator->validate([
+        return $validator->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'first_name' => 'required|min:2|max:64',
             'last_name' => 'required|min:2|max:64'
         ]);
-
-        return $validator;
     }
 }

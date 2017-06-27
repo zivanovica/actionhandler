@@ -72,6 +72,18 @@ class Response
 
     /**
      *
+     * Retrieve all response data
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+
+        return $this->_data;
+    }
+
+    /**
+     *
      * Set single response error
      *
      * @param string $error
@@ -99,6 +111,18 @@ class Response
         $this->_errors = $errors;
 
         return $this;
+    }
+
+    /**
+     *
+     * Retrieve all respsonse errors
+     *
+     * @return array
+     */
+    public function getErrors(): array
+    {
+
+        return $this->_errors;
     }
 
     /**
@@ -149,36 +173,13 @@ class Response
 
     /**
      *
-     * Finish request with given status, data and/or errors
+     * Retrieve current response status code
      *
-     * @param array $data
-     * @param array $errors
-     * @param int $status
+     * @return int
      */
-    public function send(array $data = [], array $errors = [], int $status = 200): void
+    public function getStatus(): int
     {
 
-        empty($errors) ? $this->errors($errors) : $this->data($data);
-
-        $this->status($status);
-
-        $this->end();
-
-
+        return $this->_status;
     }
-
-    /**
-     * Finish request
-     */
-    public function end(): void
-    {
-
-        http_response_code($this->_status);
-
-        echo json_encode([
-            'status' => $this->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
-            'data' => $this->hasErrors() ? $this->_errors : $this->_data
-        ]);
-    }
-
 }

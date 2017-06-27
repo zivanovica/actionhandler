@@ -89,7 +89,7 @@ class Application
 
         if (null === $route) {
 
-            $this->_response->status(404)->errors(['action' => "Action '{$requestRoute}' not found"])->end();
+            $this->_sendResponse($this->_response->status(404)->errors(['action' => "Action '{$requestRoute}' not found"]));
 
             return;
         }
@@ -104,21 +104,21 @@ class Application
             return;
         }
 
-        $route->handler()->handle($this->_request, $this->_response);
+        $response = $route->handler()->handle($this->_request, $this->_response);
 
         $this->_executeAfterHandler($route->handler());
 
-        $this->_response->end();
+        $this->_sendResponse($response);
     }
 
     /**
-     * @param null|IApplicationActionValidator $handler
+     * @param null|IApplicationRequestValidator $handler
      * @return bool
      */
     private function _executeValidator($handler): bool
     {
 
-        if (false === $handler instanceof IApplicationActionValidator) {
+        if (false === $handler instanceof IApplicationRequestValidator) {
 
             return true;
         }
@@ -129,10 +129,11 @@ class Application
 
         if ($validator->hasErrors()) {
 
-            $this->_response
-                ->errors($validator->getErrors())
-                ->addError('_handle.validate', 'Action did not pass validation.')
-                ->end();
+            $this->_sendResponse(
+                $this->_response
+                    ->errors($validator->getErrors())
+                    ->addError('_handle.validate', 'Action did not pass validation.')
+            );
 
             return false;
         }
@@ -141,13 +142,13 @@ class Application
     }
 
     /**
-     * @param null|IApplicationActionMiddleware $handler
+     * @param null|IApplicationRequestMiddleware $handler
      * @return bool
      */
     private function _executeMiddlewares($handler): bool
     {
 
-        if (false === $handler instanceof IApplicationActionMiddleware) {
+        if (false === $handler instanceof IApplicationRequestMiddleware) {
 
             return true;
         }
@@ -158,7 +159,7 @@ class Application
 
         if (false === $middleware->finished()) {
 
-            $this->_response->addError('_handle.middleware', 'Middlewares did not finished.')->end();
+            $this->_sendResponse($this->_response->addError('_handle.middleware', 'Middlewares did not finished.'));
 
             return false;
         }
@@ -170,13 +171,13 @@ class Application
      *
      * Executes "after" handle if action handler implements correct interface
      *
-     * @param null|IApplicationActionAfterHandler $handler
+     * @param null|IApplicationRequestAfterHandler $handler
      * @return void
      */
     private function _executeAfterHandler($handler): void
     {
 
-        if ($handler instanceof IApplicationActionAfterHandler) {
+        if ($handler instanceof IApplicationRequestAfterHandler) {
 
             $handler->after();
         }
@@ -207,6 +208,19 @@ class Application
         }
 
         return true;
+    }
+
+    private function _sendResponse(Response $response): void
+    {
+
+        http_response_code($response->getStatus());
+
+        echo json_encode([
+            'status' => $response->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
+            'data' => $response->hasErrors() ? $response->getErrors() : $response->getData()
+        ]);
+
+        return;
     }
 
 }

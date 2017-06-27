@@ -12,13 +12,13 @@ namespace Api\Handlers\User;
 use Api\Models\Token;
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationActionValidator;
+use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestValidator;
 use Core\Libs\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
-class LoginHandler implements IApplicationActionHandler, IApplicationActionValidator
+class LoginHandler implements IApplicationRequestHandler, IApplicationRequestValidator
 {
 
     /**
@@ -27,8 +27,9 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
      *
      * @param Request $request
      * @param Response $response
+     * @return Response
      */
-    public function handle(Request $request, Response $response): void
+    public function handle(Request $request, Response $response): Response
     {
 
         $user = User::getSharedInstance()->getUserByEmailAndPassword(
@@ -38,21 +39,19 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
 
         if (false === $user instanceof User) {
 
-            $response->status(IResponseStatus::UNAUTHORIZED)->addError('credentials', 'Invalid login credentials.');
-
-            return;
+            return $response
+                ->status(IResponseStatus::UNAUTHORIZED)->addError('credentials', 'Invalid login credentials.');
         }
 
         $token = Token::getSharedInstance()->create($user);
 
         if (false === $token instanceof Token) {
 
-            $response->status(IResponseStatus::INTERNAL_ERROR)->addError('internal', 'There were some issues.');
-
-            return;
+            return $response
+                ->status(IResponseStatus::INTERNAL_ERROR)->addError('internal', 'There were some issues.');
         }
 
-        $response->addData('token', $token->getAttribute('value'));
+        return $response->addData('token', $token->getAttribute('value'));
     }
 
     /**
@@ -69,8 +68,6 @@ class LoginHandler implements IApplicationActionHandler, IApplicationActionValid
     public function validate(InputValidator $validator): InputValidator
     {
 
-        $validator->validate(['email' => 'required', 'password' => 'required']);
-
-        return $validator;
+        return $validator->validate(['email' => 'required', 'password' => 'required']);
     }
 }

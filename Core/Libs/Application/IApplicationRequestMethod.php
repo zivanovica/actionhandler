@@ -9,7 +9,7 @@
 namespace Core\Libs\Application;
 
 
-interface IApplicationHandlerMethod
+interface IApplicationRequestMethod
 {
 
     const GET = 'GET';

@@ -11,7 +11,7 @@ namespace Core\Libs\Application;
 
 use Core\Libs\Middleware\Middleware;
 
-interface IApplicationActionMiddleware
+interface IApplicationRequestMiddleware
 {
 
     /**

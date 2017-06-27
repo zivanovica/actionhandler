@@ -10,7 +10,7 @@ namespace Core\Libs\Application;
 
 use Core\CoreUtils\InputValidator\InputValidator;
 
-interface IApplicationActionValidator
+interface IApplicationRequestValidator
 {
 
     /**

@@ -9,8 +9,8 @@
 namespace Core\Libs\Router;
 
 use Core\CoreUtils\Singleton;
-use Core\Libs\Application\IApplicationActionHandler;
-use Core\Libs\Application\IApplicationHandlerMethod;
+use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestMethod;
 
 class Router
 {
@@ -32,13 +32,13 @@ class Router
      * Register POST route
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function post(string $route, IApplicationActionHandler $handler): Router
+    public function post(string $route, string $handlerClass): Router
     {
 
-        $this->add($route, [IApplicationHandlerMethod::POST], $handler);
+        $this->add($route, [IApplicationRequestMethod::POST], $handlerClass);
 
         return $this;
     }
@@ -48,13 +48,13 @@ class Router
      * Register GET route
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function get(string $route, IApplicationActionHandler $handler): Router
+    public function get(string $route, string $handlerClass): Router
     {
 
-        $this->add($route, [IApplicationHandlerMethod::GET], $handler);
+        $this->add($route, [IApplicationRequestMethod::GET], $handlerClass);
 
         return $this;
     }
@@ -64,13 +64,13 @@ class Router
      * Register PUT route
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function put(string $route, IApplicationActionHandler $handler): Router
+    public function put(string $route, string $handlerClass): Router
     {
 
-        $this->add($route, [IApplicationHandlerMethod::PUT], $handler);
+        $this->add($route, [IApplicationRequestMethod::PUT], $handlerClass);
 
         return $this;
     }
@@ -80,13 +80,13 @@ class Router
      * Register DELETE route
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function delete(string $route, IApplicationActionHandler $handler): Router
+    public function delete(string $route, string $handlerClass): Router
     {
 
-        $this->add($route, [IApplicationHandlerMethod::DELETE], $handler);
+        $this->add($route, [IApplicationRequestMethod::DELETE], $handlerClass);
 
         return $this;
     }
@@ -96,13 +96,13 @@ class Router
      * Register PATCH route
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function patch(string $route, IApplicationActionHandler $handler): Router
+    public function patch(string $route, string $handlerClass): Router
     {
 
-        $this->add($route, [IApplicationHandlerMethod::PATCH], $handler);
+        $this->add($route, [IApplicationRequestMethod::PATCH], $handlerClass);
 
         return $this;
     }
@@ -112,21 +112,21 @@ class Router
      * Register route on any request method
      *
      * @param string $route
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      * @return Router
      */
-    public function any(string $route, IApplicationActionHandler $handler): Router
+    public function any(string $route, string $handlerClass): Router
     {
 
         $methods = [
-            IApplicationHandlerMethod::GET,
-            IApplicationHandlerMethod::POST,
-            IApplicationHandlerMethod::PUT,
-            IApplicationHandlerMethod::PATCH,
-            IApplicationHandlerMethod::DELETE
+            IApplicationRequestMethod::GET,
+            IApplicationRequestMethod::POST,
+            IApplicationRequestMethod::PUT,
+            IApplicationRequestMethod::PATCH,
+            IApplicationRequestMethod::DELETE
         ];
 
-        $this->add($route, $methods, $handler);
+        $this->add($route, $methods, $handlerClass);
 
         return $this;
 
@@ -138,9 +138,9 @@ class Router
      *
      * @param string $route
      * @param array $methods
-     * @param IApplicationActionHandler $handler
+     * @param string $handlerClass
      */
-    public function add(string $route, array $methods, IApplicationActionHandler $handler): void
+    public function add(string $route, array $methods, string $handlerClass): void
     {
 
         list($regex, $parameters) = $this->_prepareRoute($route);
@@ -154,7 +154,7 @@ class Router
             $this->_routes[$order][$subOrder] = [];
         }
 
-        $this->_routes[$order][$subOrder][] = [$regex, $methods, $parameters, $handler];
+        $this->_routes[$order][$subOrder][] = [$regex, $methods, $parameters, $handlerClass];
     }
 
     /**
@@ -231,44 +231,68 @@ class Router
      * @param string $regex Route regular expression
      * @param array $methods Allowed route methods
      * @param array $parameters Dynamic route parameters
-     * @param IApplicationActionHandler $handler Route handler
+     * @param string $handlerClass Route handler class name
      * @return IRoute
      */
-    private function _getIRouteInstance($regex, array $methods, array $parameters, IApplicationActionHandler $handler): IRoute
+    private function _getIRouteInstance($regex, array $methods, array $parameters, string $handlerClass): IRoute
     {
-        return new class($regex, $methods, $parameters, $handler) implements IRoute
+        return new class($regex, $methods, $parameters, $handlerClass) implements IRoute
         {
 
+            /** @var string Expression used to match route */
             private $_regex;
 
+            /** @var array Acceptable request method for handler */
             private $_methods;
 
+            /** @var array Route parameters */
             private $_parameters;
 
+            /** @var IApplicationRequestHandler */
             private $_handler;
 
-            public function __construct($regex, array $methods, array $parameters, IApplicationActionHandler $handler)
+            public function __construct($regex, array $methods, array $parameters, string $handlerClass)
             {
 
                 $this->_regex = $regex;
 
                 $this->_methods = $methods;
 
-                $this->_handler = $handler;
+                $this->_handler = new $handlerClass();
 
                 $this->_parameters = $parameters;
             }
 
-            public function handler(): IApplicationActionHandler
+            /**
+             *
+             * Retrieve route handler instance
+             *
+             * @return IApplicationRequestHandler
+             */
+            public function handler(): IApplicationRequestHandler
             {
                 return $this->_handler;
             }
 
+            /**
+             *
+             * Retrieve all route parameters
+             *
+             * @return array
+             */
             public function parameters(): array
             {
                 return $this->_parameters;
             }
 
+            /**
+             *
+             * Validates method and given string to current route
+             *
+             * @param string $method
+             * @param string $route
+             * @return bool
+             */
             public function valid(string $method, string $route): bool
             {
 
