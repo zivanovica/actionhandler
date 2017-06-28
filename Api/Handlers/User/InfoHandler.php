@@ -33,6 +33,8 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
     public function handle(Request $request, Response $response): Response
     {
 
+        // $request->get('id') will return instance of User model
+        // as filter for that field is defined in "filter" method of this class
         return $response->addData('user', $request->get('id'));
     }
 
