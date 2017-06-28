@@ -38,7 +38,6 @@ class RequestFilter implements IRequestFilter
             $this->_fields[$field] = [];
         }
 
-
         $this->_fields[$field][] = $filter;
 
         return $this;
@@ -81,12 +80,7 @@ class RequestFilter implements IRequestFilter
     public function filter(string $field, $value)
     {
 
-        if (false === empty($this->_filtered[$field])) {
-
-            return $this->_filtered[$field];
-        }
-
-        if ($this->hasFilter($field)) {
+        if (empty($this->_filtered[$field]) && $this->hasFilter($field)) {
 
             /** @var IDataFilter $filter */
             foreach ($this->_fields[$field] as $filter) {

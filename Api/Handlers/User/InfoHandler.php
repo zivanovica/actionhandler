@@ -2,11 +2,8 @@
 
 namespace Api\Handlers\User;
 
-
 use Api\Models\User;
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\DataFilter\Filters\ModelFilter;
-use Core\CoreUtils\DataFilter\Filters\WaterfallFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
@@ -58,11 +55,6 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
     public function filter(IRequestFilter $filter): IRequestFilter
     {
 
-        return $filter
-            ->add('id', new WaterfallFilter([
-                ModelFilter::getNewInstance(User::class),
-                ModelFilter::getNewInstance(User::class),
-                ModelFilter::getNewInstance(User::class, 'id')
-            ]));
+        return $filter->add('id', ModelFilter::getNewInstance(User::class));
     }
 }

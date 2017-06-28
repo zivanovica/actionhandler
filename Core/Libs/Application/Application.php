@@ -162,6 +162,7 @@ class Application
 
             $this->_finishRequest(
                 $this->_response
+                    ->status(IResponseStatus::BAD_REQUEST)
                     ->errors($validator->getErrors())
                     ->addError('_request.validate', 'Action did not pass validation.')
             );
