@@ -21,11 +21,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `accounts` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `first_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id`         INT(11) NOT NULL,
+  `user_id`    INT(11)                 DEFAULT NULL,
+  `first_name` VARCHAR(64)
+               COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_name`  VARCHAR(64)
+               COLLATE utf8_unicode_ci DEFAULT NULL
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -34,11 +39,15 @@ CREATE TABLE `accounts` (
 --
 
 CREATE TABLE `ideas` (
-  `id` int(11) NOT NULL,
-  `idea_category` int(11) NOT NULL,
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `status` enum('OPEN','CONFIRMED','DECLINED') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'OPEN'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id`            INT(11)                      NOT NULL,
+  `idea_category` INT(11)                      NOT NULL,
+  `description`   TEXT COLLATE utf8_unicode_ci NOT NULL,
+  `status`        ENUM ('OPEN', 'CONFIRMED', 'DECLINED')
+                  COLLATE utf8_unicode_ci      NOT NULL DEFAULT 'OPEN'
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -47,11 +56,15 @@ CREATE TABLE `ideas` (
 --
 
 CREATE TABLE `idea_categories` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '0',
-  `updated_at` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id`         INT(11)                 NOT NULL,
+  `name`       VARCHAR(255)
+               COLLATE utf8_unicode_ci NOT NULL,
+  `active`     TINYINT(1)              NOT NULL DEFAULT '0',
+  `updated_at` INT(11)                 NOT NULL
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -60,12 +73,19 @@ CREATE TABLE `idea_categories` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `password` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `status` enum('INACTIVE','ACTIVE','BANNED') COLLATE utf8_unicode_ci DEFAULT 'INACTIVE',
-  `code` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id`       INT(11) NOT NULL,
+  `email`    VARCHAR(255)
+             COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` VARCHAR(60)
+             COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status`   ENUM ('INACTIVE', 'ACTIVE', 'BANNED')
+             COLLATE utf8_unicode_ci DEFAULT 'INACTIVE',
+  `code`     VARCHAR(64)
+             COLLATE utf8_unicode_ci DEFAULT NULL
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -77,7 +97,7 @@ CREATE TABLE `users` (
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `user_id_UNIQUE` (`user_id`),
-  ADD KEY `full_name` (`first_name`,`last_name`);
+  ADD KEY `full_name` (`first_name`, `last_name`);
 
 --
 -- Indexes for table `ideas`

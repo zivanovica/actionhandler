@@ -68,7 +68,8 @@ class CreateHandler implements IApplicationRequestHandler, IApplicationRequestVa
 
         return $middleware
             ->add(new AuthenticateMiddleware())
-            ->add(new class implements IMiddleware {
+            ->add(new class implements IMiddleware
+            {
 
                 public function run(Request $request, Response $response, Middleware $middleware): void
                 {
@@ -86,11 +87,9 @@ class CreateHandler implements IApplicationRequestHandler, IApplicationRequestVa
 
                     $response
                         ->status(IResponseStatus::CONFLICT)
-                        ->addError('idea.exists', 'Open idea already pending')
-                    ;
+                        ->addError('idea.exists', 'Open idea already pending');
                 }
-            })
-        ;
+            });
     }
 
     /**
