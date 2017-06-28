@@ -100,7 +100,7 @@ class Application
 
         $this->_executeAfterHandler($route->handler());
 
-        $this->_sendResponse($response);
+        $this->_finishRequest($response);
 
         return;
     }
@@ -136,7 +136,7 @@ class Application
 
         if (null === $route) {
 
-            $this->_sendResponse($this->_response->status(404)->errors(['action' => "Route '{$requestRoute}' not found"]));
+            $this->_finishRequest($this->_response->status(404)->errors(['action' => "Route '{$requestRoute}' not found"]));
 
             return null;
         }
@@ -160,7 +160,7 @@ class Application
 
         if ($validator->hasErrors()) {
 
-            $this->_sendResponse(
+            $this->_finishRequest(
                 $this->_response
                     ->errors($validator->getErrors())
                     ->addError('_request.validate', 'Action did not pass validation.')
@@ -190,7 +190,7 @@ class Application
 
         if (false === $middleware->finished()) {
 
-            $this->_sendResponse($this->_response->addError('_request.middleware', 'Middlewares did not finished.'));
+            $this->_finishRequest($this->_response->addError('_request.middleware', 'Middlewares did not finished.'));
 
             return false;
         }
@@ -249,7 +249,7 @@ class Application
      *
      * @param Response $response
      */
-    private function _sendResponse(Response $response): void
+    private function _finishRequest(Response $response): void
     {
 
         http_response_code($response->getStatus());

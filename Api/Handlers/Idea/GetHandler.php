@@ -10,7 +10,10 @@ namespace Api\Handlers\Idea;
 
 
 use Api\Models\Idea;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\DataFilter\Filters\ModelFilter;
+use Core\CoreUtils\DataFilter\Filters\WaterfallFilter;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
@@ -69,6 +72,9 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
      */
     public function filter(IRequestFilter $filter): IRequestFilter
     {
-        return $filter->add('id', ModelFilter::getNewInstance(Idea::class));
+        return $filter->add('id', new WaterfallFilter([
+            IntFilter::getSharedInstance(),
+            ModelFilter::getNewInstance(Idea::class)
+        ]));
     }
 }
