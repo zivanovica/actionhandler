@@ -1,16 +1,12 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/28/17
- * Time: 3:12 PM
- */
 
 namespace Api\Handlers\User;
 
 
 use Api\Models\User;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\DataFilter\Filters\ModelFilter;
+use Core\CoreUtils\DataFilter\Filters\WaterfallFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
@@ -43,8 +39,6 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
      * Validator is used to perform simple request input validations
      * This is executed before middlewares and provides simple way of validating request input before doing anything else.
      *
-     *
-     *
      * @param InputValidator $validator
      * @return InputValidator
      */
@@ -64,6 +58,11 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
     public function filter(IRequestFilter $filter): IRequestFilter
     {
 
-        return $filter->add('id', ModelFilter::getNewInstance(User::class));
+        return $filter
+            ->add('id', new WaterfallFilter([
+                ModelFilter::getNewInstance(User::class),
+                ModelFilter::getNewInstance(User::class),
+                ModelFilter::getNewInstance(User::class, 'id')
+            ]));
     }
 }

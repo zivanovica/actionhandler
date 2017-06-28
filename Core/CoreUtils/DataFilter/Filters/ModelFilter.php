@@ -18,6 +18,9 @@ class ModelFilter implements IDataFilter
 {
     use Singleton;
 
+    /** @var array */
+    private static $_cached = [];
+
     /** @var string */
     private $_modelName;
 
@@ -35,15 +38,21 @@ class ModelFilter implements IDataFilter
     public function filter($value)
     {
 
-        /** @var Model $model */
-        $model = new $this->_modelName();
+        $uniqueId = hash('sha256', "{$this->_modelName}-{$this->_field}-{$value}");
 
-        if (false === $model instanceof Model) {
+        if (false === isset(self::$_cached[$uniqueId])) {
 
-            throw new ModelTransformerException(ModelTransformerException::ERROR_INVALID_MODEL_CLASS, $this->_modelName);
+            /** @var Model $model */
+            $model = new $this->_modelName();
+
+            if (false === $model instanceof Model) {
+
+                throw new ModelTransformerException(ModelTransformerException::ERROR_INVALID_MODEL_CLASS, $this->_modelName);
+            }
+
+            self::$_cached[$uniqueId] = empty($this->_field) ? $model->find($value) : $model->findOneWhere([$this->_field => $value]);
         }
 
-        return empty($this->_field) ? $model->find($value) : $model->findOneWhere([$this->_field => $value]);
-
+        return self::$_cached[$uniqueId];
     }
 }
