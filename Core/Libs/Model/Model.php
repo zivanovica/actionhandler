@@ -25,6 +25,9 @@ abstract class Model
     /** @var array */
     protected $_updatedAttributes = [];
 
+    /** @var array Properties that will be excluded in toArray() method */
+    protected $_hidden = [];
+
     /** @var bool */
     protected $_isDirty;
 
@@ -291,7 +294,7 @@ abstract class Model
     public function toArray(): array
     {
 
-        return array_merge($this->_attributes, $this->_updatedAttributes);
+        return array_diff_key(array_merge($this->_attributes, $this->_updatedAttributes), array_flip($this->_hidden));
     }
 
     public function reset(): void

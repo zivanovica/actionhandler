@@ -11,6 +11,7 @@ namespace Core\Libs\Response;
 
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ResponseException;
+use Core\Libs\Model\Model;
 
 class Response
 {
@@ -49,6 +50,11 @@ class Response
      */
     public function addData(string $key, $value): Response
     {
+
+        if ($value instanceof Model) {
+
+            $value = $value->toArray();
+        }
 
         $this->_data[$key] = $value;
 

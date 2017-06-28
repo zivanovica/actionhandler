@@ -2,16 +2,15 @@
 /**
  * Created by IntelliJ IDEA.
  * User: coa
- * Date: 6/27/17
- * Time: 3:54 PM
+ * Date: 6/28/17
+ * Time: 3:12 PM
  */
 
-namespace Api\Handlers\Idea;
+namespace Api\Handlers\User;
 
-use Api\Models\Idea;
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
+
+use Api\Models\User;
 use Core\CoreUtils\DataFilter\Filters\ModelFilter;
-use Core\CoreUtils\DataFilter\Filters\WaterfallFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
@@ -20,7 +19,7 @@ use Core\Libs\Request\IRequestFilter;
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
-class GetHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestFilter
+class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilter, IApplicationRequestValidator
 {
 
     /**
@@ -34,12 +33,7 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
     public function handle(Request $request, Response $response): Response
     {
 
-        /** @var Idea $idea */
-        $idea = $request->get('id');
-
-        return $response->data([
-            'idea' => $idea->toArray()
-        ]);
+        return $response->addData('user', $request->get('id'));
     }
 
     /**
@@ -55,9 +49,7 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
     public function validate(InputValidator $validator): InputValidator
     {
 
-        return $validator->validate([
-            'id' => 'required|exists:ideas,id'
-        ]);
+        return $validator->validate(['id' => 'required|exists:users,id']);
     }
 
     /**
@@ -69,9 +61,7 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
      */
     public function filter(IRequestFilter $filter): IRequestFilter
     {
-        return $filter->add('id', new WaterfallFilter([
-            IntFilter::getSharedInstance(),
-            ModelFilter::getNewInstance(Idea::class)
-        ]));
+
+        return $filter->add('id', ModelFilter::getNewInstance(User::class));
     }
 }

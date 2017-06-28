@@ -8,7 +8,6 @@
 
 namespace Api\Handlers\Idea;
 
-
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
 use Core\CoreUtils\DataFilter\Filters\IntFilter;

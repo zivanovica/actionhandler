@@ -22,6 +22,8 @@ class User extends Model
     const STATUS_INACTIVE = 'INACTIVE';
     const STATUS_BANNED = 'BANNED';
 
+    protected $_hidden = ['password'];
+
     public function table(): string
     {
         return 'users';

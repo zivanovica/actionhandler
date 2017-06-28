@@ -8,10 +8,8 @@
 
 namespace Api\Handlers\Idea;
 
-
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestMiddleware;
@@ -37,9 +35,9 @@ class CreateHandler implements IApplicationRequestHandler, IApplicationRequestVa
     {
 
         $idea = Idea::getNewInstance([
-            'idea_category' => $request->data('idea_category', null),
+            'idea_category' => $request->get('idea_category'),
             'creator_id' => $request->token()->user(),
-            'description' => $request->data('description'),
+            'description' => $request->get('description'),
             'status' => Idea::STATUS_OPEN
         ]);
 

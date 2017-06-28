@@ -8,7 +8,6 @@
 
 namespace Api\Handlers\User;
 
-
 use Api\Models\Token;
 use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
