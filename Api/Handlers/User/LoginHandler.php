@@ -59,7 +59,7 @@ class LoginHandler implements IApplicationRequestHandler, IApplicationRequestVal
      * Status code returned from validate will be used as response status code.
      * If this method does not return status 200 or IResponseStatus::OK script will end response and won't handle rest of request.
      *
-     * NOTE: this is executed AFTER middlewares
+     *
      *
      * @param InputValidator $validator
      * @return InputValidator

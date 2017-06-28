@@ -47,7 +47,7 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
      * Validator is used to perform simple request input validations
      * This is executed before middlewares and provides simple way of validating request input before doing anything else.
      *
-     * NOTE: this is executed AFTER middlewares
+     *
      *
      * @param InputValidator $validator
      * @return InputValidator
