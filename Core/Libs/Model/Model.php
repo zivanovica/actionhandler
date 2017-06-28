@@ -9,7 +9,7 @@
 namespace Core\Libs\Model;
 
 
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelException;
 use Core\Libs\Database;
@@ -73,10 +73,10 @@ abstract class Model
     /**
      * Retrieves value of primary key for current entity
      *
-     * @param IDataTransformer $transformer
+     * @param IDataFilter $transformer
      * @return mixed
      */
-    public function primaryValue(?IDataTransformer $transformer = null)
+    public function primaryValue(?IDataFilter $transformer = null)
     {
 
         return $this->getAttribute($this->primary(), $transformer);
@@ -231,11 +231,11 @@ abstract class Model
      *
      * @param string $name Field name
      * @param mixed $value Value of field
-     * @param IDataTransformer|null $transformer
+     * @param IDataFilter|null $transformer
      * @return $this|Model
      * @throws ModelException
      */
-    public function setAttribute(string $name, $value, ?IDataTransformer $transformer = null): Model
+    public function setAttribute(string $name, $value, ?IDataFilter $transformer = null): Model
     {
 
         if (false === in_array($name, $this->fields())) {
@@ -250,7 +250,7 @@ abstract class Model
 
         $this->_isDirty = true;
 
-        $this->_updatedAttributes[$name] = null === $transformer ? $value : $transformer->transform($value);
+        $this->_updatedAttributes[$name] = null === $transformer ? $value : $transformer->filter($value);
 
         return $this;
     }
@@ -260,17 +260,17 @@ abstract class Model
      * Get specific field value
      *
      * @param $name
-     * @param IDataTransformer|null $transformer
+     * @param IDataFilter|null $transformer
      * @return mixed|null
      */
-    public function getAttribute(string $name, ?IDataTransformer $transformer = null)
+    public function getAttribute(string $name, ?IDataFilter $transformer = null)
     {
 
         $attributes = array_merge($this->_attributes, $this->_updatedAttributes);
 
         $value = isset($attributes[$name]) ? $attributes[$name] : null;
 
-        return null === $transformer ? $value : $transformer->transform($value);
+        return null === $transformer ? $value : $transformer->filter($value);
     }
 
     /**

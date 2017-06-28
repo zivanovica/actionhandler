@@ -8,17 +8,19 @@
 
 namespace Core\Libs\Application;
 
-use Core\CoreUtils\DataTransformer\Transformers\RouteTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\StringTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\WaterfallTransformer;
+use Core\CoreUtils\DataFilter\Filters\RouteTransformer;
+use Core\CoreUtils\DataFilter\Filters\StringFilter;
+use Core\CoreUtils\DataFilter\Filters\WaterfallFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ApplicationException;
 use Core\Libs\Database;
 use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
+use Core\Libs\Request\RequestFilter;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
+use Core\Libs\Router\IRoute;
 use Core\Libs\Router\Router;
 
 class Application
@@ -81,28 +83,18 @@ class Application
     public function run(Router $router): void
     {
 
-        $requestRoute = $this->_request->query(
-            $this->_appConfig['actionIdentifier'], Application::DEFAULT_ACTION_IDENTIFIER, StringTransformer::getSharedInstance()
-        );
+        $route = $this->_validateAndGetRoute($router);
 
-        $route = $router->route($this->_request->method(), $requestRoute);
-
-        if (null === $route) {
-
-            $this->_sendResponse($this->_response->status(404)->errors(['action' => "Action '{$requestRoute}' not found"]));
-
+        if (false === $route instanceof IRoute)
             return;
-        }
 
-        if (false === $this->_executeValidator($route->handler())) {
-
+        if (false === $this->_executeValidator($route->handler()))
             return;
-        }
 
-        if (false === $this->_executeMiddlewares($route->handler())) {
-
+        if (false === $this->_executeMiddlewares($route->handler()))
             return;
-        }
+
+        $this->_setRequestFilter($route->handler());
 
         $response = $route->handler()->handle($this->_request, $this->_response);
 
@@ -111,6 +103,45 @@ class Application
         $this->_sendResponse($response);
 
         return;
+    }
+
+    /**
+     * @param null|IApplicationRequestFilter $handler
+     * @return void
+     */
+    private function _setRequestFilter($handler): void
+    {
+
+        if (false === $handler instanceof IApplicationRequestFilter) {
+
+            return;
+        }
+
+        $this->_request->setFilter($handler->filter(RequestFilter::getSharedInstance()));
+    }
+
+    /**
+     *
+     * Validates current url and if it is okay return IRoute associated to it
+     *
+     * @param Router $router
+     * @return IRoute|null
+     */
+    private function _validateAndGetRoute(Router $router): ?IRoute
+    {
+
+        $requestRoute = $this->_request->query($this->_appConfig['actionIdentifier'], '/');
+
+        $route = $router->route($this->_request->method(), $requestRoute);
+
+        if (null === $route) {
+
+            $this->_sendResponse($this->_response->status(404)->errors(['action' => "Route '{$requestRoute}' not found"]));
+
+            return null;
+        }
+
+        return $route;
     }
 
     /**

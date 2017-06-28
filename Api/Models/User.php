@@ -9,7 +9,7 @@
 namespace Api\Models;
 
 
-use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
@@ -114,7 +114,7 @@ class User extends Model
     public function getAccount(): Account
     {
 
-        $id = $this->getAttribute('id', IntTransformer::getSharedInstance());
+        $id = $this->getAttribute('id', IntFilter::getSharedInstance());
 
         return Account::getSharedInstance()->findOneWhere(['user_id' => $id]);
     }

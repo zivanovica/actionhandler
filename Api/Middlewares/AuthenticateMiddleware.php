@@ -11,11 +11,11 @@ namespace Api\Middlewares;
 
 use Api\Models\Token;
 use Api\Models\User;
-use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
+use Core\CoreUtils\DataFilter\Filters\ModelFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
@@ -28,7 +28,7 @@ class AuthenticateMiddleware implements IMiddleware
     {
 
         /** @var Token $token */
-        $token = $request->query('token', null, ModelTransformer::getNewInstance(Token::class, 'value'));
+        $token = $request->query('token', null, ModelFilter::getNewInstance(Token::class, 'value'));
 
         if (false === $token instanceof Token) {
 

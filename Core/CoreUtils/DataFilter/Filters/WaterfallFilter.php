@@ -6,16 +6,16 @@
  * Time: 2:59 PM
  */
 
-namespace Core\CoreUtils\DataTransformer\Transformers;
+namespace Core\CoreUtils\DataFilter\Filters;
 
 
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 
-class WaterfallTransformer implements IDataTransformer
+class WaterfallFilter implements IDataFilter
 {
 
     /**
-     * @var IDataTransformer[]
+     * @var IDataFilter[]
      */
     private $_transformers;
 
@@ -32,7 +32,7 @@ class WaterfallTransformer implements IDataTransformer
      *
      * return last transformed value
      *
-     * @param IDataTransformer[] $dataTransformers
+     * @param IDataFilter[] $dataTransformers
      */
     public function __construct(array $dataTransformers)
     {
@@ -40,7 +40,7 @@ class WaterfallTransformer implements IDataTransformer
         $this->_transformers = $dataTransformers;
     }
 
-    public function transform($value)
+    public function filter($value)
     {
 
         foreach ($this->_transformers as $transformer) {
@@ -52,10 +52,10 @@ class WaterfallTransformer implements IDataTransformer
     }
 
     /**
-     * @param IDataTransformer $transformer
+     * @param IDataFilter $transformer
      * @param $value
      */
-    private function _transform(?IDataTransformer $transformer, &$value)
+    private function _transform(?IDataFilter $transformer, &$value)
     {
 
         if (null === $transformer) {
@@ -63,6 +63,6 @@ class WaterfallTransformer implements IDataTransformer
             return;
         }
 
-        $value = $transformer->transform($value);
+        $value = $transformer->filter($value);
     }
 }

@@ -6,18 +6,18 @@
  * Time: 4:42 PM
  */
 
-namespace Core\CoreUtils\DataTransformer\Transformers;
+namespace Core\CoreUtils\DataFilter\Filters;
 
 
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 
-class StringTransformer implements IDataTransformer
+class StringFilter implements IDataFilter
 {
 
     use Singleton;
 
-    public function transform($value)
+    public function filter($value)
     {
 
         if (is_string($value)) {

@@ -8,7 +8,7 @@
 
 namespace Api\Models;
 
-use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
@@ -65,7 +65,7 @@ class Idea extends Model
 
         if (false === $this->_user instanceof User) {
 
-            $id = $this->getAttribute('creator_id', IntTransformer::getSharedInstance());
+            $id = $this->getAttribute('creator_id', IntFilter::getSharedInstance());
 
             $this->_user = User::getSharedInstance()->find($id);
         }

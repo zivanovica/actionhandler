@@ -9,7 +9,7 @@
 namespace Api\Models;
 
 
-use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
@@ -46,6 +46,6 @@ class IdeaCategory extends Model
     {
 
         return Idea::getSharedInstance()
-            ->findWhere(['idea_category' => $this->getAttribute('id', IntTransformer::getSharedInstance())]);
+            ->findWhere(['idea_category' => $this->getAttribute('id', IntFilter::getSharedInstance())]);
     }
 }

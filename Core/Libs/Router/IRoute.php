@@ -10,6 +10,7 @@ namespace Core\Libs\Router;
 
 
 use Core\Libs\Application\IApplicationRequestAfterHandler;
+use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestMiddleware;
 use Core\Libs\Application\IApplicationRequestValidator;
@@ -22,7 +23,7 @@ interface IRoute
     const VALIDATOR_METHOD = 2;
 
     /**
-     * @return IApplicationRequestHandler|IApplicationRequestMiddleware|IApplicationRequestAfterHandler|IApplicationRequestValidator
+     * @return IApplicationRequestHandler|IApplicationRequestMiddleware|IApplicationRequestAfterHandler|IApplicationRequestValidator|IApplicationRequestFilter
      */
     public function handler(): IApplicationRequestHandler;
 

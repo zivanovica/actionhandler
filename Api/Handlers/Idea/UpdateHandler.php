@@ -11,15 +11,15 @@ namespace Api\Handlers\Idea;
 
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
-use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
-use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
+use Core\CoreUtils\DataFilter\Filters\ModelFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestMiddleware;
 use Core\Libs\Application\IApplicationRequestValidator;
 use Core\Libs\Middleware\IMiddleware;
 use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 
@@ -49,7 +49,7 @@ class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMi
 
         $idea->setAttributes($data);
 
-        if ($idea->getAttribute('id', IntTransformer::getSharedInstance()) === $idea->save()) {
+        if ($idea->getAttribute('id', IntFilter::getSharedInstance()) === $idea->save()) {
 
             return $response->data(['message', 'Idea successfully updated', 'idea' => $idea->toArray()]);
         }
@@ -75,11 +75,11 @@ class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMi
                 {
 
                     /** @var Idea $idea */
-                    $idea = $request->parameter('id', null, ModelTransformer::getNewInstance(Idea::class));
+                    $idea = $request->parameter('id', null, ModelFilter::getNewInstance(Idea::class));
 
-                    $creatorId = $idea->user()->getAttribute('id', IntTransformer::getSharedInstance());
+                    $creatorId = $idea->user()->getAttribute('id', IntFilter::getSharedInstance());
 
-                    $tokenUserId = $request->token()->user()->getAttribute('id', IntTransformer::getSharedInstance());
+                    $tokenUserId = $request->token()->user()->getAttribute('id', IntFilter::getSharedInstance());
 
                     if ($creatorId === $tokenUserId) {
 
@@ -125,9 +125,9 @@ class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMi
 
         $data = [];
 
-        $ideaCategoryId = $idea->getAttribute('idea_category', IntTransformer::getSharedInstance());
+        $ideaCategoryId = $idea->getAttribute('idea_category', IntFilter::getSharedInstance());
 
-        $data['idea_category'] = $request->data('idea_category', $ideaCategoryId, IntTransformer::getSharedInstance());
+        $data['idea_category'] = $request->data('idea_category', $ideaCategoryId);
 
         if ($data['idea_category'] === $ideaCategoryId) {
 

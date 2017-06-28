@@ -11,7 +11,7 @@ namespace Core\Libs\Middleware;
 
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\MiddlewareException;
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
 class Middleware

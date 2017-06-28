@@ -9,7 +9,7 @@
 namespace Api\Models;
 
 
-use Core\CoreUtils\DataTransformer\Transformers\IntTransformer;
+use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
@@ -83,7 +83,7 @@ class Token extends Model
     public function hasExpired(): bool
     {
 
-        return time() - $this->getAttribute('updated_at', IntTransformer::getSharedInstance()) > Token::DEFAULT_EXPIRE_TIMEOUT;
+        return time() - $this->getAttribute('updated_at', IntFilter::getSharedInstance()) > Token::DEFAULT_EXPIRE_TIMEOUT;
     }
 
     /**

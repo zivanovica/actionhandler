@@ -7,10 +7,10 @@
  * Time: 2:58 PM
  */
 
-namespace Core\Libs;
+namespace Core\Libs\Request;
 
 use Api\Models\Token;
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Router\Router;
 
@@ -30,6 +30,9 @@ class Request
 
     /** @var Router */
     private $_router;
+
+    /** @var IRequestFilter */
+    private $_filter;
 
     /**
      *
@@ -79,12 +82,11 @@ class Request
      *
      * @param string $key
      * @param mixed $default
-     * @param IDataTransformer $transformer
      * @return null|string
      */
-    public function query(string $key, $default = null, IDataTransformer $transformer = null)
+    public function query(string $key, $default = null)
     {
-        return $this->_getTransformedValue($transformer, isset($this->_query[$key]) ? $this->_query[$key] : $default);
+        return $this->_getFilterValue($key, isset($this->_query[$key]) ? $this->_query[$key] : $default);
     }
 
     /**
@@ -93,15 +95,14 @@ class Request
      *
      * @param string $key
      * @param null $default
-     * @param IDataTransformer|null $transformer
      * @return mixed
      */
-    public function parameter(string $key, $default = null, IDataTransformer $transformer = null)
+    public function parameter(string $key, $default = null)
     {
 
         $parameters = $this->_router->currentRoute()->parameters();
 
-        return $this->_getTransformedValue($transformer, isset($parameters[$key]) ? $parameters[$key] : $default);
+        return $this->_getFilterValue($key, isset($parameters[$key]) ? $parameters[$key] : $default);
     }
 
     /**
@@ -110,13 +111,12 @@ class Request
      *
      * @param string $key
      * @param mixed $default
-     * @param IDataTransformer $transformer
      * @return mixed
      */
-    public function data(string $key, $default = null, IDataTransformer $transformer = null)
+    public function data(string $key, $default = null)
     {
 
-        return $this->_getTransformedValue($transformer, isset($this->_data[$key]) ? $this->_data[$key] : $default);
+        return $this->_getFilterValue($key, isset($this->_data[$key]) ? $this->_data[$key] : $default);
     }
 
     /**
@@ -167,14 +167,13 @@ class Request
      *
      * @param string $key
      * @param null $default
-     * @param IDataTransformer|null $transformer
      * @return mixed
      */
-    public function get(string $key, $default = null, ?IDataTransformer $transformer = null)
+    public function get(string $key, $default = null)
     {
         $all = $this->getAll();
 
-        return $this->_getTransformedValue($transformer, isset($all[$key]) ? $all[$key] : $default);
+        return $this->_getFilterValue($key, isset($all[$key]) ? $all[$key] : $default);
     }
 
     /**
@@ -229,21 +228,35 @@ class Request
 
     /**
      *
-     * Retrieve transformed value if transformator is set, otherwise return original value
+     * Set request input filter used to transform values to desire type/value
      *
-     * @param IDataTransformer $transformer
-     * @param $value
-     * @return mixed
+     * @param IRequestFilter $filter
+     * @return Request
      */
-    private function _getTransformedValue(?IDataTransformer $transformer, $value)
+    public function setFilter(IRequestFilter $filter): Request
     {
 
-        if (null === $transformer) {
+        $this->_filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     *
+     * Executes all filters for given field, and return final value, in case that there are no filter original value is returned
+     *
+     * @param string $field
+     * @param null $value
+     * @return mixed|null
+     */
+    private function _getFilterValue(string $field, $value = null)
+    {
+
+        if (null === $this->_filter || false === $this->_filter->hasFilter($field)) {
 
             return $value;
         }
 
-        return $transformer->transform($value);
+        return $this->_filter->filter($field, $value);
     }
-
 }

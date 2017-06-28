@@ -8,7 +8,7 @@
 
 namespace Core\Libs\Application;
 
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
 interface IApplicationRequestHandler

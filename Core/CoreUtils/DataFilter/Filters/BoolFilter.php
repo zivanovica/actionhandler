@@ -6,18 +6,18 @@
  * Time: 3:07 PM
  */
 
-namespace Core\CoreUtils\DataTransformer\Transformers;
+namespace Core\CoreUtils\DataFilter\Filters;
 
 
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 
-class BoolTransformer implements IDataTransformer
+class BoolFilter implements IDataFilter
 {
 
     use Singleton;
 
-    public function transform($value)
+    public function filter($value)
     {
 
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);

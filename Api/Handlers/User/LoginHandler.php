@@ -14,7 +14,7 @@ use Api\Models\User;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Request;
+use Core\Libs\Request\Request;
 use Core\Libs\Response\IResponseStatus;
 use Core\Libs\Response\Response;
 

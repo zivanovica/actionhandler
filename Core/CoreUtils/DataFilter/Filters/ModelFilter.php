@@ -6,15 +6,15 @@
  * Time: 3:17 PM
  */
 
-namespace Core\CoreUtils\DataTransformer\Transformers;
+namespace Core\CoreUtils\DataFilter\Filters;
 
 
-use Core\CoreUtils\DataTransformer\IDataTransformer;
+use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelTransformerException;
 use Core\Libs\Model\Model;
 
-class ModelTransformer implements IDataTransformer
+class ModelFilter implements IDataFilter
 {
     use Singleton;
 
@@ -32,7 +32,7 @@ class ModelTransformer implements IDataTransformer
         $this->_field = $field;
     }
 
-    public function transform($value)
+    public function filter($value)
     {
 
         /** @var Model $model */

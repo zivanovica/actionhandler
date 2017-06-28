@@ -10,14 +10,17 @@ namespace Api\Handlers\Idea;
 
 
 use Api\Models\Idea;
-use Core\CoreUtils\DataTransformer\Transformers\ModelTransformer;
+use Core\CoreUtils\DataFilter\Filters\ModelFilter;
 use Core\CoreUtils\InputValidator\InputValidator;
+use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Request;
+use Core\Libs\Request\IRequestFilter;
+use Core\Libs\Request\Request;
+use Core\Libs\Request\RequestFilter;
 use Core\Libs\Response\Response;
 
-class GetHandler implements IApplicationRequestHandler, IApplicationRequestValidator
+class GetHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestFilter
 {
 
     /**
@@ -32,7 +35,7 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
     {
 
         /** @var Idea $idea */
-        $idea = $request->get('id', null, ModelTransformer::getNewInstance(Idea::class));
+        $idea = $request->get('id', null);
 
         return $response->data([
             'idea' => $idea->toArray()
@@ -55,5 +58,17 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
         return $validator->validate([
             'id' => 'required|exists:ideas,id'
         ]);
+    }
+
+    /**
+     *
+     * Request filter used to transform given fields to specified types
+     *
+     * @param IRequestFilter $filter
+     * @return IRequestFilter
+     */
+    public function filter(IRequestFilter $filter): IRequestFilter
+    {
+        return $filter->add('id', ModelFilter::getNewInstance(Idea::class));
     }
 }
