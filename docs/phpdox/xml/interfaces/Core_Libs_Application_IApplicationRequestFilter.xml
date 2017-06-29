@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src" full="Core\Libs\Application\IApplicationRequestFilter" namespace="Core\Libs\Application" name="IApplicationRequestFilter" abstract="false" final="false" start="11" end="22">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs/Application" file="IApplicationRequestFilter.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Application/IApplicationRequestFilter.php" size="531" time="2017-06-29T16:41:54+00:00" unixtime="1498754514" sha1="359ef0abb49e061b2592659c66c0953417184cbc" relative="Libs/Application/IApplicationRequestFilter.php"/>
+  <docblock>
+    <description compact="Implementing this interface to &quot;IApplicationRequestHandler&quot; will tell &quot;Application&quot; to apply request filters with defined values"/>
+    <package value="Core\Libs\Application"/>
+  </docblock>
+  <method name="filter" start="21" end="21" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Request filter used to transform given fields to specified types"/>
+      <param type="object" variable="$filter">
+        <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+      </param>
+      <return type="object">
+        <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+      </return>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+    </return>
+    <parameter name="filter" byreference="false" type="object">
+      <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+    </parameter>
+  </method>
+</interface>

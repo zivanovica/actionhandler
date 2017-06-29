@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<source xmlns="http://xml.phpdox.net/src">
+  <dir name="/Users/coa/projects/AppIdea/Core">
+    <dir name="CoreUtils">
+      <dir name="DataFilter">
+        <dir name="Filters">
+          <file name="BoolFilter.php" size="516" time="2017-06-29T16:53:31+00:00" unixtime="1498755211" sha1="dbf68c7a9d86845bb9d890e964f3c3a0a5acad25" xml="tokens/CoreUtils/DataFilter/Filters/BoolFilter.php.xml"/>
+          <file name="EmailFilter.php" size="541" time="2017-06-29T16:53:39+00:00" unixtime="1498755219" sha1="26d2e9c60a4664a319d9470764cf2db69c3ddd43" xml="tokens/CoreUtils/DataFilter/Filters/EmailFilter.php.xml"/>
+          <file name="IntFilter.php" size="556" time="2017-06-29T16:54:16+00:00" unixtime="1498755256" sha1="7ee2c862a6654d47b7527e4032d0c08d8d949fd2" xml="tokens/CoreUtils/DataFilter/Filters/IntFilter.php.xml"/>
+          <file name="StringFilter.php" size="567" time="2017-06-29T16:54:46+00:00" unixtime="1498755286" sha1="3065a1ada74389bdb547cc330cf2572d4598b12e" xml="tokens/CoreUtils/DataFilter/Filters/StringFilter.php.xml"/>
+        </dir>
+        <file name="IDataFilter.php" size="330" time="2017-06-29T15:56:30+00:00" unixtime="1498751790" sha1="490f8d80cd4995fb4611247f18aca8881a3d7709" xml="tokens/CoreUtils/DataFilter/IDataFilter.php.xml"/>
+      </dir>
+      <dir name="InputValidator">
+        <dir name="Rules">
+          <file name="InputValidatorRule.php" size="1022" time="2017-06-29T16:45:00+00:00" unixtime="1498754700" sha1="2e2fe8c6cf349b920f85c2dae666a3c77c828f0d" xml="tokens/CoreUtils/InputValidator/Rules/InputValidatorRule.php.xml"/>
+          <file name="RuleEmail.php" size="536" time="2017-06-29T16:45:19+00:00" unixtime="1498754719" sha1="3a090536ae816790cf4e7557a38bad1d9d7935e8" xml="tokens/CoreUtils/InputValidator/Rules/RuleEmail.php.xml"/>
+          <file name="RuleEntityExists.php" size="1754" time="2017-06-29T16:47:48+00:00" unixtime="1498754868" sha1="c543a0d4057f6cee6e4c11469c8eb50b29743a5e" xml="tokens/CoreUtils/InputValidator/Rules/RuleEntityExists.php.xml"/>
+          <file name="RuleEqual.php" size="972" time="2017-06-29T16:48:45+00:00" unixtime="1498754925" sha1="f878e88810380a2d2d52c3dea272fa7114b1f740" xml="tokens/CoreUtils/InputValidator/Rules/RuleEqual.php.xml"/>
+          <file name="RuleFieldSameAsOther.php" size="1227" time="2017-06-29T16:46:39+00:00" unixtime="1498754799" sha1="2b4b701a09d8542d9590f1564e82b9877e43f03b" xml="tokens/CoreUtils/InputValidator/Rules/RuleFieldSameAsOther.php.xml"/>
+          <file name="RuleMaximumLength.php" size="1064" time="2017-06-29T16:48:45+00:00" unixtime="1498754925" sha1="b88e2f7ddc4ba8b1292cdc1d35c7052f3340e99c" xml="tokens/CoreUtils/InputValidator/Rules/RuleMaximumLength.php.xml"/>
+          <file name="RuleMayNotExists.php" size="741" time="2017-06-29T16:49:22+00:00" unixtime="1498754962" sha1="34894c5ac44db3a1dbd70ab068cb667bd4594fab" xml="tokens/CoreUtils/InputValidator/Rules/RuleMayNotExists.php.xml"/>
+          <file name="RuleMinimumLength.php" size="1028" time="2017-06-29T16:48:03+00:00" unixtime="1498754883" sha1="4637e4cb4be9ad500eadb8f433022f81c10f00df" xml="tokens/CoreUtils/InputValidator/Rules/RuleMinimumLength.php.xml"/>
+          <file name="RuleRequired.php" size="680" time="2017-06-29T16:48:45+00:00" unixtime="1498754925" sha1="03694124d9d0a90853381dc99c62089eadb00295" xml="tokens/CoreUtils/InputValidator/Rules/RuleRequired.php.xml"/>
+          <file name="RuleUniqueEntity.php" size="1699" time="2017-06-29T16:49:31+00:00" unixtime="1498754971" sha1="8868004cf75f659e37f3b4683ea61e38cbe71a5e" xml="tokens/CoreUtils/InputValidator/Rules/RuleUniqueEntity.php.xml"/>
+        </dir>
+      </dir>
+      <file name="Singleton.php" size="1565" time="2017-06-29T16:43:14+00:00" unixtime="1498754594" sha1="ed76b0142ef5ca5030941b3976205d93374ef34a" xml="tokens/CoreUtils/Singleton.php.xml"/>
+    </dir>
+    <dir name="Exceptions">
+      <file name="AFrameworkException.php" size="799" time="2017-06-29T16:50:12+00:00" unixtime="1498755012" sha1="412c4ee14179700d8c51ab1d62c0e3778db1cf53" xml="tokens/Exceptions/AFrameworkException.php.xml"/>
+      <file name="ApplicationException.php" size="392" time="2017-06-29T15:51:49+00:00" unixtime="1498751509" sha1="c81ef240ba32dedfeb2165b37ff3478103b70e46" xml="tokens/Exceptions/ApplicationException.php.xml"/>
+      <file name="DatabaseException.php" size="368" time="2017-06-29T15:51:49+00:00" unixtime="1498751509" sha1="a311cd8aef4a3ad1d66f62a25c1ab6e64ae0cd48" xml="tokens/Exceptions/DatabaseException.php.xml"/>
+      <file name="MiddlewareException.php" size="275" time="2017-06-29T15:51:53+00:00" unixtime="1498751513" sha1="be1b2f72b349e71d8126e69ab2b529721b35a9e6" xml="tokens/Exceptions/MiddlewareException.php.xml"/>
+      <file name="ModelException.php" size="348" time="2017-06-29T15:52:05+00:00" unixtime="1498751525" sha1="46c7cc8616ab8dffd364f0c71b8a4b16f7f1d0c1" xml="tokens/Exceptions/ModelException.php.xml"/>
+      <file name="ModelTransformerException.php" size="275" time="2017-06-29T15:51:57+00:00" unixtime="1498751517" sha1="9b3ace0cbe78194ff888f027e985d9e581073124" xml="tokens/Exceptions/ModelTransformerException.php.xml"/>
+      <file name="ResponseException.php" size="501" time="2017-06-29T15:52:05+00:00" unixtime="1498751525" sha1="9e5c06595e316726a079b7447c780a56ad4af6d3" xml="tokens/Exceptions/ResponseException.php.xml"/>
+    </dir>
+    <dir name="Libs">
+      <dir name="Application">
+        <file name="Application.php" size="6476" time="2017-06-29T16:41:04+00:00" unixtime="1498754464" sha1="26e47f044a801172592c4dcb891ba20dc5bb67e4" xml="tokens/Libs/Application/Application.php.xml"/>
+        <file name="IApplicationRequestAfterHandler.php" size="585" time="2017-06-29T15:38:21+00:00" unixtime="1498750701" sha1="de06f96f736ffe563812a92c87f46e24076cc36f" xml="tokens/Libs/Application/IApplicationRequestAfterHandler.php.xml"/>
+        <file name="IApplicationRequestFilter.php" size="531" time="2017-06-29T16:41:54+00:00" unixtime="1498754514" sha1="359ef0abb49e061b2592659c66c0953417184cbc" xml="tokens/Libs/Application/IApplicationRequestFilter.php.xml"/>
+        <file name="IApplicationRequestHandler.php" size="573" time="2017-06-29T15:51:21+00:00" unixtime="1498751481" sha1="6ffb2393163f4414e12ebadab71c78445f783902" xml="tokens/Libs/Application/IApplicationRequestHandler.php.xml"/>
+        <file name="IApplicationRequestMethod.php" size="367" time="2017-06-29T15:51:15+00:00" unixtime="1498751475" sha1="1ae511a1241f952361683f651bed7933d17bbe10" xml="tokens/Libs/Application/IApplicationRequestMethod.php.xml"/>
+        <file name="IApplicationRequestMiddleware.php" size="756" time="2017-06-29T15:41:35+00:00" unixtime="1498750895" sha1="e0ddec9e2b8354cccb126f0ff7e297109bc039ab" xml="tokens/Libs/Application/IApplicationRequestMiddleware.php.xml"/>
+        <file name="IApplicationRequestValidator.php" size="778" time="2017-06-29T15:42:37+00:00" unixtime="1498750957" sha1="b674a40c485fedfa55b943f7358d44d0d84e2a8f" xml="tokens/Libs/Application/IApplicationRequestValidator.php.xml"/>
+      </dir>
+      <file name="Database.php" size="3531" time="2017-06-29T16:57:22+00:00" unixtime="1498755442" sha1="1ad3a0a01ecdce611edd3ab7481afad66da37adb" xml="tokens/Libs/Database.php.xml"/>
+      <dir name="Middleware">
+        <file name="IMiddleware.php" size="564" time="2017-06-29T16:55:45+00:00" unixtime="1498755345" sha1="c608fe019db098d2f70fc01588a82ae2f9e93b4d" xml="tokens/Libs/Middleware/IMiddleware.php.xml"/>
+        <file name="Middleware.php" size="2650" time="2017-06-29T15:50:59+00:00" unixtime="1498751459" sha1="68beec3cf717b5da86a36345992e46ea436b6d94" xml="tokens/Libs/Middleware/Middleware.php.xml"/>
+      </dir>
+      <dir name="Request">
+        <file name="IRequestFilter.php" size="1214" time="2017-06-29T16:52:28+00:00" unixtime="1498755148" sha1="405378eba7bbfa93d91f57695c3a8357ada0b0d5" xml="tokens/Libs/Request/IRequestFilter.php.xml"/>
+        <file name="Request.php" size="5687" time="2017-06-29T16:51:34+00:00" unixtime="1498755094" sha1="2bbe9fa4cdeff20ea7c145ff246f266ad15ea9ff" xml="tokens/Libs/Request/Request.php.xml"/>
+        <file name="RequestFilter.php" size="2034" time="2017-06-29T16:52:15+00:00" unixtime="1498755135" sha1="188713f73eaad65eca80f44caba50c2a90d7c5db" xml="tokens/Libs/Request/RequestFilter.php.xml"/>
+      </dir>
+      <dir name="Response">
+        <file name="IResponseStatus.php" size="716" time="2017-06-29T15:49:35+00:00" unixtime="1498751375" sha1="f282dc7f3ea562520c0751315c6ee9f01ee228a4" xml="tokens/Libs/Response/IResponseStatus.php.xml"/>
+        <file name="Response.php" size="3342" time="2017-06-29T16:52:58+00:00" unixtime="1498755178" sha1="c1a55bdf90ca3ddb710a60f9dd22cac670b5bb11" xml="tokens/Libs/Response/Response.php.xml"/>
+      </dir>
+      <dir name="Router">
+        <file name="IRoute.php" size="1210" time="2017-06-29T16:56:34+00:00" unixtime="1498755394" sha1="c0e031a635ed2f6ba15460dc61bcec6e02ca53e9" xml="tokens/Libs/Router/IRoute.php.xml"/>
+      </dir>
+    </dir>
+    <file name="loader.php" size="251" time="2017-06-15T14:11:36+00:00" unixtime="1497535896" sha1="bf97cec7b984d2c9d25a4b9a144391d4b0bea6de" xml="tokens/loader.php.xml"/>
+  </dir>
+</source>

@@ -5,7 +5,7 @@ namespace Core\CoreUtils\InputValidator\Rules;
 use Core\CoreUtils\InputValidator\InputValidator;
 
 /**
- * Description of InputValidatorRule
+ * Extending this class will make child class as actual rule that can be registered to "InputValidator"
  *
  * @author Aleksandar Zivanovic
  */

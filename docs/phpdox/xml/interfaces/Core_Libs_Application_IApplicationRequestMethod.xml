@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src" full="Core\Libs\Application\IApplicationRequestMethod" namespace="Core\Libs\Application" name="IApplicationRequestMethod" abstract="false" final="false" start="11" end="19">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs/Application" file="IApplicationRequestMethod.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Application/IApplicationRequestMethod.php" size="367" time="2017-06-29T15:51:15+00:00" unixtime="1498751475" sha1="1ae511a1241f952361683f651bed7933d17bbe10" relative="Libs/Application/IApplicationRequestMethod.php"/>
+  <docblock>
+    <description compact="This interface allows you to get string identifier of each available request method with valid autocomplete"/>
+    <package value="Core\Libs\Application"/>
+  </docblock>
+  <constant type="string" name="GET" value="'GET'"/>
+  <constant type="string" name="POST" value="'POST'"/>
+  <constant type="string" name="PUT" value="'PUT'"/>
+  <constant type="string" name="PATCH" value="'PATCH'"/>
+  <constant type="string" name="DELETE" value="'DELETE'"/>
+</interface>

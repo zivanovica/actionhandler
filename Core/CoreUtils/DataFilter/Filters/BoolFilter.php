@@ -5,6 +5,11 @@ namespace Core\CoreUtils\DataFilter\Filters;
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 
+/**
+ * Filter that is used to convert value to boolean
+ *
+ * @package Core\CoreUtils\DataFilter\Filters
+ */
 class BoolFilter implements IDataFilter
 {
 

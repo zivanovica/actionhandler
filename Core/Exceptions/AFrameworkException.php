@@ -2,6 +2,12 @@
 
 namespace Core\Exceptions;
 
+/**
+ *
+ * To use proper error messaging in exceptions extend this class in custom exceptions instead of \Exception
+ *
+ * @package Core\Exceptions
+ */
 abstract class AFrameworkException extends \Exception
 {
 

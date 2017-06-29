@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index xmlns="http://xml.phpdox.net/src" basedir="/Users/coa/projects/AppIdea/Core">
+  <namespace name="Core\CoreUtils\DataFilter\Filters">
+    
+    
+    
+    
+  <class name="BoolFilter" src="CoreUtils/DataFilter/Filters/BoolFilter.php" description="Filter that is used to convert value to boolean" xml="classes/Core_CoreUtils_DataFilter_Filters_BoolFilter.xml"/><class name="EmailFilter" src="CoreUtils/DataFilter/Filters/EmailFilter.php" description="Filter that is used to convert value to email" xml="classes/Core_CoreUtils_DataFilter_Filters_EmailFilter.xml"/><class name="IntFilter" src="CoreUtils/DataFilter/Filters/IntFilter.php" description="Filter that is used to convert value to integer" xml="classes/Core_CoreUtils_DataFilter_Filters_IntFilter.xml"/><class name="StringFilter" src="CoreUtils/DataFilter/Filters/StringFilter.php" description="Filter that is used to convert value to string" xml="classes/Core_CoreUtils_DataFilter_Filters_StringFilter.xml"/></namespace>
+  <namespace name="Core\CoreUtils\DataFilter">
+    <interface name="IDataFilter" src="CoreUtils/DataFilter/IDataFilter.php" description="Implement this interface if you are creating new filtering rule" xml="interfaces/Core_CoreUtils_DataFilter_IDataFilter.xml"/>
+  </namespace>
+  <namespace name="Core\CoreUtils\InputValidator\Rules">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  <class name="InputValidatorRule" src="CoreUtils/InputValidator/Rules/InputValidatorRule.php" description="Extending this class will make child class as actual rule that can be registered to &quot;InputValidator&quot;" xml="classes/Core_CoreUtils_InputValidator_Rules_InputValidatorRule.xml"/><class name="RuleEmail" src="CoreUtils/InputValidator/Rules/RuleEmail.php" description="This rule is used to validate input field as an email" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleEmail.xml"/><class name="RuleEntityExists" src="CoreUtils/InputValidator/Rules/RuleEntityExists.php" description="This rule is used to validate existence of given value with defined table and field (column) in database" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleEntityExists.xml"/><class name="RuleEqual" src="CoreUtils/InputValidator/Rules/RuleEqual.php" description="This rule is used to compare input value to given as rule parameter" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleEqual.xml"/><class name="RuleFieldSameAsOther" src="CoreUtils/InputValidator/Rules/RuleFieldSameAsOther.php" description="This rule is used to compare two request inputs and validate that they are the same" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleFieldSameAsOther.xml"/><class name="RuleMaximumLength" src="CoreUtils/InputValidator/Rules/RuleMaximumLength.php" description="This rule is used to ensure maximum length of input value" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleMaximumLength.xml"/><class name="RuleMayNotExists" src="CoreUtils/InputValidator/Rules/RuleMayNotExists.php" description="This rule is used to ensure that input value IS NOT DEFINED" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleMayNotExists.xml"/><class name="RuleMinimumLength" src="CoreUtils/InputValidator/Rules/RuleMinimumLength.php" description="This rule is used to ensure minimum length of input value" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleMinimumLength.xml"/><class name="RuleRequired" src="CoreUtils/InputValidator/Rules/RuleRequired.php" description="Use this rule to ensure existence of input value" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleRequired.xml"/><class name="RuleUniqueEntity" src="CoreUtils/InputValidator/Rules/RuleUniqueEntity.php" description="This rule is used to ensure that input value with defined table and field (column) does not exists in database" xml="classes/Core_CoreUtils_InputValidator_Rules_RuleUniqueEntity.xml"/></namespace>
+  <namespace name="Core\CoreUtils">
+    
+  <trait name="Singleton" src="CoreUtils/Singleton.php" description="Using this trait in class will make that class &quot;Singleton&quot; and attach methods for getting shared instance or new one" xml="traits/Core_CoreUtils_Singleton.xml"/></namespace>
+  <namespace name="Core\Exceptions">
+    
+    <class name="ApplicationException" src="Exceptions/ApplicationException.php" xml="classes/Core_Exceptions_ApplicationException.xml"/>
+    <class name="DatabaseException" src="Exceptions/DatabaseException.php" xml="classes/Core_Exceptions_DatabaseException.xml"/>
+    <class name="MiddlewareException" src="Exceptions/MiddlewareException.php" xml="classes/Core_Exceptions_MiddlewareException.xml"/>
+    <class name="ModelException" src="Exceptions/ModelException.php" xml="classes/Core_Exceptions_ModelException.xml"/>
+    <class name="ModelTransformerException" src="Exceptions/ModelTransformerException.php" xml="classes/Core_Exceptions_ModelTransformerException.xml"/>
+    <class name="ResponseException" src="Exceptions/ResponseException.php" xml="classes/Core_Exceptions_ResponseException.xml"/>
+  <class name="AFrameworkException" src="Exceptions/AFrameworkException.php" description="To use proper error messaging in exceptions extend this class in custom exceptions instead of \Exception" xml="classes/Core_Exceptions_AFrameworkException.xml"/></namespace>
+  <namespace name="Core\Libs\Application">
+    <class name="Application" src="Libs/Application/Application.php" description="This is core of framework, its where everything gets connected and executed" xml="classes/Core_Libs_Application_Application.xml"/>
+    <interface name="IApplicationRequestAfterHandler" src="Libs/Application/IApplicationRequestAfterHandler.php" description="Implementing this interface into some &quot;IApplicationRequestHandler&quot; classes will tell &quot;Application&quot; to execute &quot;after&quot; method when request finished (validators, middlewares, handler)" xml="interfaces/Core_Libs_Application_IApplicationRequestAfterHandler.xml"/>
+    <interface name="IApplicationRequestFilter" src="Libs/Application/IApplicationRequestFilter.php" description="Implementing this interface to &quot;IApplicationRequestHandler&quot; will tell &quot;Application&quot; to apply request filters with defined values" xml="interfaces/Core_Libs_Application_IApplicationRequestFilter.xml"/>
+    <interface name="IApplicationRequestHandler" src="Libs/Application/IApplicationRequestHandler.php" description="Implementing this interface to some class will tell &quot;Application&quot; that this class is request handler and it contain &quot;handle&quot; method" xml="interfaces/Core_Libs_Application_IApplicationRequestHandler.xml"/>
+    <interface name="IApplicationRequestMethod" src="Libs/Application/IApplicationRequestMethod.php" description="This interface allows you to get string identifier of each available request method with valid autocomplete" xml="interfaces/Core_Libs_Application_IApplicationRequestMethod.xml"/>
+    <interface name="IApplicationRequestMiddleware" src="Libs/Application/IApplicationRequestMiddleware.php" description="Implementing this interface into &quot;IApplicationRequestHandler&quot; will tell &quot;Application&quot; that it should execute middlewares added to &quot;Middleware&quot; class before request handler is executed. If there are some unfinished (not executed) middlewares, script will prevent request handler to be executed, and finish request (send response)" xml="interfaces/Core_Libs_Application_IApplicationRequestMiddleware.xml"/>
+    <interface name="IApplicationRequestValidator" src="Libs/Application/IApplicationRequestValidator.php" description="Implementing this interface into &quot;IApplicationRequestHandler&quot; will tell &quot;Application&quot; to execute &quot;validate&quot; method, before any middlewares and handlers. If validation fails request is finished with status 400 and errors" xml="interfaces/Core_Libs_Application_IApplicationRequestValidator.xml"/>
+  </namespace>
+  <namespace name="Core\Libs">
+    
+  <class name="Database" src="Libs/Database.php" description="Holds connection to MySQL database, and provides facade for fetching, storing and removing to and from database" xml="classes/Core_Libs_Database.xml"/></namespace>
+  <namespace name="Core\Libs\Middleware">
+    
+    <class name="Middleware" src="Libs/Middleware/Middleware.php" description="This is used to add &quot;IMiddleware&quot; to current request middleware list" xml="classes/Core_Libs_Middleware_Middleware.xml"/>
+  <interface name="IMiddleware" src="Libs/Middleware/IMiddleware.php" description="Implement this interface to make your class an middleware that can be used in any request" xml="interfaces/Core_Libs_Middleware_IMiddleware.xml"/></namespace>
+  <namespace name="Core\Libs\Request">
+    
+    
+    
+  <interface name="IRequestFilter" src="Libs/Request/IRequestFilter.php" description="This class is used to define request input filters, so when getting request value it get filtered properly to wanted type" xml="interfaces/Core_Libs_Request_IRequestFilter.xml"/><class name="Request" src="Libs/Request/Request.php" description="Request class is here to hold all required request input values (GET, POST, PUT, PATCH, DELETE), also current request method" xml="classes/Core_Libs_Request_Request.xml"/><class name="RequestFilter" src="Libs/Request/RequestFilter.php" description="This class is used to define request input filters, so when getting request value it get filtered properly to wanted type" xml="classes/Core_Libs_Request_RequestFilter.xml"/></namespace>
+  <namespace name="Core\Libs\Response">
+    <interface name="IResponseStatus" src="Libs/Response/IResponseStatus.php" description="Use this interface for setting response status, DON'T USE MAGIC NUMBERS!!!" xml="interfaces/Core_Libs_Response_IResponseStatus.xml"/>
+    
+  <class name="Response" src="Libs/Response/Response.php" description="This is used to set up response data, such as status code, data, errors, headers etc.." xml="classes/Core_Libs_Response_Response.xml"/></namespace>
+  <namespace name="Core\Libs\Router">
+    
+  <interface name="IRoute" src="Libs/Router/IRoute.php" description="Interface is used to represent correct way of defining one route data" xml="interfaces/Core_Libs_Router_IRoute.xml"/></namespace>
+  <namespace name="">
+    <class name="Exception" xml="classes/Exception.xml"/>
+  </namespace>
+</index>

@@ -2,13 +2,19 @@
 
 namespace Core\Libs\Router;
 
-
 use Core\Libs\Application\IApplicationRequestAfterHandler;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestMiddleware;
 use Core\Libs\Application\IApplicationRequestValidator;
 
+/**
+ * Interface is used to represent correct way of defining one route data
+ *
+ * Currently is only used as interface of anonymous class in "Router"
+ *
+ * @package Core\Libs\Router
+ */
 interface IRoute
 {
 

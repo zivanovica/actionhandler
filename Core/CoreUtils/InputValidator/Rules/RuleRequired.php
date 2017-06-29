@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleRequired
+ *
+ * Use this rule to ensure existence of input value
  *
  * @author Aleksandar Zivanovic
  */

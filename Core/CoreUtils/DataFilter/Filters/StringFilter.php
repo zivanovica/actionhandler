@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 4:42 PM
- */
 
 namespace Core\CoreUtils\DataFilter\Filters;
-
 
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 
+/**
+ * Filter that is used to convert value to string
+ *
+ * @package Core\CoreUtils\DataFilter\Filters
+ */
 class StringFilter implements IDataFilter
 {
 

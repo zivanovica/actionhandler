@@ -6,6 +6,13 @@ use Core\CoreUtils\Singleton;
 use Core\Exceptions\ResponseException;
 use Core\Libs\Model\Model;
 
+/**
+ * This is used to set up response data, such as status code, data, errors, headers etc..
+ *
+ * TODO: Add headers handling
+ *
+ * @package Core\Libs\Response
+ */
 class Response
 {
 

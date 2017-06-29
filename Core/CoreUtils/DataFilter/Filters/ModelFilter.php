@@ -1,19 +1,18 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 3:17 PM
- */
 
 namespace Core\CoreUtils\DataFilter\Filters;
-
 
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelTransformerException;
 use Core\Libs\Model\Model;
 
+/**
+ *
+ * Filter that is used to convert value to corresponding model
+ *
+ * @package Core\CoreUtils\DataFilter\Filters
+ */
 class ModelFilter implements IDataFilter
 {
     use Singleton;

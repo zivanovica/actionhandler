@@ -17,6 +17,14 @@ use Core\Libs\Response\Response;
 use Core\Libs\Router\IRoute;
 use Core\Libs\Router\Router;
 
+/**
+ *
+ * This is core of framework, its where everything gets connected and executed
+ *
+ * Application is used to register routes with handlers, execute route corresponding to url
+ *
+ * @package Core\Libs\Application
+ */
 class Application
 {
 

@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/16/17
- * Time: 2:59 PM
- */
-
 namespace Core\CoreUtils\DataFilter\Filters;
 
 
 use Core\CoreUtils\DataFilter\IDataFilter;
 
+/**
+ * This data transformer accepts array of data transformers and transform value through each one in order they are present
+ *
+ * @package Core\CoreUtils\DataFilter\Filters
+ */
 class WaterfallFilter implements IDataFilter
 {
 

@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleMayNotExists
+ *
+ * This rule is used to ensure that input value IS NOT DEFINED
  *
  * @author Aleksandar Zivanovic
  */

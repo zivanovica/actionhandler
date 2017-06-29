@@ -2,6 +2,12 @@
 
 namespace Core\CoreUtils;
 
+/**
+ *
+ * Using this trait in class will make that class "Singleton" and attach methods for getting shared instance or new one
+ *
+ * @package Core\CoreUtils
+ */
 trait Singleton
 {
     /** @var object */

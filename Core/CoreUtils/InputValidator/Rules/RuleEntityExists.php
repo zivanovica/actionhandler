@@ -5,7 +5,8 @@ namespace Core\CoreUtils\InputValidator\Rules;
 use Core\Libs\Database;
 
 /**
- * Description of RuleEntityExists
+ *
+ * This rule is used to validate existence of given value with defined table and field (column) in database
  *
  * @author Aleksandar Zivanovic
  */

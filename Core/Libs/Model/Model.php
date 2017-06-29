@@ -7,6 +7,12 @@ use Core\CoreUtils\Singleton;
 use Core\Exceptions\ModelException;
 use Core\Libs\Database;
 
+/**
+ *
+ * Extend this class to ensure that child class is model that can be stored, fetched and removed from database
+ *
+ * @package Core\Libs\Model
+ */
 abstract class Model
 {
 

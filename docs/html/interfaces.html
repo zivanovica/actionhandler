@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Overview</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="interfaces.html">Interfaces</a>
+        </li>
+        <li>
+          <a href="classes.html">Classes</a>
+        </li>
+        <li>
+          <a href="traits.html">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <h1>Interfaces</h1>
+      <div class="container">
+        <h2 id="Core_CoreUtils_DataFilter">\Core\CoreUtils\DataFilter</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_CoreUtils_DataFilter_IDataFilter.html">IDataFilter</a>
+              </td>
+              <td>Implement this interface if you are creating new filtering rule</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <h2 id="Core_Libs_Application">\Core\Libs\Application</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestAfterHandler.html">IApplicationRequestAfterHandler</a>
+              </td>
+              <td>Implementing this interface into some "IApplicationRequestHandler" classes will tell "Application" to execute "after" method when request finished (validators, middlewares, handler)</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestFilter.html">IApplicationRequestFilter</a>
+              </td>
+              <td>Implementing this interface to "IApplicationRequestHandler" will tell "Application" to apply request filters with defined values</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestHandler.html">IApplicationRequestHandler</a>
+              </td>
+              <td>Implementing this interface to some class will tell "Application" that this class is request handler and it contain "handle" method</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestMethod.html">IApplicationRequestMethod</a>
+              </td>
+              <td>This interface allows you to get string identifier of each available request method with valid autocomplete</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestMiddleware.html">IApplicationRequestMiddleware</a>
+              </td>
+              <td>Implementing this interface into "IApplicationRequestHandler" will tell "Application" that it should execute middlewares added to "Middleware" class before request handler is executed. If there are some unfinished (not executed) middlewares, script will prevent request handler to be executed, and finish request (send response)</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Application_IApplicationRequestValidator.html">IApplicationRequestValidator</a>
+              </td>
+              <td>Implementing this interface into "IApplicationRequestHandler" will tell "Application" to execute "validate" method, before any middlewares and handlers. If validation fails request is finished with status 400 and errors</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <h2 id="Core_Libs_Middleware">\Core\Libs\Middleware</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Middleware_IMiddleware.html">IMiddleware</a>
+              </td>
+              <td>Implement this interface to make your class an middleware that can be used in any request</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <h2 id="Core_Libs_Request">\Core\Libs\Request</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Request_IRequestFilter.html">IRequestFilter</a>
+              </td>
+              <td>This class is used to define request input filters, so when getting request value it get filtered properly to wanted type</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <h2 id="Core_Libs_Response">\Core\Libs\Response</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Response_IResponseStatus.html">IResponseStatus</a>
+              </td>
+              <td>Use this interface for setting response status, DON'T USE MAGIC NUMBERS!!!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <h2 id="Core_Libs_Router">\Core\Libs\Router</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="interfaces/Core_Libs_Router_IRoute.html">IRoute</a>
+              </td>
+              <td>Interface is used to represent correct way of defining one route data</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.10.0 - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

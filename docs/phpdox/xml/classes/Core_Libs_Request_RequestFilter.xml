@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="Core\Libs\Request\RequestFilter" namespace="Core\Libs\Request" name="RequestFilter" abstract="false" final="false" start="16" end="98">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs/Request" file="RequestFilter.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Request/RequestFilter.php" size="2034" time="2017-06-29T16:52:15+00:00" unixtime="1498755135" sha1="188713f73eaad65eca80f44caba50c2a90d7c5db" relative="Libs/Request/RequestFilter.php"/>
+  <docblock>
+    <description compact="This class is used to define request input filters, so when getting request value it get filtered properly to wanted type">e.g ID parameter to User model</description>
+    <package value="Core\Libs\Request"/>
+  </docblock>
+  <implements full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+  <uses full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton" start="19" end="19"/>
+  <member name="_fields" visibility="private" static="false" line="22">
+    <docblock>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="_filtered" visibility="private" static="false" line="25">
+    <docblock>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <method name="add" start="35" end="46" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds another filter to list for given field"/>
+      <param type="string" variable="$field"/>
+      <param type="object" variable="$filter">
+        <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+      </param>
+      <return type="object">
+        <type full="Core\Libs\Request\$this|IRequestFilter" namespace="Core\Libs\Request" name="$this|IRequestFilter"/>
+      </return>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+    </return>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+    <parameter name="filter" byreference="false" type="object">
+      <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+    </parameter>
+  </method>
+  <method name="get" start="55" end="59" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Gets array of all filters for given field"/>
+      <param type="string" variable="$field"/>
+      <return type="object">
+        <type full="Core\Libs\Request\array|null" namespace="Core\Libs\Request" name="array|null"/>
+      </return>
+    </docblock>
+    <return type="array" nullable="true"/>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+  </method>
+  <method name="hasFilter" start="68" end="72" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Checks does field contain any filters or not"/>
+      <param type="string" variable="$field"/>
+      <return type="object">
+        <type full="Core\Libs\Request\bool" namespace="Core\Libs\Request" name="bool"/>
+      </return>
+    </docblock>
+    <return type="bool" nullable="false"/>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+  </method>
+  <method name="filter" start="82" end="97" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Will execute all filters for given field"/>
+      <param type="string" variable="$field"/>
+      <param description="Value that needs to be filtered" type="mixed" variable="$value"/>
+      <return type="mixed"/>
+    </docblock>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+    <parameter name="value" byreference="false" type="{unknown}"/>
+  </method>
+  <interface full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter">
+    <method name="add" start="26" end="26" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Adds another filter to list for given field"/>
+        <param type="string" variable="$field"/>
+        <param type="object" variable="$filter">
+          <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+        </param>
+        <return type="object">
+          <type full="Core\Libs\Request\$this|IRequestFilter" namespace="Core\Libs\Request" name="$this|IRequestFilter"/>
+        </return>
+      </docblock>
+      <return type="object" nullable="false">
+        <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+      </return>
+      <parameter name="field" byreference="false" type="object">
+        <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+      </parameter>
+      <parameter name="filter" byreference="false" type="object">
+        <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+      </parameter>
+    </method>
+    <method name="get" start="35" end="35" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Gets array of all filters for given field"/>
+        <param type="string" variable="$field"/>
+        <return type="object">
+          <type full="Core\Libs\Request\array|null" namespace="Core\Libs\Request" name="array|null"/>
+        </return>
+      </docblock>
+      <return type="array" nullable="true"/>
+      <parameter name="field" byreference="false" type="object">
+        <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+      </parameter>
+    </method>
+    <method name="hasFilter" start="44" end="44" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Checks does field contain any filters or not"/>
+        <param type="string" variable="$field"/>
+        <return type="object">
+          <type full="Core\Libs\Request\bool" namespace="Core\Libs\Request" name="bool"/>
+        </return>
+      </docblock>
+      <return type="bool" nullable="false"/>
+      <parameter name="field" byreference="false" type="object">
+        <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+      </parameter>
+    </method>
+    <method name="filter" start="54" end="54" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Will execute all filters for given field"/>
+        <param description="Fields which filters should be applied" type="string" variable="$field"/>
+        <param description="Value that needs to be filtered" type="mixed" variable="$value"/>
+        <return type="mixed"/>
+      </docblock>
+      <parameter name="field" byreference="false" type="object">
+        <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+      </parameter>
+      <parameter name="value" byreference="false" type="{unknown}"/>
+    </method>
+  </interface>
+  <trait full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton">
+    <method name="getSharedInstance" start="19" end="26" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\object|$this" namespace="Core\CoreUtils" name="object|$this"/>
+      </return>
+    </docblock>
+  </method>
+    <method name="getSharedInstanceArgs" start="32" end="35" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this|object" namespace="Core\CoreUtils" name="$this|object"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+    <method name="getNewInstance" start="40" end="43" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\mixed|$this" namespace="Core\CoreUtils" name="mixed|$this"/>
+      </return>
+    </docblock>
+  </method>
+    <method name="getNewInstanceArgs" start="49" end="52" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this" namespace="Core\CoreUtils" name="$this"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+  </trait>
+</class>

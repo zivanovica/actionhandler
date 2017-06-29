@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleMinimum
+ *
+ * This rule is used to ensure minimum length of input value
  *
  * @author Aleksandar Zivanovic
  */

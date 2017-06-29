@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="Core\Libs\Middleware\Middleware" namespace="Core\Libs\Middleware" name="Middleware" abstract="false" final="false" start="16" end="131">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs/Middleware" file="Middleware.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Middleware/Middleware.php" size="2650" time="2017-06-29T15:50:59+00:00" unixtime="1498751459" sha1="68beec3cf717b5da86a36345992e46ea436b6d94" relative="Libs/Middleware/Middleware.php"/>
+  <docblock>
+    <description compact="This is used to add &quot;IMiddleware&quot; to current request middleware list"/>
+    <package value="Core\Libs\Middleware"/>
+  </docblock>
+  <uses full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton" start="19" end="19"/>
+  <member name="_middlewares" type="array" default="" visibility="private" static="false" line="22">
+    <docblock>
+      <var description="IMiddleware[]" type="array"/>
+    </docblock>
+  </member>
+  <member name="_bag" type="array" default="" visibility="private" static="false" line="25">
+    <docblock>
+      <var description="Used to store some data in middleware and used them later in request" type="array"/>
+    </docblock>
+  </member>
+  <member name="_request" visibility="private" static="false" line="28">
+    <docblock>
+      <var type="object">
+        <type full="Core\Libs\Request\Request" namespace="Core\Libs\Request" name="Request"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="_response" visibility="private" static="false" line="31">
+    <docblock>
+      <var type="object">
+        <type full="Core\Libs\Response\Response" namespace="Core\Libs\Response" name="Response"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="_finished" type="boolean" default="false" visibility="private" static="false" line="34">
+    <docblock>
+      <var type="object">
+        <type full="Core\Libs\Middleware\bool" namespace="Core\Libs\Middleware" name="bool"/>
+      </var>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="40" end="45" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description/>
+      <param type="object" variable="$request">
+        <type full="Core\Libs\Request\Request" namespace="Core\Libs\Request" name="Request"/>
+      </param>
+      <param type="object" variable="$response">
+        <type full="Core\Libs\Response\Response" namespace="Core\Libs\Response" name="Response"/>
+      </param>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="Core\Libs\Request\Request" namespace="Core\Libs\Request" name="Request"/>
+    </parameter>
+    <parameter name="response" byreference="false" type="object">
+      <type full="Core\Libs\Response\Response" namespace="Core\Libs\Response" name="Response"/>
+    </parameter>
+  </constructor>
+  <method name="add" start="54" end="60" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Append another middleware in current execution list"/>
+      <param type="object" variable="$middleware">
+        <type full="Core\Libs\Middleware\IMiddleware" namespace="Core\Libs\Middleware" name="IMiddleware"/>
+      </param>
+      <return type="object">
+        <type full="Core\Libs\Middleware\Middleware" namespace="Core\Libs\Middleware" name="Middleware"/>
+      </return>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="Core\Libs\Middleware\Middleware" namespace="Core\Libs\Middleware" name="Middleware"/>
+    </return>
+    <parameter name="middleware" byreference="false" type="object">
+      <type full="Core\Libs\Middleware\IMiddleware" namespace="Core\Libs\Middleware" name="IMiddleware"/>
+    </parameter>
+  </method>
+  <method name="put" start="70" end="76" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Add identified data to bag"/>
+      <param type="string" variable="$identifier"/>
+      <param variable="$object"/>
+      <return type="object">
+        <type full="Core\Libs\Middleware\Middleware" namespace="Core\Libs\Middleware" name="Middleware"/>
+      </return>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="Core\Libs\Middleware\Middleware" namespace="Core\Libs\Middleware" name="Middleware"/>
+    </return>
+    <parameter name="identifier" byreference="false" type="object">
+      <type full="Core\Libs\Middleware\string" namespace="Core\Libs\Middleware" name="string"/>
+    </parameter>
+    <parameter name="object" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="get" start="86" end="90" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Retrieve value of given identifier from bag"/>
+      <param type="string" variable="$identifier"/>
+      <param type="null" variable="$default"/>
+      <return type="object">
+        <type full="Core\Libs\Middleware\mixed|null" namespace="Core\Libs\Middleware" name="mixed|null"/>
+      </return>
+    </docblock>
+    <parameter name="identifier" byreference="false" type="object">
+      <type full="Core\Libs\Middleware\string" namespace="Core\Libs\Middleware" name="string"/>
+    </parameter>
+    <parameter name="default" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="next" start="98" end="117" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Execute next middleware"/>
+      <throws type="object">
+        <type full="Core\Exceptions\MiddlewareException" namespace="Core\Exceptions" name="MiddlewareException"/>
+      </throws>
+    </docblock>
+    <return type="void" nullable="false"/>
+  </method>
+  <method name="finished" start="125" end="129" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Determine did middleware ($this) executed all middlewares"/>
+      <return type="object">
+        <type full="Core\Libs\Middleware\bool" namespace="Core\Libs\Middleware" name="bool"/>
+      </return>
+    </docblock>
+    <return type="bool" nullable="false"/>
+  </method>
+  <trait full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton">
+    <method name="getSharedInstance" start="13" end="20" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Core\CoreUtils\object|$this" namespace="Core\CoreUtils" name="object|$this"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getSharedInstanceArgs" start="26" end="29" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description/>
+        <param type="array" variable="$arguments"/>
+        <return type="object">
+          <type full="Core\CoreUtils\$this|object" namespace="Core\CoreUtils" name="$this|object"/>
+        </return>
+      </docblock>
+      <parameter name="arguments" byreference="false" type="array"/>
+    </method>
+    <method name="getNewInstance" start="34" end="37" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Core\CoreUtils\mixed|$this" namespace="Core\CoreUtils" name="mixed|$this"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getNewInstanceArgs" start="43" end="46" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description/>
+        <param type="array" variable="$arguments"/>
+        <return type="object">
+          <type full="Core\CoreUtils\$this" namespace="Core\CoreUtils" name="$this"/>
+        </return>
+      </docblock>
+      <parameter name="arguments" byreference="false" type="array"/>
+    </method>
+  </trait>
+</class>

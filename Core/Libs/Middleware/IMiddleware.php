@@ -5,6 +5,11 @@ namespace Core\Libs\Middleware;
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
+/**
+ * Implement this interface to make your class an middleware that can be used in any request
+ *
+ * @package Core\Libs\Middleware
+ */
 interface IMiddleware
 {
 

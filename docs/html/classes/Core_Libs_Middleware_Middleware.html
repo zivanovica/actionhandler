@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Core\Libs\Middleware\Middleware</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.html">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.html">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.html">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.html">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html#Core_Libs_Middleware">Core\Libs\Middleware</a>
+          </li>
+          <li class="separator">Middleware</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/Libs/Middleware/Middleware.php.html#line16">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Core\Libs\Middleware\</small>Middleware</h1>
+        <h4>This is used to add "IMiddleware" to current request middleware list</h4>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Middleware
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$_middlewares</a> =
+                        ;
+                    </li><li>private array <a href="#members">$_bag</a> =
+                        ;
+                    </li><li>private <span title="Core\Libs\Request\Request">Request</span> <a href="#members">$_request</a>;
+                    </li><li>private <span title="Core\Libs\Response\Response">Response</span> <a href="#members">$_response</a>;
+                    </li><li>private <span title="Core\Libs\Middleware\bool">bool</span> <a href="#members">$_finished</a> =
+                        false;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/__construct.html">__construct</a>()
+                    </li><li>public <span title="Middleware">Middleware</span> <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/add.html">add</a>()
+                    </li><li>public <span title="Middleware">Middleware</span> <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/put.html">put</a>()
+                    </li><li>public mixed|null <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/get.html">get</a>()
+                    </li><li>public void <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/next.html">next</a>()
+                    </li><li>public bool <a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/finished.html">finished</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Core\CoreUtils\Singleton">Singleton</span></li><li>public static object|$this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstance.html">getSharedInstance</a>()
+                        </li><li>public static $this|object <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstanceArgs.html">getSharedInstanceArgs</a>()
+                        </li><li>public static mixed|$this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstance.html">getNewInstance</a>()
+                        </li><li>public static $this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstanceArgs.html">getNewInstanceArgs</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Uses</h4>
+          <ul>
+            <li>
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton.html">Core\CoreUtils\Singleton</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_bag"><strong>$_bag</strong>
+                —
+                array</li>
+            <li id="_finished"><strong>$_finished</strong>
+                —
+                <a title="Core\Libs\Middleware\bool" href="../classes/Core_Libs_Middleware_bool.html">Core\Libs\Middleware\bool</a></li>
+            <li id="_middlewares"><strong>$_middlewares</strong>
+                —
+                array</li>
+            <li id="_request"><strong>$_request</strong>
+                —
+                <a title="Core\Libs\Request\Request" href="../classes/Core_Libs_Request_Request.html">Core\Libs\Request\Request</a></li>
+            <li id="_response"><strong>$_response</strong>
+                —
+                <a title="Core\Libs\Response\Response" href="../classes/Core_Libs_Response_Response.html">Core\Libs\Response\Response</a></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="add"><a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/add.html">add()</a>
+                — Append another middleware in current execution list</li>
+            <li id="finished"><a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/finished.html">finished()</a>
+                — Determine did middleware ($this) executed all middlewares</li>
+            <li id="get"><a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/get.html">get()</a>
+                — Retrieve value of given identifier from bag</li>
+            <li id="next"><a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/next.html">next()</a>
+                — Execute next middleware</li>
+            <li id="put"><a title="Core\Libs\Middleware\Middleware" href="../classes/Core_Libs_Middleware_Middleware/put.html">put()</a>
+                — Add identified data to bag</li>
+          </ul>
+          <h3>Inherited from <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton.html">Core\CoreUtils\Singleton</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="getNewInstance">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstance.html">getNewInstance()</a>
+            </li>
+            <li id="getNewInstanceArgs">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstanceArgs.html">getNewInstanceArgs()</a>
+            </li>
+            <li id="getSharedInstance">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstance.html">getSharedInstance()</a>
+            </li>
+            <li id="getSharedInstanceArgs">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstanceArgs.html">getSharedInstanceArgs()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.10.0 - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

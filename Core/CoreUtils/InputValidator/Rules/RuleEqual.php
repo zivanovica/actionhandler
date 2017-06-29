@@ -2,6 +2,12 @@
 
 namespace Core\CoreUtils\InputValidator\Rules;
 
+/**
+ *
+ * This rule is used to compare input value to given as rule parameter
+ *
+ * @package Core\CoreUtils\InputValidator\Rules
+ */
 class RuleEqual extends InputValidatorRule
 {
 

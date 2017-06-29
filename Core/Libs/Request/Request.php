@@ -7,6 +7,12 @@ use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Router\Router;
 
+/**
+ *
+ * Request class is here to hold all required request input values (GET, POST, PUT, PATCH, DELETE), also current request method
+ *
+ * @package Core\Libs\Request
+ */
 class Request
 {
 

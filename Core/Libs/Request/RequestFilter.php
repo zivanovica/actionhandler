@@ -5,6 +5,14 @@ namespace Core\Libs\Request;
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
 
+/**
+ *
+ * This class is used to define request input filters, so when getting request value it get filtered properly to wanted type
+ *
+ * e.g ID parameter to User model
+ *
+ * @package Core\Libs\Request
+ */
 class RequestFilter implements IRequestFilter
 {
 

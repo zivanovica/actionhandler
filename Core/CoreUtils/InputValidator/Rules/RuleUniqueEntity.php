@@ -5,7 +5,8 @@ namespace Core\CoreUtils\InputValidator\Rules;
 use Core\Libs\Database;
 
 /**
- * Description of RuleUniqueEntity
+ *
+ * This rule is used to ensure that input value with defined table and field (column) does not exists in database
  *
  * @author Aleksandar Zivanovic
  */

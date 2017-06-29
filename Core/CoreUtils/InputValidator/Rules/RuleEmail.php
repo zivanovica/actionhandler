@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleEmail
+ *
+ * This rule is used to validate input field as an email
  *
  * @author Aleksandar Zivanovic
  */

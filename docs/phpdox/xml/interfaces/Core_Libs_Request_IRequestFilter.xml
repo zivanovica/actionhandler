@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src" full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter" abstract="false" final="false" start="15" end="55">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs/Request" file="IRequestFilter.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Request/IRequestFilter.php" size="1214" time="2017-06-29T16:52:28+00:00" unixtime="1498755148" sha1="405378eba7bbfa93d91f57695c3a8357ada0b0d5" relative="Libs/Request/IRequestFilter.php"/>
+  <docblock>
+    <description compact="This class is used to define request input filters, so when getting request value it get filtered properly to wanted type">e.g ID parameter to User model</description>
+    <package value="Core\Libs\Request"/>
+  </docblock>
+  <method name="add" start="26" end="26" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds another filter to list for given field"/>
+      <param type="string" variable="$field"/>
+      <param type="object" variable="$filter">
+        <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+      </param>
+      <return type="object">
+        <type full="Core\Libs\Request\$this|IRequestFilter" namespace="Core\Libs\Request" name="$this|IRequestFilter"/>
+      </return>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="Core\Libs\Request\IRequestFilter" namespace="Core\Libs\Request" name="IRequestFilter"/>
+    </return>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+    <parameter name="filter" byreference="false" type="object">
+      <type full="Core\CoreUtils\DataFilter\IDataFilter" namespace="Core\CoreUtils\DataFilter" name="IDataFilter"/>
+    </parameter>
+  </method>
+  <method name="get" start="35" end="35" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Gets array of all filters for given field"/>
+      <param type="string" variable="$field"/>
+      <return type="object">
+        <type full="Core\Libs\Request\array|null" namespace="Core\Libs\Request" name="array|null"/>
+      </return>
+    </docblock>
+    <return type="array" nullable="true"/>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+  </method>
+  <method name="hasFilter" start="44" end="44" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Checks does field contain any filters or not"/>
+      <param type="string" variable="$field"/>
+      <return type="object">
+        <type full="Core\Libs\Request\bool" namespace="Core\Libs\Request" name="bool"/>
+      </return>
+    </docblock>
+    <return type="bool" nullable="false"/>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+  </method>
+  <method name="filter" start="54" end="54" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Will execute all filters for given field"/>
+      <param description="Fields which filters should be applied" type="string" variable="$field"/>
+      <param description="Value that needs to be filtered" type="mixed" variable="$value"/>
+      <return type="mixed"/>
+    </docblock>
+    <parameter name="field" byreference="false" type="object">
+      <type full="Core\Libs\Request\string" namespace="Core\Libs\Request" name="string"/>
+    </parameter>
+    <parameter name="value" byreference="false" type="{unknown}"/>
+  </method>
+  <implementors>
+    <class full="Core\Libs\Request\RequestFilter" namespace="Core\Libs\Request" name="RequestFilter"/>
+  </implementors>
+</interface>

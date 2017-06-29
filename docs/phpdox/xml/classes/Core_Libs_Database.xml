@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="Core\Libs\Database" namespace="Core\Libs" name="Database" abstract="false" final="false" start="14" end="137">
+  <file path="/Users/coa/projects/AppIdea/Core/Libs" file="Database.php" realpath="/Users/coa/projects/AppIdea/Core/Libs/Database.php" size="3531" time="2017-06-29T16:57:22+00:00" unixtime="1498755442" sha1="1ad3a0a01ecdce611edd3ab7481afad66da37adb" relative="Libs/Database.php"/>
+  <docblock>
+    <description compact="Holds connection to MySQL database, and provides facade for fetching, storing and removing to and from database"/>
+    <package value="Core\Libs"/>
+  </docblock>
+  <uses full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton" start="18" end="18"/>
+  <member name="connection" visibility="public" static="false" line="21">
+    <docblock>
+      <var type="object">
+        <type full="\PDO" namespace="" name="PDO"/>
+      </var>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="30" end="36" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="Host address" type="string" variable="$host"/>
+      <param description="Database name" type="string" variable="$database"/>
+      <param description="Username" type="string" variable="$username"/>
+      <param description="Password" type="string" variable="$password"/>
+      <param description="Port" type="int" variable="$port"/>
+    </docblock>
+    <parameter name="host" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="database" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="username" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="password" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="port" byreference="false" type="integer" default="3306">
+      <type full="Core\Libs\int" namespace="Core\Libs" name="int"/>
+    </parameter>
+  </constructor>
+  <method name="fetch" start="46" end="54" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Fetch single record from database"/>
+      <param description="Query that will be executed" type="string" variable="$query"/>
+      <param description="Parameters that will be bind to query" type="array" variable="$bindings"/>
+      <return type="object">
+        <type full="Core\Libs\array|null" namespace="Core\Libs" name="array|null"/>
+      </return>
+    </docblock>
+    <return type="array" nullable="true"/>
+    <parameter name="query" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="bindings" byreference="false" type="array" default=""/>
+  </method>
+  <method name="fetchAll" start="64" end="72" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Fetch multiple record from database"/>
+      <param description="Query that will be executed" type="string" variable="$query"/>
+      <param description="Parameters that will be bind to query" type="array" variable="$bindings"/>
+      <return type="object">
+        <type full="Core\Libs\array|null" namespace="Core\Libs" name="array|null"/>
+      </return>
+    </docblock>
+    <return type="array" nullable="true"/>
+    <parameter name="query" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="bindings" byreference="false" type="array" default=""/>
+  </method>
+  <method name="store" start="84" end="90" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Save record to database and retrieve its id (INSERT, UPDATE queries)"/>
+      <param description="Query that will be executed" type="string" variable="$query"/>
+      <param description="Parameters that will be bind to query execution" type="array" variable="$bindings"/>
+      <return type="int"/>
+    </docblock>
+    <return type="int" nullable="false"/>
+    <parameter name="query" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="bindings" byreference="false" type="array"/>
+  </method>
+  <method name="delete" start="102" end="108" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Execute query and return number of affected rows">Meant to be used with delete queries</description>
+      <param type="string" variable="$query"/>
+      <param type="array" variable="$bindings"/>
+      <return type="int"/>
+    </docblock>
+    <return type="int" nullable="false"/>
+    <parameter name="query" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="bindings" byreference="false" type="array"/>
+  </method>
+  <method name="_executeQuery" start="119" end="135" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description compact="Execute query and retrieve PDOStatement"/>
+      <param description="Query that needs to be prepared and executed" type="string" variable="$query"/>
+      <param description="Parameters that will be bind on query" type="array" variable="$bindings"/>
+      <return type="object">
+        <type full="\PDOStatement" namespace="" name="PDOStatement"/>
+      </return>
+      <throws type="object">
+        <type full="Core\Exceptions\DatabaseException" namespace="Core\Exceptions" name="DatabaseException"/>
+      </throws>
+    </docblock>
+    <return type="object" nullable="false">
+      <type full="PDOStatement" namespace="" name="PDOStatement"/>
+    </return>
+    <parameter name="query" byreference="false" type="object">
+      <type full="Core\Libs\string" namespace="Core\Libs" name="string"/>
+    </parameter>
+    <parameter name="bindings" byreference="false" type="array"/>
+  </method>
+  <trait full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton">
+    <method name="getSharedInstance" start="19" end="26" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\object|$this" namespace="Core\CoreUtils" name="object|$this"/>
+      </return>
+    </docblock>
+  </method>
+    <method name="getSharedInstanceArgs" start="32" end="35" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this|object" namespace="Core\CoreUtils" name="$this|object"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+    <method name="getNewInstance" start="40" end="43" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\mixed|$this" namespace="Core\CoreUtils" name="mixed|$this"/>
+      </return>
+    </docblock>
+  </method>
+    <method name="getNewInstanceArgs" start="49" end="52" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this" namespace="Core\CoreUtils" name="$this"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+  </trait>
+</class>

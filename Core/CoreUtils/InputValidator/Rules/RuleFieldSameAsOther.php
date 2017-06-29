@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleFieldSameAsOther
+ *
+ * This rule is used to compare two request inputs and validate that they are the same
  *
  * @author Aleksandar Zivanovic
  */

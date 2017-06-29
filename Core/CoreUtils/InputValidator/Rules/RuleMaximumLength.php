@@ -3,7 +3,8 @@
 namespace Core\CoreUtils\InputValidator\Rules;
 
 /**
- * Description of RuleMaximumLength
+ *
+ * This rule is used to ensure maximum length of input value
  *
  * @author Aleksandar Zivanovic
  */

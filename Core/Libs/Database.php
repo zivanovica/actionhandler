@@ -5,6 +5,12 @@ namespace Core\Libs;
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\DatabaseException;
 
+/**
+ *
+ *  Holds connection to MySQL database, and provides facade for fetching, storing and removing to and from database
+ *
+ * @package Core\Libs
+ */
 class Database
 {
 

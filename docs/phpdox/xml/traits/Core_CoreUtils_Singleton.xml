@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trait xmlns="http://xml.phpdox.net/src" full="Core\CoreUtils\Singleton" namespace="Core\CoreUtils" name="Singleton" abstract="false" final="false" start="11" end="75">
+  <file path="/Users/coa/projects/AppIdea/Core/CoreUtils" file="Singleton.php" realpath="/Users/coa/projects/AppIdea/Core/CoreUtils/Singleton.php" size="1565" time="2017-06-29T16:43:14+00:00" unixtime="1498754594" sha1="ed76b0142ef5ca5030941b3976205d93374ef34a" relative="CoreUtils/Singleton.php"/>
+  <docblock>
+    <description compact="Using this trait in class will make that class &quot;Singleton&quot; and attach methods for getting shared instance or new one"/>
+    <package value="Core\CoreUtils"/>
+  </docblock>
+  <member name="instance" visibility="private" static="true" line="14">
+    <docblock>
+      <var type="object"/>
+    </docblock>
+  </member>
+  <method name="getSharedInstance" start="19" end="26" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\object|$this" namespace="Core\CoreUtils" name="object|$this"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getSharedInstanceArgs" start="32" end="35" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this|object" namespace="Core\CoreUtils" name="$this|object"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+  <method name="getNewInstance" start="40" end="43" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Core\CoreUtils\mixed|$this" namespace="Core\CoreUtils" name="mixed|$this"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getNewInstanceArgs" start="49" end="52" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this" namespace="Core\CoreUtils" name="$this"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+  <method name="getInstance" start="58" end="74" abstract="false" final="false" static="true" visibility="private">
+    <docblock>
+      <description/>
+      <param type="array" variable="$arguments"/>
+      <return type="object">
+        <type full="Core\CoreUtils\$this" namespace="Core\CoreUtils" name="$this"/>
+      </return>
+    </docblock>
+    <parameter name="arguments" byreference="false" type="array"/>
+  </method>
+<users><class full="Core\Libs\Response\Response" namespace="Core\Libs\Response" name="Response"/><class full="Core\Libs\Database" namespace="Core\Libs" name="Database"/></users></trait>

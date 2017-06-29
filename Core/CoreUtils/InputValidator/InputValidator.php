@@ -16,7 +16,7 @@ use Core\CoreUtils\Singleton;
 use RuntimeException;
 
 /**
- * Description of InputValidator
+ * Its used to register and execute corresponding filters for request field
  *
  * @author Aleksandar Zivanovic
  */

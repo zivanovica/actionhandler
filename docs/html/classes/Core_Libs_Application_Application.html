@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Core\Libs\Application\Application</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.html">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.html">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.html">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.html">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.html#Core_Libs_Application">Core\Libs\Application</a>
+          </li>
+          <li class="separator">Application</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/Libs/Application/Application.php.html#line28">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Core\Libs\Application\</small>Application</h1>
+        <h4>This is core of framework, its where everything gets connected and executed</h4>
+        <p>Application is used to register routes with handlers, execute route corresponding to url</p>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Application
+            {<br/><ul class="none"><li>// constants</li><li>const DEFAULT_ACTION_IDENTIFIER = '_action';</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$_config</a>;
+                    </li><li>private  <a href="#members">$_dbConfig</a>;
+                    </li><li>private  <a href="#members">$_appConfig</a>;
+                    </li><li>private <span title="Core\Libs\Request\Request">Request</span> <a href="#members">$_request</a>;
+                    </li><li>private <span title="Core\Libs\Response\Response">Response</span> <a href="#members">$_response</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/__construct.html">__construct</a>()
+                    </li><li>public void <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/run.html">run</a>()
+                    </li><li>private void <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_setRequestFilter.html">_setRequestFilter</a>()
+                    </li><li>private ?<span title="IRoute">IRoute</span> <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_validateAndGetRoute.html">_validateAndGetRoute</a>()
+                    </li><li>private bool <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeValidator.html">_executeValidator</a>()
+                    </li><li>private bool <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeMiddlewares.html">_executeMiddlewares</a>()
+                    </li><li>private void <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeAfterHandler.html">_executeAfterHandler</a>()
+                    </li><li>private bool <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_loadConfig.html">_loadConfig</a>()
+                    </li><li>private void <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_finishRequest.html">_finishRequest</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Core\CoreUtils\Singleton">Singleton</span></li><li>public static object|$this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstance.html">getSharedInstance</a>()
+                        </li><li>public static $this|object <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstanceArgs.html">getSharedInstanceArgs</a>()
+                        </li><li>public static mixed|$this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstance.html">getNewInstance</a>()
+                        </li><li>public static $this <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstanceArgs.html">getNewInstanceArgs</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Uses</h4>
+          <ul>
+            <li>
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton.html">Core\CoreUtils\Singleton</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="DEFAULT_ACTION_IDENTIFIER">DEFAULT_ACTION_IDENTIFIER</td>
+              <td>'_action'</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_appConfig"><strong>$_appConfig</strong>
+                —
+                array</li>
+            <li id="_config"><strong>$_config</strong>
+                —
+                array</li>
+            <li id="_dbConfig"><strong>$_dbConfig</strong>
+                —
+                array</li>
+            <li id="_request"><strong>$_request</strong>
+                —
+                <a title="Core\Libs\Request\Request" href="../classes/Core_Libs_Request_Request.html">Core\Libs\Request\Request</a></li>
+            <li id="_response"><strong>$_response</strong>
+                —
+                <a title="Core\Libs\Response\Response" href="../classes/Core_Libs_Response_Response.html">Core\Libs\Response\Response</a></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/__construct.html">__construct()</a>
+            </li>
+            <li id="_executeAfterHandler"><a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeAfterHandler.html">_executeAfterHandler()</a>
+                — Executes "after" handle if action handler implements correct interface</li>
+            <li id="_executeMiddlewares">
+              <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeMiddlewares.html">_executeMiddlewares()</a>
+            </li>
+            <li id="_executeValidator">
+              <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_executeValidator.html">_executeValidator()</a>
+            </li>
+            <li id="_finishRequest"><a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_finishRequest.html">_finishRequest()</a>
+                — Will finish request with proper data/errors and status code</li>
+            <li id="_loadConfig"><a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_loadConfig.html">_loadConfig()</a>
+                — Stores json information from given config file in config variable</li>
+            <li id="_setRequestFilter">
+              <a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_setRequestFilter.html">_setRequestFilter()</a>
+            </li>
+            <li id="_validateAndGetRoute"><a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/_validateAndGetRoute.html">_validateAndGetRoute()</a>
+                — Validates current url and if it is okay return IRoute associated to it</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="run"><a title="Core\Libs\Application\Application" href="../classes/Core_Libs_Application_Application/run.html">run()</a>
+                — Executes handler for requested action</li>
+          </ul>
+          <h3>Inherited from <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton.html">Core\CoreUtils\Singleton</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="getNewInstance">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstance.html">getNewInstance()</a>
+            </li>
+            <li id="getNewInstanceArgs">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getNewInstanceArgs.html">getNewInstanceArgs()</a>
+            </li>
+            <li id="getSharedInstance">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstance.html">getSharedInstance()</a>
+            </li>
+            <li id="getSharedInstanceArgs">
+              <a title="Core\CoreUtils\Singleton" href="../traits/Core_CoreUtils_Singleton/getSharedInstanceArgs.html">getSharedInstanceArgs()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.10.0 - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>
