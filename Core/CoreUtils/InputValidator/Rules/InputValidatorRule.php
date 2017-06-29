@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Core\CoreUtils\InputValidator\Rules;
 
 use Core\CoreUtils\InputValidator\InputValidator;

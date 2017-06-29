@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 9:47 PM
- */
 
 namespace Core\Exceptions;
-
 
 class ApplicationException extends AFrameworkException
 {

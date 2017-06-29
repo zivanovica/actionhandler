@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Aleksandar Zivanovic
- * Email: coapsyfactor@gmail.com
- * Date: 6/14/17
- * Time: 2:58 PM
- */
 
 namespace Core\Libs\Request;
 

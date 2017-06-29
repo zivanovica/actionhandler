@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 1:09 PM
- */
 
 namespace Core\Exceptions;
-
 
 class DatabaseException extends AFrameworkException
 {

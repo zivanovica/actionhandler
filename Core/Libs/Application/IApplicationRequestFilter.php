@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/28/17
- * Time: 2:00 PM
- */
 
 namespace Core\Libs\Application;
 

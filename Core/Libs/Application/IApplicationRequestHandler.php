@@ -1,16 +1,16 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 9:44 PM
- */
 
 namespace Core\Libs\Application;
 
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
+/**
+ *
+ * Implementing this interface to some class will tell "Application" that this class is request handler and it contain "handle" method
+ *
+ * @package Core\Libs\Application
+ */
 interface IApplicationRequestHandler
 {
 

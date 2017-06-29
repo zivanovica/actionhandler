@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 9:39 PM
- */
 
 namespace Core\Libs\Application;
 
@@ -72,7 +66,6 @@ class Application
         $this->_request = Request::getSharedInstance();
 
         $this->_response = Response::getSharedInstance();
-
     }
 
     /**

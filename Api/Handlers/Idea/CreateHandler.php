@@ -5,7 +5,6 @@
  * Date: 6/21/17
  * Time: 12:41 PM
  */
-
 namespace Api\Handlers\Idea;
 
 use Api\Middlewares\AuthenticateMiddleware;

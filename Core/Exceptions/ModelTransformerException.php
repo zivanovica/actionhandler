@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 3:19 PM
- */
 
 namespace Core\Exceptions;
 

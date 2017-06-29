@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/22/17
- * Time: 1:05 PM
- */
 
 namespace Core\CoreUtils\DataFilter\Filters;
-
 
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
@@ -17,6 +10,13 @@ class EmailFilter implements IDataFilter
 
     use Singleton;
 
+    /**
+     *
+     * Returns email if its valid, FALSE otherwise
+     *
+     * @param string $value
+     * @return false|string
+     */
     public function filter($value)
     {
 

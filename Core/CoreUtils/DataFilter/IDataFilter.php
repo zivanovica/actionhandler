@@ -1,16 +1,18 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 4:35 PM
- */
 
 namespace Core\CoreUtils\DataFilter;
 
-
+/**
+ * Implement this interface if you are creating new filtering rule
+ *
+ * @package Core\CoreUtils\DataFilter
+ */
 interface IDataFilter
 {
 
+    /**
+     * @param mixed $value Value that will be filtered
+     * @return mixed Filtered value
+     */
     public function filter($value);
 }

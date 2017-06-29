@@ -1,14 +1,16 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/16/17
- * Time: 2:25 PM
- */
 
 namespace Core\Libs\Application;
 
-
+/**
+ *
+ * Implementing this interface into some "IApplicationRequestHandler" classes will tell "Application" to execute "after" method when request
+ * finished (validators, middlewares, handler)
+ *
+ * It does not affect response directly, only if something changes response data inside of "after" method
+ *
+ * @package Core\Libs\Application
+ */
 interface IApplicationRequestAfterHandler
 {
 

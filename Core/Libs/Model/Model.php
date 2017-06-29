@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 12:44 PM
- */
 
 namespace Core\Libs\Model;
-
 
 use Core\CoreUtils\DataFilter\IDataFilter;
 use Core\CoreUtils\Singleton;
@@ -280,7 +273,7 @@ abstract class Model
      *
      * Get bulk of field values
      *
-     * TODO: Investigate could this anyhow result in false existance
+     * TODO: Investigate could this anyhow result in false existence
      *
      * @param array $attributes
      * @return array
@@ -291,12 +284,21 @@ abstract class Model
         return array_intersect_key(array_flip($attributes), array_merge($this->_attributes, $this->_updatedAttributes));
     }
 
+    /**
+     *
+     * Retrieve all parameters with its associated values, parameters stored in "_hidden" property won't be retrieved in array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
 
         return array_diff_key(array_merge($this->_attributes, $this->_updatedAttributes), array_flip($this->_hidden));
     }
 
+    /**
+     * Reset all changes to original values
+     */
     public function reset(): void
     {
 
@@ -341,6 +343,9 @@ abstract class Model
     }
 
     /**
+     *
+     * Build select query with "WHERE" criteria
+     *
      * @param string $table
      * @param array $criteria
      * @return string
@@ -384,16 +389,25 @@ abstract class Model
     }
 
     /**
+     *
+     * Retrieve current model table name
+     *
      * @return string Table name
      */
     public abstract function table(): string;
 
     /**
+     *
+     * Retrieve current model primary key identifier
+     *
      * @return string Name of primary key field
      */
     public abstract function primary(): string;
 
     /**
+     *
+     * Retrieve current model available fields (columns)
+     *
      * @return array Fields (columns) of table
      */
     public abstract function fields(): array;

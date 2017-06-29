@@ -17,7 +17,7 @@ class WaterfallFilter implements IDataFilter
     /**
      * @var IDataFilter[]
      */
-    private $_transformers;
+    private $_filters;
 
     /**
      *
@@ -32,18 +32,25 @@ class WaterfallFilter implements IDataFilter
      *
      * return last transformed value
      *
-     * @param IDataFilter[] $dataTransformers
+     * @param IDataFilter[] $dataFilters
      */
-    public function __construct(array $dataTransformers)
+    public function __construct(array $dataFilters)
     {
 
-        $this->_transformers = $dataTransformers;
+        $this->_filters = $dataFilters;
     }
 
+    /**
+     *
+     * Filters input value through all given filters
+     *
+     * @param mixed $value
+     * @return mixed
+     */
     public function filter($value)
     {
 
-        foreach ($this->_transformers as $transformer) {
+        foreach ($this->_filters as $transformer) {
 
             $this->_transform($transformer, $value);
         }

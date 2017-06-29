@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/23/17
- * Time: 4:43 PM
- */
 
 namespace Core\CoreUtils\InputValidator\Rules;
-
 
 class RuleEqual extends InputValidatorRule
 {

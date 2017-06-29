@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 3:10 PM
- */
 
 namespace Core\Libs\Response;
-
 
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\ResponseException;
@@ -121,7 +114,7 @@ class Response
 
     /**
      *
-     * Retrieve all respsonse errors
+     * Retrieve all response errors
      *
      * @return array
      */

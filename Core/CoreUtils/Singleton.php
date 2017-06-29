@@ -1,11 +1,5 @@
 <?php
 
-/**
- * User: Aleksandar Zivanovic <coapsyfactor@gmail.com>
- * Date: 22.6.2016.
- * Time: 02.53
- */
-
 namespace Core\CoreUtils;
 
 trait Singleton
@@ -52,6 +46,7 @@ trait Singleton
     }
 
     /**
+     * @param array $arguments
      * @return $this
      */
     private static function getInstance(array $arguments)

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 10:59 PM
- */
 
 namespace Core\Libs;
 
@@ -14,28 +8,34 @@ use Core\Exceptions\DatabaseException;
 class Database
 {
 
+    // We want to be able to get connected instance with Database::getSharedInstance()
     use Singleton;
 
     /** @var \PDO */
     public $connection;
 
+    /**
+     * @param string $host Host address
+     * @param string $database Database name
+     * @param string $username Username
+     * @param string $password Password
+     * @param int $port Port
+     */
     public function __construct(string $host, string $database, string $username, string $password, int $port = 3306)
     {
 
         $dsn = "mysql:host={$host};port={$port};dbname={$database};";
 
         $this->connection = new \PDO($dsn, $username, $password);
-
     }
 
     /**
      *
-     * Fetch single database record
+     * Fetch single record from database
      *
-     * @param string $query
-     * @param array $bindings
-     * @return array
-     * @throws DatabaseException
+     * @param string $query Query that will be executed
+     * @param array $bindings Parameters that will be bind to query
+     * @return array|null
      */
     public function fetch(string $query, array $bindings = []): ?array
     {
@@ -47,6 +47,14 @@ class Database
         return is_array($results) ? $results : null;
     }
 
+    /**
+     *
+     * Fetch multiple record from database
+     *
+     * @param string $query Query that will be executed
+     * @param array $bindings Parameters that will be bind to query
+     * @return array|null
+     */
     public function fetchAll(string $query, array $bindings = []): ?array
     {
 
@@ -58,6 +66,15 @@ class Database
     }
 
 
+    /**
+     *
+     * Save record to database and retrieve its id
+     * (INSERT, UPDATE queries)
+     *
+     * @param string $query Query that will be executed
+     * @param array $bindings Parameters that will be bind to query execution
+     * @return int
+     */
     public function store(string $query, array $bindings): int
     {
 
@@ -66,6 +83,16 @@ class Database
         return $this->connection->lastInsertId();
     }
 
+    /**
+     *
+     * Execute query and return number of affected rows
+     *
+     * Meant to be used with delete queries
+     *
+     * @param string $query
+     * @param array $bindings
+     * @return int
+     */
     public function delete(string $query, array $bindings): int
     {
 
@@ -74,6 +101,15 @@ class Database
         return $statement->rowCount();
     }
 
+    /**
+     *
+     * Execute query and retrieve PDOStatement
+     *
+     * @param string $query Query that needs to be prepared and executed
+     * @param array $bindings Parameters that will be bind on query
+     * @return \PDOStatement
+     * @throws DatabaseException
+     */
     private function _executeQuery(string $query, array $bindings): \PDOStatement
     {
 

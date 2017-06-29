@@ -1,19 +1,18 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/19/17
- * Time: 12:57 PM
- */
 
 namespace Core\Libs\Middleware;
-
 
 use Core\CoreUtils\Singleton;
 use Core\Exceptions\MiddlewareException;
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
+/**
+ *
+ * This is used to add "IMiddleware" to current request middleware list
+ *
+ * @package Core\Libs\Middleware
+ */
 class Middleware
 {
 
@@ -22,23 +21,36 @@ class Middleware
     /** @var array IMiddleware[] */
     private $_middlewares = [];
 
+    /** @var array Used to store some data in middleware and used them later in request */
     private $_bag = [];
 
     /** @var Request */
     private $_request;
 
+    /** @var Response */
     private $_response;
 
+    /** @var bool */
     private $_finished = false;
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     private function __construct(Request $request, Response $response)
     {
 
         $this->_request = $request;
-
         $this->_response = $response;
     }
 
+    /**
+     *
+     * Append another middleware in current execution list
+     *
+     * @param IMiddleware $middleware
+     * @return Middleware
+     */
     public function add(IMiddleware $middleware): Middleware
     {
 
@@ -47,6 +59,14 @@ class Middleware
         return $this;
     }
 
+    /**
+     *
+     * Add identified data to bag
+     *
+     * @param string $identifier
+     * @param $object
+     * @return Middleware
+     */
     public function put(string $identifier, $object): Middleware
     {
 
@@ -55,12 +75,26 @@ class Middleware
         return $this;
     }
 
+    /**
+     *
+     * Retrieve value of given identifier from bag
+     *
+     * @param string $identifier
+     * @param null $default
+     * @return mixed|null
+     */
     public function get(string $identifier, $default = null)
     {
 
         return isset($this->_bag[$identifier]) ? $this->_bag[$identifier] : $default;
     }
 
+    /**
+     *
+     * Execute next middleware
+     *
+     * @throws MiddlewareException
+     */
     public function next(): void
     {
 
@@ -82,6 +116,12 @@ class Middleware
         $middleware->run($this->_request, $this->_response, $this);
     }
 
+    /**
+     *
+     * Determine did middleware ($this) executed all middlewares
+     *
+     * @return bool
+     */
     public function finished(): bool
     {
 

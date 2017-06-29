@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/20/17
- * Time: 3:00 PM
- */
 
 namespace Core\Libs\Router;
 
@@ -209,6 +203,7 @@ class Router
 
         foreach ($routes as $routeData) {
 
+            /** @var IRoute $routeInstance */
             $routeInstance = call_user_func_array([$this, '_getIRouteInstance'], $routeData);
 
             if (false === $routeInstance->valid($method, $route)) {

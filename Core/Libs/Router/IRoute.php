@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/20/17
- * Time: 2:59 PM
- */
 
 namespace Core\Libs\Router;
 

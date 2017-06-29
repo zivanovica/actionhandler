@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/19/17
- * Time: 1:00 PM
- */
 
 namespace Core\Exceptions;
-
 
 class MiddlewareException extends AFrameworkException
 {

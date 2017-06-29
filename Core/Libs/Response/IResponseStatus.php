@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 6:05 PM
- */
 
 namespace Core\Libs\Response;
 
-
+/**
+ * Use this interface for setting response status, DON'T USE MAGIC NUMBERS!!!
+ * @package Core\Libs\Response
+ */
 interface IResponseStatus
 {
     const OK = 200;

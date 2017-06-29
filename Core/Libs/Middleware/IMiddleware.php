@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/19/17
- * Time: 12:56 PM
- */
 
 namespace Core\Libs\Middleware;
-
 
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
@@ -15,5 +8,13 @@ use Core\Libs\Response\Response;
 interface IMiddleware
 {
 
+    /**
+     *
+     * Execute method for current middleware
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param Middleware $middleware Used to call "next" method
+     */
     public function run(Request $request, Response $response, Middleware $middleware): void;
 }

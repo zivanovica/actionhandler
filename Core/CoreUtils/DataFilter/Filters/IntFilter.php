@@ -10,6 +10,13 @@ class IntFilter implements IDataFilter
 
     use Singleton;
 
+    /**
+     *
+     * Convert value into integer
+     *
+     * @param mixed $value
+     * @return int
+     */
     public function filter($value)
     {
         if (is_integer($value)) {

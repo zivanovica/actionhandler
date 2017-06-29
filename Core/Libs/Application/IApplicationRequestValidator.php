@@ -1,15 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/19/17
- * Time: 1:14 PM
- */
 
 namespace Core\Libs\Application;
 
 use Core\CoreUtils\InputValidator\InputValidator;
 
+/**
+ * Implementing this interface into "IApplicationRequestHandler" will tell "Application" to execute "validate" method,
+ * before any middlewares and handlers. If validation fails request is finished with status 400 and errors
+ *
+ * @package Core\Libs\Application
+ */
 interface IApplicationRequestValidator
 {
 

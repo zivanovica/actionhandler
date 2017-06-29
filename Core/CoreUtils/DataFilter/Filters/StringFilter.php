@@ -17,6 +17,13 @@ class StringFilter implements IDataFilter
 
     use Singleton;
 
+    /**
+     *
+     * Filters input value to string
+     *
+     * @param mixed $value
+     * @return string
+     */
     public function filter($value)
     {
 

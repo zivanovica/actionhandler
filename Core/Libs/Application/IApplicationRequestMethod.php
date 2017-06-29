@@ -1,14 +1,13 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/15/17
- * Time: 4:55 PM
- */
 
 namespace Core\Libs\Application;
 
-
+/**
+ *
+ * This interface allows you to get string identifier of each available request method with valid autocomplete
+ *
+ * @package Core\Libs\Application
+ */
 interface IApplicationRequestMethod
 {
 

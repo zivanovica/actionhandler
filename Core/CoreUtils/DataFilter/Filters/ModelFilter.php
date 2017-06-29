@@ -35,6 +35,15 @@ class ModelFilter implements IDataFilter
         $this->_field = $field;
     }
 
+    /**
+     *
+     * Use input value as "field" value to fetch from database and return that model
+     * If value, field and model were already filtered, method will return model from $_cached property
+     *
+     * @param mixed $value
+     * @return Model|null
+     * @throws ModelTransformerException
+     */
     public function filter($value)
     {
 
