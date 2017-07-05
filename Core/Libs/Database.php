@@ -84,9 +84,9 @@ class Database
     public function store(string $query, array $bindings): int
     {
 
-        $this->_executeQuery($query, $bindings);
+        $statement = $this->_executeQuery($query, $bindings);
 
-        return $this->connection->lastInsertId();
+        return $this->connection->lastInsertId() ? $this->connection->lastInsertId() : $statement->rowCount();
     }
 
     /**

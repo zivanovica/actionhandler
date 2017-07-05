@@ -28,7 +28,7 @@ class AuthenticateMiddleware implements IMiddleware
     {
 
         /** @var Token $token */
-        $token = $request->query('token', null, ModelFilter::getNewInstance(Token::class, 'value'));
+        $token = $request->get('token', null, ModelFilter::getNewInstance(Token::class, 'value'));
 
         if (false === $token instanceof Token) {
 

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/22/17
- * Time: 3:42 PM
- */
 
 namespace Api\Models;
-
 
 use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;

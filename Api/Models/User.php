@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 1:14 PM
- */
 
 namespace Api\Models;
-
 
 use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
@@ -48,15 +41,16 @@ class User extends Model
      * @param string $password
      * @param string $firstName
      * @param string $lastName
+     * @param int $permission
      * @return User|null
      */
-    public function createProfile(string $email, string $password, string $firstName, string $lastName): ?User
+    public function createProfile(
+        string $email, string $password, string $firstName, string $lastName, int $permission = UserRole::ROLE_USER
+    ): ?User
     {
         $user = User::getNewInstance([
-            'email' => $email,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'code' => hash('sha256', uniqid('', true)),
-            'status' => User::STATUS_INACTIVE
+            'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT),
+            'code' => hash('sha256', uniqid('', true)), 'status' => User::STATUS_INACTIVE
         ]);
 
         if (0 === $user->save()) {
@@ -64,15 +58,20 @@ class User extends Model
             return null;
         }
 
-        $account = Account::getNewInstance([
-            'user_id' => $user,
-            'first_name' => $firstName,
-            'last_name' => $lastName
-        ]);
+        $account = $this->_createNewUserAccount($user, $firstName, $lastName);
 
-        if (0 === $account->save()) {
+        if (null === $account) {
 
             $user->delete();
+
+            return null;
+        }
+
+        if (0 === UserRole::getNewInstance()->setRole($user, $permission)->save()) {
+
+            $user->delete();
+
+            $account->delete();
 
             return null;
         }
@@ -119,5 +118,41 @@ class User extends Model
         $id = $this->getAttribute('id', IntFilter::getSharedInstance());
 
         return Account::getSharedInstance()->findOneWhere(['user_id' => $id]);
+    }
+
+    /**
+     * @return UserRole
+     */
+    public function getRole(): UserRole
+    {
+
+        $id = $this->getAttribute('id', IntFilter::getSharedInstance());
+
+        return UserRole::getSharedInstance()->findOneWhere(['user_id' => $id]);
+    }
+
+    /**
+     *
+     * Creates new account entity
+     *
+     * @param User $user
+     * @param string $firstName
+     * @param string $lastName
+     * @return Account|null
+     */
+    private function _createNewUserAccount(User $user, string $firstName, string $lastName): ?Account
+    {
+        $account = Account::getNewInstance([
+            'user_id' => $user,
+            'first_name' => $firstName,
+            'last_name' => $lastName
+        ]);
+
+        if (0 === $account->save()) {
+
+            return null;
+        }
+
+        return $account;
     }
 }

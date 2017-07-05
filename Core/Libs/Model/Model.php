@@ -35,13 +35,21 @@ abstract class Model
 
     /**
      * @param array $attributes Initial model values
+     * @param bool $isDirty
      */
-    public function __construct(array $attributes = [])
+    public function __construct(array $attributes = [], ?bool $isDirty = null)
     {
 
         $this->_db = Database::getSharedInstance();
 
-        $this->_isDirty = false === empty($attributes);
+        if (false === $isDirty) {
+
+            $this->_attributes = $attributes;
+
+            $this->_isDirty = false;
+
+            return;
+        }
 
         $this->setAttributes($attributes);
     }
@@ -101,7 +109,7 @@ abstract class Model
             return null;
         }
 
-        return new $this($results);
+        return new $this($results, false);
     }
 
     /**
@@ -120,7 +128,7 @@ abstract class Model
             return null;
         }
 
-        return new $this($results);
+        return new $this($results, false);
     }
 
     /**
@@ -171,12 +179,11 @@ abstract class Model
 
         if ($id) {
 
-            $this->_attributes = array_merge($this->_attributes, $this->_updatedAttributes);
-
             $this->setAttribute($this->primary(), $id);
 
-            $this->reset();
+            $this->_attributes = array_merge($this->_attributes, $this->_updatedAttributes);
 
+            $this->reset();
         }
 
         return (int)$id;
@@ -197,7 +204,7 @@ abstract class Model
             throw new ModelException(ModelException::ERROR_MISSING_PRIMARY, 'Primary key is required for deleting.');
         }
 
-        $id = isset($this->_attributes[$this->primary()]) ? $this->_attributes[$this->primary()] : null;
+        $id = $this->primaryValue();
 
         if (null === $id) {
 
@@ -313,6 +320,12 @@ abstract class Model
         $this->_isDirty = false;
     }
 
+    public function dirty(): bool
+    {
+
+        return $this->_isDirty;
+    }
+
     /**
      *
      * Generate INSERT query used for saving
@@ -388,7 +401,7 @@ abstract class Model
 
         foreach ($results as $result) {
 
-            $resultModels[] = new $this($result);
+            $resultModels[] = new $this($result, false);
         }
 
         return $resultModels;

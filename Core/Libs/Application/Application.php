@@ -89,13 +89,13 @@ class Application
         if (false === $route instanceof IRoute)
             return;
 
+        $this->_setRequestFilter($route->handler());
+
         if (false === $this->_executeValidator($route->handler()))
             return;
 
         if (false === $this->_executeMiddlewares($route->handler()))
             return;
-
-        $this->_setRequestFilter($route->handler());
 
         $response = $route->handler()->handle($this->_request, $this->_response);
 

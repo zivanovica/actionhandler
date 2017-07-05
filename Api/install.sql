@@ -87,6 +87,24 @@ CREATE TABLE `users` (
   DEFAULT CHARSET = utf8
   COLLATE = utf8_unicode_ci;
 
+
+CREATE  TABLE `user_roles` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `user_id` INT NULL ,
+  `permission` INT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) );
+
+
+CREATE  TABLE `unique` (
+  `id` INT NOT NULL ,
+  `entity_model` VARCHAR(45) NULL ,
+  `entity_id` INT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  UNIQUE INDEX `entity_UNIQUE` (`entity_model` ASC, `entity_id` ASC) );
+
+
 --
 -- Indexes for dumped tables
 --

@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/21/17
- * Time: 12:41 PM
- */
+
 namespace Api\Handlers\Idea;
 
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
+use Api\Models\Unique;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestHandler;
 use Core\Libs\Application\IApplicationRequestMiddleware;
@@ -33,6 +29,7 @@ class CreateHandler implements IApplicationRequestHandler, IApplicationRequestVa
     public function handle(Request $request, Response $response): Response
     {
 
+
         $idea = Idea::getNewInstance([
             'idea_category' => $request->get('idea_category'),
             'creator_id' => $request->token()->user(),
@@ -46,7 +43,7 @@ class CreateHandler implements IApplicationRequestHandler, IApplicationRequestVa
                 ->status(IResponseStatus::CREATED)
                 ->data([
                     'message' => 'Idea successfully created.',
-                    'idea' => $idea->toArray()
+                    'idea' => $idea
                 ]);
         }
 

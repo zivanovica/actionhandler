@@ -1,18 +1,27 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: coa
+ * Date: 7/3/17
+ * Time: 7:00 PM
+ */
 
-namespace Api\Handlers\Idea;
+namespace Api\Handlers\Entity;
+
 
 use Api\Filters\UniqueEntityFilter;
-use Api\Models\Idea;
+use Api\Middlewares\AuthenticateMiddleware;
 use Core\CoreUtils\InputValidator\InputValidator;
 use Core\Libs\Application\IApplicationRequestFilter;
 use Core\Libs\Application\IApplicationRequestHandler;
+use Core\Libs\Application\IApplicationRequestMiddleware;
 use Core\Libs\Application\IApplicationRequestValidator;
+use Core\Libs\Middleware\Middleware;
 use Core\Libs\Request\IRequestFilter;
 use Core\Libs\Request\Request;
 use Core\Libs\Response\Response;
 
-class GetHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestFilter
+class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMiddleware, IApplicationRequestValidator, IApplicationRequestFilter
 {
 
     /**
@@ -25,15 +34,20 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
      */
     public function handle(Request $request, Response $response): Response
     {
+        // TODO: Implement handle() method.
+    }
 
-        /** @var Idea $idea */
-        $idea = $request->get('id');
+    /**
+     *
+     * Used to register all middlewares that should be executed before handling acton
+     *
+     * @param Middleware $middleware
+     * @return Middleware
+     */
+    public function middleware(Middleware $middleware): Middleware
+    {
 
-        return $response->data([
-            'idea' => $idea,
-            'unique_id' => $idea->getUniqueId(),
-            'unique_id2' => $idea->getUniqueId()
-        ]);
+        return $middleware->add(new AuthenticateMiddleware());
     }
 
     /**
@@ -42,16 +56,13 @@ class GetHandler implements IApplicationRequestHandler, IApplicationRequestValid
      * This is executed before middlewares and provides simple way of validating request input before doing anything else.
      *
      *
-     *
      * @param InputValidator $validator
      * @return InputValidator
      */
     public function validate(InputValidator $validator): InputValidator
     {
 
-        return $validator->validate([
-            'id' => 'required|exists:unique,id'
-        ]);
+        return $validator->validate(['id' => 'required|exists:unique,id']);
     }
 
     /**

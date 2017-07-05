@@ -12,7 +12,7 @@ use Core\CoreUtils\DataFilter\Filters\IntFilter;
 use Core\CoreUtils\Singleton;
 use Core\Libs\Model\Model;
 
-class Idea extends Model
+class Idea extends Unique
 {
 
     use Singleton;

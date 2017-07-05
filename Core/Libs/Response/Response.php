@@ -71,7 +71,12 @@ class Response
     public function data(array $data): Response
     {
 
-        $this->_data = $data;
+        $this->_data = [];
+
+        foreach ($data as $key => $value) {
+
+            $this->addData($key, $value);
+        }
 
         return $this;
     }

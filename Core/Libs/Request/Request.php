@@ -81,11 +81,12 @@ class Request
      *
      * @param string $key
      * @param mixed $default
+     * @param IDataFilter|null $dataFilter
      * @return null|string
      */
-    public function query(string $key, $default = null)
+    public function query(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-        return $this->_getFilterValue($key, isset($this->_query[$key]) ? $this->_query[$key] : $default);
+        return $this->_getFilterValue($key, isset($this->_query[$key]) ? $this->_query[$key] : $default, $dataFilter);
     }
 
     /**
@@ -93,15 +94,16 @@ class Request
      * Retrieve specific parameter value from url
      *
      * @param string $key
-     * @param null $default
+     * @param mixed|null $default
+     * @param IDataFilter|null $dataFilter
      * @return mixed
      */
-    public function parameter(string $key, $default = null)
+    public function parameter(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
 
         $parameters = $this->_router->currentRoute()->parameters();
 
-        return $this->_getFilterValue($key, isset($parameters[$key]) ? $parameters[$key] : $default);
+        return $this->_getFilterValue($key, isset($parameters[$key]) ? $parameters[$key] : $default, $dataFilter);
     }
 
     /**
@@ -110,12 +112,13 @@ class Request
      *
      * @param string $key
      * @param mixed $default
+     * @param IDataFilter|null $dataFilter
      * @return mixed
      */
-    public function data(string $key, $default = null)
+    public function data(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
 
-        return $this->_getFilterValue($key, isset($this->_data[$key]) ? $this->_data[$key] : $default);
+        return $this->_getFilterValue($key, isset($this->_data[$key]) ? $this->_data[$key] : $default, $dataFilter);
     }
 
     /**
@@ -166,13 +169,14 @@ class Request
      *
      * @param string $key
      * @param null $default
+     * @param IDataFilter|null $dataFilter
      * @return mixed
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
         $all = $this->getAll();
 
-        return $this->_getFilterValue($key, isset($all[$key]) ? $all[$key] : $default);
+        return $this->_getFilterValue($key, isset($all[$key]) ? $all[$key] : $default, $dataFilter);
     }
 
     /**
@@ -246,10 +250,16 @@ class Request
      *
      * @param string $field
      * @param null $value
+     * @param IDataFilter|null $additionalFilter
      * @return mixed|null
      */
-    private function _getFilterValue(string $field, $value = null)
+    private function _getFilterValue(string $field, $value = null, ?IDataFilter $additionalFilter = null)
     {
+
+        if ($additionalFilter) {
+
+            $value = $additionalFilter->filter($value);
+        }
 
         if (null === $this->_filter || false === $this->_filter->hasFilter($field)) {
 
