@@ -1,19 +1,19 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/14/17
- * Time: 2:55 PM
- */
 
-require_once __DIR__ . '/../Core/loader.php';
+use RequestHandler\Modules\Application\Application;
+use RequestHandler\Modules\Database;
+use RequestHandler\Modules\Router\Router;
 
-use Core\Libs\Application\Application;
-use Core\Libs\Router\Router;
+require_once __DIR__ . '/../vendor/autoload.php';
 
-Application::getSharedInstance(__DIR__ . '/config.json')->run(
+$app = Application::getSharedInstance(__DIR__ . '/config.json');
+
+/** @var \RequestHandler\Modules\Database $db */
+$db = Database::getSharedInstance();
+
+$app->run(
     Router::getSharedInstance()
-        ->get('/user/:id', \Api\Handlers\User\InfoHandler::class)
+        ->get('/user/:user_id', \Api\Handlers\User\InfoHandler::class)
         ->get('/idea/:id', \Api\Handlers\Idea\GetHandler::class)
         ->patch('/idea/:id', \Api\Handlers\Idea\UpdateHandler::class)
         ->post('/idea/category', \Api\Handlers\IdeaCategory\CreateHandler::class)
@@ -22,4 +22,3 @@ Application::getSharedInstance(__DIR__ . '/config.json')->run(
         ->post('/user/login', \Api\Handlers\User\LoginHandler::class)
         ->get('/e/:id', \Api\Handlers\Entity\GetHandler::class)
 );
-

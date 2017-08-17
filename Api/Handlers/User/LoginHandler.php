@@ -10,12 +10,12 @@ namespace Api\Handlers\User;
 
 use Api\Models\Token;
 use Api\Models\User;
-use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\IResponseStatus;
-use Core\Libs\Response\Response;
+use RequestHandler\Utils\InputValidator\InputValidator;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestValidator;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\IResponseStatus;
+use RequestHandler\Modules\Response\Response;
 
 class LoginHandler implements IApplicationRequestHandler, IApplicationRequestValidator
 {

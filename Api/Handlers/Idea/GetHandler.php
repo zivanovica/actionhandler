@@ -4,13 +4,13 @@ namespace Api\Handlers\Idea;
 
 use Api\Filters\UniqueEntityFilter;
 use Api\Models\Idea;
-use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationRequestFilter;
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Request\IRequestFilter;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\Response;
+use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
+use RequestHandler\Utils\InputValidator\InputValidator;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestFilter;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestValidator;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\Response;
 
 class GetHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestFilter
 {

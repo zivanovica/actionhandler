@@ -1,21 +1,11 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 6/22/17
- * Time: 12:57 PM
- */
 
 namespace Api\Models;
 
-
-use Core\CoreUtils\Singleton;
-use Core\Libs\Model\Model;
+use RequestHandler\Modules\Model\Model;
 
 class Account extends Model
 {
-
-    use Singleton;
 
     /**
      * @return string Table name

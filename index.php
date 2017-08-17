@@ -1,3 +1,3 @@
 <?php
 
-require_once __DIR__ . '/Public/index.html';
+require_once __DIR__ . '/vendor/autoload.php';

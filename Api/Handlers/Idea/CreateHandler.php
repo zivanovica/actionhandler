@@ -5,15 +5,15 @@ namespace Api\Handlers\Idea;
 use Api\Middlewares\AuthenticateMiddleware;
 use Api\Models\Idea;
 use Api\Models\Unique;
-use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Application\IApplicationRequestMiddleware;
-use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Middleware\IMiddleware;
-use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\IResponseStatus;
-use Core\Libs\Response\Response;
+use RequestHandler\Utils\InputValidator\InputValidator;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestMiddleware;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestValidator;
+use RequestHandler\Modules\Middleware\IMiddleware;
+use RequestHandler\Modules\Middleware\Middleware;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\IResponseStatus;
+use RequestHandler\Modules\Response\Response;
 
 class CreateHandler implements IApplicationRequestHandler, IApplicationRequestValidator, IApplicationRequestMiddleware
 {

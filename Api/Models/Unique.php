@@ -2,9 +2,9 @@
 
 namespace Api\Models;
 
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
-use Core\Libs\Database;
-use Core\Libs\Model\Model;
+use RequestHandler\Modules\Database;
+use RequestHandler\Modules\Model\Model;
+use RequestHandler\Utils\DataFilter\Filters\IntFilter;
 
 abstract class Unique extends Model
 {
@@ -57,9 +57,9 @@ abstract class Unique extends Model
      *
      * Execute original save, after its saved - create and store unique id entity
      *
-     * @return int
+     * @return bool
      */
-    public function save(): int
+    public function save(): bool
     {
         $id = parent::save();
 
@@ -83,10 +83,10 @@ abstract class Unique extends Model
 
             Unique::$_models[$uniqueId] = $this;
 
-            return $id;
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     /**

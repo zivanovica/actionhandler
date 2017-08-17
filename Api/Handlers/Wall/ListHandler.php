@@ -9,9 +9,9 @@
 namespace Api\Handlers\Wall;
 
 
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\Response;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\Response;
 
 class ListHandler implements IApplicationRequestHandler
 {

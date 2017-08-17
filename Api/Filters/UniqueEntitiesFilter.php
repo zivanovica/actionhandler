@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 7/3/17
- * Time: 7:12 PM
- */
 
 namespace Api\Filters;
 
-
-use Core\CoreUtils\DataFilter\IDataFilter;
-use Core\CoreUtils\Singleton;
-use Core\Libs\Database;
-use Core\Libs\Model\Model;
+use RequestHandler\Utils\DataFilter\IDataFilter;
+use RequestHandler\Utils\Singleton;
+use RequestHandler\Modules\Database;
+use RequestHandler\Modules\Model\Model;
 
 class UniqueEntitiesFilter implements IDataFilter
 {

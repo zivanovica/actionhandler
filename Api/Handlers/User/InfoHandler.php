@@ -2,17 +2,26 @@
 
 namespace Api\Handlers\User;
 
+use Api\Models\Decorators\UserPublicInfoDecorator;
 use Api\Models\User;
-use Core\CoreUtils\DataFilter\Filters\ModelFilter;
-use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationRequestFilter;
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Request\IRequestFilter;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\Response;
+use Bulletproof\Handlers\Forum\Post\Create;
+use RequestHandler\Modules\Application\Application;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestFilter;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestMiddleware;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestValidator;
+use RequestHandler\Modules\Middleware\IMiddleware;
+use RequestHandler\Modules\Middleware\Middleware;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
+use RequestHandler\Modules\Response\Response;
+use RequestHandler\Utils\DataFilter\Filters\IntFilter;
+use RequestHandler\Utils\DataFilter\Filters\ModelFilter;
+use RequestHandler\Utils\DataFilter\Filters\UIntFilter;
+use RequestHandler\Utils\DataFilter\Filters\WaterfallFilter;
+use RequestHandler\Utils\InputValidator\InputValidator;
 
-class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilter, IApplicationRequestValidator
+class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilter, IApplicationRequestValidator, IApplicationRequestMiddleware
 {
 
     /**
@@ -25,10 +34,13 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
      */
     public function handle(Request $request, Response $response): Response
     {
+        /** @var array $userInfo */
+        $userInfo = $request
+            ->get('user_id')
+            ->decorate(UserPublicInfoDecorator::class)
+            ->getInfo();
 
-        // $request->get('id') will return instance of User model
-        // as filter for that field is defined in "filter" method of this class
-        return $response->addData('user', $request->get('id'));
+        return $response->addData('user', $userInfo);
     }
 
     /**
@@ -42,7 +54,7 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
     public function validate(InputValidator $validator): InputValidator
     {
 
-        return $validator->validate(['id' => 'required|exists:users,id']);
+        return $validator->validate(['user_id' => 'required|exists:users,id']);
     }
 
     /**
@@ -55,6 +67,42 @@ class InfoHandler implements IApplicationRequestHandler, IApplicationRequestFilt
     public function filter(IRequestFilter $filter): IRequestFilter
     {
 
-        return $filter->add('id', ModelFilter::getNewInstance(User::class));
+        $application = Application::getSharedInstance();
+
+        var_dump($application->getAttribute('min_title_length', Create::DEFAULT_TITLE_MIN_LENGTH, UIntFilter::getSharedInstance()));
+
+        $userFilter = new WaterfallFilter([IntFilter::getSharedInstance(), ModelFilter::getNewInstance(User::class)]);
+
+        return $filter->add('user_id', $userFilter);
+    }
+
+    /**
+     *
+     * Used to register all middlewares that should be executed before handling acton
+     *
+     * @param Middleware $middleware
+     * @return Middleware
+     */
+    public function middleware(Middleware $middleware): Middleware
+    {
+
+        return $middleware->add(new class implements IMiddleware {
+
+            /**
+             *
+             * Execute method for current middleware
+             *
+             * @param Request $request
+             * @param Response $response
+             * @param Middleware $middleware Used to call "next" method
+             */
+            public function run(Request $request, Response $response, Middleware $middleware): void
+            {
+
+                Application::getSharedInstance()->setAttribute('min_title_length', '-2');
+                $middleware->next();
+
+            }
+        });
     }
 }

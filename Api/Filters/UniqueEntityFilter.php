@@ -3,9 +3,9 @@
 namespace Api\Filters;
 
 use Api\Models\Unique;
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
-use Core\CoreUtils\DataFilter\IDataFilter;
-use Core\CoreUtils\Singleton;
+use RequestHandler\Utils\DataFilter\Filters\IntFilter;
+use RequestHandler\Utils\DataFilter\IDataFilter;
+use RequestHandler\Utils\Singleton;
 
 class UniqueEntityFilter implements IDataFilter
 {

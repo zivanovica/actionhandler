@@ -11,15 +11,15 @@ namespace Api\Handlers\Entity;
 
 use Api\Filters\UniqueEntityFilter;
 use Api\Middlewares\AuthenticateMiddleware;
-use Core\CoreUtils\InputValidator\InputValidator;
-use Core\Libs\Application\IApplicationRequestFilter;
-use Core\Libs\Application\IApplicationRequestHandler;
-use Core\Libs\Application\IApplicationRequestMiddleware;
-use Core\Libs\Application\IApplicationRequestValidator;
-use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request\IRequestFilter;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\Response;
+use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
+use RequestHandler\Utils\InputValidator\InputValidator;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestFilter;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestHandler;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestMiddleware;
+use RequestHandler\Modules\Application\ApplicationRequest\IApplicationRequestValidator;
+use RequestHandler\Modules\Middleware\Middleware;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\Response;
 
 class UpdateHandler implements IApplicationRequestHandler, IApplicationRequestMiddleware, IApplicationRequestValidator, IApplicationRequestFilter
 {

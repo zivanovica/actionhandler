@@ -1,5 +1,6 @@
 {
   "application": {
+    "debug": true,
     "actionIdentifier": "_action"
   },
   "database": {

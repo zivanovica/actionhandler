@@ -2,7 +2,7 @@
 
 namespace Api\Models;
 
-use Core\Libs\Model\Model;
+use RequestHandler\Modules\Model\Model;
 
 class UserRole extends Model
 {

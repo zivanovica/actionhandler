@@ -11,13 +11,13 @@ namespace Api\Middlewares;
 
 use Api\Models\Token;
 use Api\Models\User;
-use Core\CoreUtils\DataFilter\Filters\ModelFilter;
-use Core\CoreUtils\Singleton;
-use Core\Libs\Middleware\IMiddleware;
-use Core\Libs\Middleware\Middleware;
-use Core\Libs\Request\Request;
-use Core\Libs\Response\IResponseStatus;
-use Core\Libs\Response\Response;
+use RequestHandler\Utils\DataFilter\Filters\ModelFilter;
+use RequestHandler\Utils\Singleton;
+use RequestHandler\Modules\Middleware\IMiddleware;
+use RequestHandler\Modules\Middleware\Middleware;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Response\IResponseStatus;
+use RequestHandler\Modules\Response\Response;
 
 class AuthenticateMiddleware implements IMiddleware
 {

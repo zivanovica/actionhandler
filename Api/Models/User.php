@@ -2,9 +2,9 @@
 
 namespace Api\Models;
 
-use Core\CoreUtils\DataFilter\Filters\IntFilter;
-use Core\CoreUtils\Singleton;
-use Core\Libs\Model\Model;
+use RequestHandler\Utils\DataFilter\Filters\IntFilter;
+use RequestHandler\Utils\Singleton;
+use RequestHandler\Modules\Model\Model;
 
 class User extends Model
 {
