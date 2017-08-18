@@ -5,6 +5,7 @@ namespace RequestHandler\Utils\InputValidator;
 use RequestHandler\Utils\InputValidator\Rules\InputValidatorRule;
 use RequestHandler\Utils\InputValidator\Rules\RuleEmail;
 use RequestHandler\Utils\InputValidator\Rules\RuleEntityExists;
+use RequestHandler\Utils\InputValidator\Rules\RuleEnum;
 use RequestHandler\Utils\InputValidator\Rules\RuleEqual;
 use RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther;
 use RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength;
@@ -187,6 +188,7 @@ class InputValidator implements IInputValidator
             'may-not-exists' => RuleMayNotExists::class,
             'email' => RuleEmail::class,
             'equal' => RuleEqual::class,
+            'enum' => RuleEnum::class
         ];
     }
 

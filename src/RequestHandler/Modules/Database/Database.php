@@ -2,7 +2,6 @@
 
 namespace RequestHandler\Modules\Database;
 
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
 use RequestHandler\Exceptions\DatabaseException;
 
 /**
@@ -13,9 +12,6 @@ use RequestHandler\Exceptions\DatabaseException;
  */
 class Database implements IDatabase
 {
-
-    // We want to be able to get connected instance with SingletonFactory::getSharedInstance(IDatabase::class)
-
 
     /** @var \PDO */
     public $connection;

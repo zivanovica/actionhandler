@@ -8,7 +8,7 @@ namespace RequestHandler\Modules\Exception;
  *
  * @package Core\Exceptions
  */
-class BaseException extends \RuntimeException
+abstract class BaseException extends \RuntimeException
 {
 
     /** @var array */

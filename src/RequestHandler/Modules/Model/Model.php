@@ -4,7 +4,7 @@ namespace RequestHandler\Modules\Model;
 
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\{
-    Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, SingletonFactory, DataFilter\IDataFilter
+    Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, SingletonFactory\SingletonFactory, DataFilter\IDataFilter
 };
 
 use RequestHandler\Exceptions\ModelException;

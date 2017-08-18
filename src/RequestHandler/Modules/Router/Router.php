@@ -196,7 +196,7 @@ class Router implements IRouter
      *
      * @return IRoute
      */
-    public function currentRoute(): IRoute
+    public function currentRoute(): ?IRoute
     {
 
         return $this->_currentRoute;

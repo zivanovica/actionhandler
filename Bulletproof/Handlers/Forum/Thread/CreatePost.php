@@ -25,7 +25,7 @@ use RequestHandler\Utils\InputValidator\InputValidator;
 use RequestHandler\Utils\SingletonFactory\SingletonFactory;
 
 
-class Create implements IApplicationAware, IHandle, IValidate, IMiddleware
+class CreatePost implements IApplicationAware, IHandle, IValidate, IMiddleware
 {
 
     const DEFAULT_TITLE_MIN_LENGTH = 5;
@@ -42,11 +42,11 @@ class Create implements IApplicationAware, IHandle, IValidate, IMiddleware
     public function onApplication(IApplication $application)
     {
 
-        $this->_titleMin = $application->getAttribute('min_title_length', Create::DEFAULT_TITLE_MIN_LENGTH);
-        $this->_titleMax = $application->getAttribute('max_title_length', Create::DEFAULT_TITLE_MAX_LENGTH);
+        $this->_titleMin = $application->getAttribute('min_title_length', CreatePost::DEFAULT_TITLE_MIN_LENGTH);
+        $this->_titleMax = $application->getAttribute('max_title_length', CreatePost::DEFAULT_TITLE_MAX_LENGTH);
 
-        $this->_contentMin = $application->getAttribute('min_content_length', Create::DEFAULT_CONTENT_MIN_LENGTH);
-        $this->_contentMax = $application->getAttribute('max_content_length', Create::DEFAULT_CONTENT_MAX_LENGTH);
+        $this->_contentMin = $application->getAttribute('min_content_length', CreatePost::DEFAULT_CONTENT_MIN_LENGTH);
+        $this->_contentMax = $application->getAttribute('max_content_length', CreatePost::DEFAULT_CONTENT_MAX_LENGTH);
     }
 
     /**

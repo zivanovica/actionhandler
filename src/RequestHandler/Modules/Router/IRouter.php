@@ -92,5 +92,5 @@ interface IRouter
      *
      * @return IRoute
      */
-    public function currentRoute(): IRoute;
+    public function currentRoute(): ?IRoute;
 }

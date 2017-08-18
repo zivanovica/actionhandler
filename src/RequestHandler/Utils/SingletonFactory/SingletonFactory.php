@@ -69,7 +69,7 @@ abstract class SingletonFactory implements ISingletonFactory
     public static function map(string $interface, string $className): void
     {
 
-        if (false === interface_exists($interface)) {
+        if (false === (interface_exists($interface) || class_exists($interface))) {
 
             throw new SingletonFactoryException(SingletonFactoryException::ERROR_INVALID_INTERFACE, $interface);
         }
@@ -77,6 +77,14 @@ abstract class SingletonFactory implements ISingletonFactory
         if (false === class_exists($className)) {
 
             throw new SingletonFactoryException(SingletonFactoryException::ERROR_INVALID_CLASS, $className);
+        }
+
+        if (false === is_subclass_of($className, $interface) && 0 !== strcasecmp($className, $interface)) {
+
+            throw new SingletonFactoryException(
+                SingletonFactoryException::ERROR_INTERFACE_MISMATCH,
+                "{$className} does not implements {$interface}"
+            );
         }
 
         static::$_map[$interface] = $className;
@@ -89,12 +97,10 @@ abstract class SingletonFactory implements ISingletonFactory
     public static function setMap(array $map): void
     {
 
-        if (false === is_array($map)) {
+        foreach ($map as $interface => $class) {
 
-            $map = [];
+            static::map($interface, $class);
         }
-
-        static::$_map = $map;
     }
 
     /**
@@ -137,27 +143,14 @@ abstract class SingletonFactory implements ISingletonFactory
 
         $mapped = empty(static::$_map[$interface]) ? $interface : static::$_map[$interface];
 
-        if (false === interface_exists($interface) && interface_exists($mapped)) {
-
-            return static::_getInterfaceClass($mapped);
-        } else if (false === interface_exists($interface) && class_exists($mapped)) {
+        if (class_exists($mapped)) {
 
             return $mapped;
-        } else if (false === (interface_exists($interface) || interface_exists($mapped) || class_exists($mapped))) {
+        } else if (interface_exists($mapped)) {
 
-            throw new SingletonFactoryException(SingletonFactoryException::ERROR_INVALID_TYPE, "Got {$mapped} for {$interface}");
+            return self::_getInterfaceClass($mapped);
         }
 
-        $class = empty(static::$_map[$interface]) ? $interface : static::$_map[$interface];
-
-        if (false === is_subclass_of($class, $interface)) {
-
-            throw new SingletonFactoryException(
-                SingletonFactoryException::ERROR_INTERFACE_MISMATCH,
-                "{$class} does not implements {$interface}"
-            );
-        }
-
-        return $class;
+        return $interface;
     }
 }

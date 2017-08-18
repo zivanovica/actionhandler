@@ -1,5 +1,8 @@
 {
   "autoload": {
+    "files": [
+      "src/index.php"
+    ],
     "psr-4": {
       "RequestHandler\\": "src/RequestHandler",
       "Api\\": "Api",

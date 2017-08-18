@@ -6,14 +6,10 @@ use RequestHandler\Exceptions\ApplicationException;
 use RequestHandler\Modules\Application\ApplicationRequest\IFilter;
 use RequestHandler\Modules\Application\ApplicationRequest\IMiddleware;
 use RequestHandler\Modules\Application\ApplicationRequest\IValidate;
-use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Modules\Middleware\IMiddlewareContainer;
-use RequestHandler\Modules\Middleware\MiddlewareContainer;
 use RequestHandler\Modules\Request\IRequest;
-use RequestHandler\Modules\Request\Request;
 use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
-use RequestHandler\Modules\Request\RequestFilter\RequestFilter;
 use RequestHandler\Modules\Response\IResponse;
 use RequestHandler\Modules\Response\IResponseStatus;
 use RequestHandler\Modules\Response\Response;
@@ -21,7 +17,6 @@ use RequestHandler\Modules\Router\IRoute;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 use RequestHandler\Utils\InputValidator\IInputValidator;
-use RequestHandler\Utils\InputValidator\InputValidator;
 use RequestHandler\Utils\SingletonFactory\SingletonFactory;
 
 /**
@@ -36,7 +31,6 @@ class Application implements IApplication
 {
 
     const DEFAULT_ACTION_IDENTIFIER = '_action';
-
 
     /** @var array */
     private $_config;
@@ -135,12 +129,11 @@ class Application implements IApplication
     {
 
 
-        try {
+        if (false === $this->_appConfig['debug']) {
+            try {
 
-            $this->_execute($router);
-        } catch (\Throwable $exception) {
-
-            if (false === $this->_appConfig['debug']) {
+                $this->_execute($router);
+            } catch (\Throwable $exception) {
 
                 $this->_response->status(500)->errors([
                     'message' => 'There were some errors',
@@ -149,13 +142,12 @@ class Application implements IApplication
                 ]);
 
                 $this->_finishRequest();
-
-                return;
             }
 
-            throw $exception;
+            return;
         }
 
+        $this->_execute($router);
 
         return;
     }
