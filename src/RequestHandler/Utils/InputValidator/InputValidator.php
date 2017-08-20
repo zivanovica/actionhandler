@@ -41,9 +41,8 @@ class InputValidator implements IInputValidator
      */
     public function __construct(array $input = [])
     {
-        $this->fields = $input;
 
-        $this->defineRules();
+        $this->fields = $input;
     }
 
     /**
@@ -74,10 +73,10 @@ class InputValidator implements IInputValidator
 
             list($ruleClass, $parameters) = $this->parseRule($rule);
 
-            /* @var $ruleValidator InputValidatorRule */
+            /* @var $ruleValidator IInputValidatorRule */
             $ruleValidator = (new \ReflectionClass($ruleClass))->newInstance($this);
 
-            if (false === $ruleValidator instanceof InputValidatorRule) {
+            if (false === $ruleValidator instanceof IInputValidatorRule) {
 
                 throw new RuntimeException("Rule {$ruleClass} must implement InputValidatorRule");
             }
@@ -155,6 +154,28 @@ class InputValidator implements IInputValidator
         return false === empty($this->errors[$field][$this->_definedRules[$errorType]]);
     }
 
+    public function addRule(IInputValidatorRule $rule): IInputValidator
+    {
+
+        $this->_definedRules[$rule->getRuleName()] = get_class($rule);
+
+        unset($ru);
+
+        return $this;
+    }
+
+    public function addRules(array $rules): IInputValidator
+    {
+
+        /** @var IInputValidatorRule $rule */
+        foreach ($rules as $rule) {
+
+            $this->addRule($rule);
+        }
+
+        return $this;
+    }
+
     /**
      *
      * @param string $rule
@@ -175,21 +196,4 @@ class InputValidator implements IInputValidator
 
         return [$this->_definedRules[$data[0]], empty($data[1]) ? [] : explode(',', $data[1])];
     }
-
-    private function defineRules(): void
-    {
-        $this->_definedRules = [
-            'min' => RuleMinimumLength::class,
-            'max' => RuleMaximumLength::class,
-            'unique' => RuleUniqueEntity::class,
-            'same' => RuleFieldSameAsOther::class,
-            'required' => RuleRequired::class,
-            'exists' => RuleEntityExists::class,
-            'may-not-exists' => RuleMayNotExists::class,
-            'email' => RuleEmail::class,
-            'equal' => RuleEqual::class,
-            'enum' => RuleEnum::class
-        ];
-    }
-
 }

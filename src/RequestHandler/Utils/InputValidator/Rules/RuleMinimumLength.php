@@ -2,6 +2,10 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
+
 /**
  *
  * This rule is used to ensure minimum length of input value
@@ -28,9 +32,9 @@ class RuleMinimumLength extends InputValidatorRule
 
     /**
      * @param array $parameters
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_MIN])) {
 
@@ -48,4 +52,15 @@ class RuleMinimumLength extends InputValidatorRule
         return "Field must contain at least {$this->_min} characters";
     }
 
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'min';
+    }
 }

@@ -12,8 +12,8 @@ $router = SingletonFactory::getSharedInstance(\RequestHandler\Modules\Router\IRo
 
 $app->run(
     $router
-        ->post('/forum/post', \Bulletproof\Handlers\Forum\Post\CreatePost::class)// C
-        ->get('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Post\GetPost::class)// R
-        ->patch('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Post\CreatePost::class)// U
-        ->delete('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Post\CreatePost::class)  // D
+//        ->post('/forum/post', \Bulletproof\Handlers\Forum\Post\CreatePost::class)// C
+        ->get('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Thread\GetPost::class)// R
+//        ->patch('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Post\CreatePost::class)// U
+//        ->delete('/forum/post/:post_id', \Bulletproof\Handlers\Forum\Post\CreatePost::class)  // D
 );

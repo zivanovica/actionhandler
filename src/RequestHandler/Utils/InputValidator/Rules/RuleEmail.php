@@ -2,6 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
+
 /**
  *
  * This rule is used to validate input field as an email
@@ -15,7 +18,7 @@ class RuleEmail extends InputValidatorRule
         return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
 
         return $this;
@@ -24,5 +27,17 @@ class RuleEmail extends InputValidatorRule
     public function getMessage(): string
     {
         return 'Email must be valid format';
+    }
+
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'email';
     }
 }

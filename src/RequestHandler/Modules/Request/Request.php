@@ -2,7 +2,6 @@
 
 namespace RequestHandler\Modules\Request;
 
-use Api\Models\Token;
 use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
@@ -17,7 +16,6 @@ use RequestHandler\Modules\Router\Router;
  */
 class Request implements IRequest
 {
-
 
 
     /** @var string Holds current method identifier e.g GET */

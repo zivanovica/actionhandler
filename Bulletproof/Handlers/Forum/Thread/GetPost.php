@@ -1,6 +1,6 @@
 <?php
 
-namespace Bulletproof\Handlers\Forum\Post;
+namespace Bulletproof\Handlers\Forum\Thread;
 
 
 use Bulletproof\Models\PostModel;

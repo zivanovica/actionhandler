@@ -48,4 +48,8 @@ interface IInputValidator
      * @return bool
      */
     public function hasError(string $field, ?string $errorType = null): bool;
+
+    public function addRule(IInputValidatorRule $rule): IInputValidator;
+
+    public function addRules(array $rules): IInputValidator;
 }

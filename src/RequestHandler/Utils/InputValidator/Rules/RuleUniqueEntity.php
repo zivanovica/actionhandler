@@ -2,8 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
-use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
 use RequestHandler\Utils\SingletonFactory\SingletonFactory;
 
 /**
@@ -43,9 +44,9 @@ class RuleUniqueEntity extends InputValidatorRule
 
     /**
      * @param array $parameters
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_TABLE])) {
 
@@ -72,5 +73,17 @@ class RuleUniqueEntity extends InputValidatorRule
     public function getMessage(): string
     {
         return "{$this->_field} {$this->_value} already exists";
+    }
+
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'unique';
     }
 }

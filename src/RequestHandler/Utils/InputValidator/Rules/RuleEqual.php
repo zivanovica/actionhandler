@@ -2,6 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
+
 /**
  *
  * This rule is used to compare input value to given as rule parameter
@@ -29,9 +32,9 @@ class RuleEqual extends InputValidatorRule
     /**
      *
      * @param array $parameters
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
 
         if (isset($parameters[RuleEqual::PARAMETER_VALUE])) {
@@ -49,5 +52,17 @@ class RuleEqual extends InputValidatorRule
     {
 
         return "Must be equal to {$this->_checkValue}";
+    }
+
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'equal';
     }
 }

@@ -2,6 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
+
 /**
  *
  * This rule is used to compare two request inputs and validate that they are the same
@@ -33,9 +36,9 @@ class RuleFieldSameAsOther extends InputValidatorRule
 
     /**
      * @param array $parameters
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
         if (isset($parameters[self::PARAMETER_FIELD])) {
 
@@ -56,4 +59,15 @@ class RuleFieldSameAsOther extends InputValidatorRule
         return "Must be same as {$this->_field}";
     }
 
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'same';
+    }
 }

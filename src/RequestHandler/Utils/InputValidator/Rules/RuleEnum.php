@@ -2,6 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
+
 class RuleEnum extends InputValidatorRule
 {
 
@@ -22,9 +25,9 @@ class RuleEnum extends InputValidatorRule
     /**
      *
      * @param array $parameters
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
 
         if (false === empty($parameters)) {
@@ -44,5 +47,17 @@ class RuleEnum extends InputValidatorRule
     public function getMessage(): string
     {
         return 'Value not allowed. Allowed values are ' . implode(', ', $this->_allowed);
+    }
+
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'enum';
     }
 }

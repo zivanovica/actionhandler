@@ -2,7 +2,9 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
-use RequestHandler\Modules\Database\Database;
+use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Utils\InputValidator\IInputValidatorRule;
+use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -56,9 +58,9 @@ class RuleEntityExists extends InputValidatorRule
     /**
      * @param array $parameters
      *
-     * @return InputValidatorRule
+     * @return IInputValidatorRule
      */
-    public function setParameters(array $parameters): InputValidatorRule
+    public function setParameters(array $parameters): IInputValidatorRule
     {
         if (false === empty($parameters[self::PARAMETER_TABLE])) {
 
@@ -111,5 +113,17 @@ class RuleEntityExists extends InputValidatorRule
         $results = SingletonFactory::getSharedInstance(IDatabase::class)->fetchAll($query, $values);
 
         return count($values) === count($results);
+    }
+
+    /**
+     *
+     * Retrieve name of rule
+     *
+     * @return string
+     */
+    public function getRuleName(): string
+    {
+
+        return 'exists';
     }
 }
