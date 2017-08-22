@@ -22,17 +22,16 @@ SingletonFactory::setMap([
     \RequestHandler\Utils\DataFilter\Filters\WaterfallFilter::class => \RequestHandler\Utils\DataFilter\Filters\WaterfallFilter::class
 ]);
 
-/** @var \RequestHandler\Utils\InputValidator\IInputValidator $inputValidator */
-$inputValidator = SingletonFactory::getSharedInstance(\RequestHandler\Utils\InputValidator\IInputValidator::class);
-$inputValidator->addRules([
-    new \RequestHandler\Utils\InputValidator\Rules\RuleEmail($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleEntityExists($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleEnum($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleEqual($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleMayNotExists($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleRequired($inputValidator),
-    new \RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity($inputValidator)
-]);
+SingletonFactory::getSharedInstance(\RequestHandler\Utils\InputValidator\IInputValidator::class)
+    ->addRules([
+        new \RequestHandler\Utils\InputValidator\Rules\RuleEmail(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleEntityExists(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleEnum(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleEqual(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleMayNotExists(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleRequired(),
+        new \RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity()
+    ]);

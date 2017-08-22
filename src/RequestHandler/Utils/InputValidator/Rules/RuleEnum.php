@@ -2,10 +2,10 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
-class RuleEnum extends InputValidatorRule
+class RuleEnum implements IInputValidatorRule
 {
 
     /** @var array */
@@ -13,10 +13,11 @@ class RuleEnum extends InputValidatorRule
 
     /**
      *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
 
         return in_array($value, $this->_allowed);

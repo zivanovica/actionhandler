@@ -2,17 +2,6 @@
 
 namespace RequestHandler\Utils\InputValidator;
 
-use RequestHandler\Utils\InputValidator\Rules\InputValidatorRule;
-use RequestHandler\Utils\InputValidator\Rules\RuleEmail;
-use RequestHandler\Utils\InputValidator\Rules\RuleEntityExists;
-use RequestHandler\Utils\InputValidator\Rules\RuleEnum;
-use RequestHandler\Utils\InputValidator\Rules\RuleEqual;
-use RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther;
-use RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength;
-use RequestHandler\Utils\InputValidator\Rules\RuleMayNotExists;
-use RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength;
-use RequestHandler\Utils\InputValidator\Rules\RuleRequired;
-use RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity;
 use RuntimeException;
 
 /**
@@ -33,7 +22,7 @@ class InputValidator implements IInputValidator
     private $_definedRules = [];
 
     /** @var array */
-    private $fields = [];
+    private $_fields = [];
 
     /**
      * InputValidator constructor.
@@ -42,7 +31,7 @@ class InputValidator implements IInputValidator
     public function __construct(array $input = [])
     {
 
-        $this->fields = $input;
+        $this->_fields = $input;
     }
 
     /**
@@ -52,7 +41,7 @@ class InputValidator implements IInputValidator
      */
     public function validate(array $fieldRules, array $fields = []): InputValidator
     {
-        $this->fields = empty($fields) ? $this->fields : $fields;
+        $this->_fields = empty($fields) ? $this->_fields : $fields;
 
         foreach ($fieldRules as $fieldName => $rules) {
 
@@ -74,7 +63,7 @@ class InputValidator implements IInputValidator
             list($ruleClass, $parameters) = $this->parseRule($rule);
 
             /* @var $ruleValidator IInputValidatorRule */
-            $ruleValidator = (new \ReflectionClass($ruleClass))->newInstance($this);
+            $ruleValidator = (new \ReflectionClass($ruleClass))->newInstance();
 
             if (false === $ruleValidator instanceof IInputValidatorRule) {
 
@@ -83,9 +72,9 @@ class InputValidator implements IInputValidator
 
             $ruleValidator->setParameters($parameters);
 
-            $field = false === isset($this->fields[$fieldName]) ? null : $this->fields[$fieldName];
+            $field = false === isset($this->_fields[$fieldName]) ? null : $this->_fields[$fieldName];
 
-            if (false === $ruleValidator->validate($field)) {
+            if (false === $ruleValidator->validate($this, $field)) {
 
                 $this->errors[$fieldName][$ruleClass] = $ruleValidator->getMessage();
             } else if ($field !== null) {
@@ -101,6 +90,18 @@ class InputValidator implements IInputValidator
     public function getFields(): array
     {
         return $this->cleanFields;
+    }
+
+    /**
+     * @param array $_fields
+     * @return IInputValidator
+     */
+    public function setFields(array $_fields): IInputValidator
+    {
+
+        $this->_fields = $_fields;
+
+        return $this;
     }
 
     /**
@@ -129,7 +130,7 @@ class InputValidator implements IInputValidator
     public function getInput(): array
     {
 
-        return $this->fields;
+        return $this->_fields;
     }
 
     /**

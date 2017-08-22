@@ -2,8 +2,8 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -11,7 +11,7 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleMaximumLength extends InputValidatorRule
+class RuleMaximumLength implements IInputValidatorRule
 {
 
     private const PARAMETER_MAX = 0;
@@ -20,10 +20,12 @@ class RuleMaximumLength extends InputValidatorRule
     private $_max;
 
     /**
+     *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
         return null === $value || ($value && strlen($value) <= $this->_max);
     }

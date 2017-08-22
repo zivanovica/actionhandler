@@ -237,7 +237,9 @@ class Application implements IApplication
         }
 
         /** @var IInputValidator $validator */
-        $validator = SingletonFactory::getSharedInstanceArgs(IInputValidator::class, [$this->_request->getAll()]);
+        $validator = SingletonFactory::getSharedInstanceArgs(IInputValidator::class);
+
+        $validator->setFields($this->_request->getAll());
 
         $handler->validate($validator);
 

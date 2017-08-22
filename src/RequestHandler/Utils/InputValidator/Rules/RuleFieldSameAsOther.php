@@ -2,8 +2,8 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -11,7 +11,7 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleFieldSameAsOther extends InputValidatorRule
+class RuleFieldSameAsOther implements IInputValidatorRule
 {
 
     private const PARAMETER_FIELD = 0;
@@ -20,16 +20,17 @@ class RuleFieldSameAsOther extends InputValidatorRule
     private $_field;
 
     /**
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
-        if (empty($this->inputValidator->getInput()[$this->_field])) {
+        if (empty($validator->getInput()[$this->_field])) {
             return false;
         }
 
-        $fieldValue = $this->inputValidator->getInput()[$this->_field];
+        $fieldValue = $validator->getInput()[$this->_field];
 
         return 0 === strcmp($value, $fieldValue);
     }

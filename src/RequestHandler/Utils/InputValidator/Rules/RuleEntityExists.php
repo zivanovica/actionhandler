@@ -3,8 +3,9 @@
 namespace RequestHandler\Utils\InputValidator\Rules;
 
 use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
+use RequestHandler\Utils\SingletonFactory\SingletonFactory;
 
 /**
  *
@@ -12,7 +13,7 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleEntityExists extends InputValidatorRule
+class RuleEntityExists implements IInputValidatorRule
 {
 
     private const PARAMETER_TABLE = 0;
@@ -34,7 +35,7 @@ class RuleEntityExists extends InputValidatorRule
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
 
         if (null === $value) {

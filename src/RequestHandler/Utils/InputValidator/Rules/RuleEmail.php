@@ -2,8 +2,8 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -11,9 +11,9 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleEmail extends InputValidatorRule
+class RuleEmail implements IInputValidatorRule
 {
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
         return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }

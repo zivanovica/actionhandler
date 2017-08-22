@@ -2,8 +2,8 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -11,7 +11,7 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @package Core\CoreUtils\InputValidator\Rules
  */
-class RuleEqual extends InputValidatorRule
+class RuleEqual implements IInputValidatorRule
 {
 
     const PARAMETER_VALUE = 0;
@@ -20,10 +20,11 @@ class RuleEqual extends InputValidatorRule
 
     /**
      *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
 
         return 0 === strcmp($value, $this->_checkValue);

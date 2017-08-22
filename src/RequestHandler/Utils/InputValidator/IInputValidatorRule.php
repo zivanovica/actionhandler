@@ -1,23 +1,17 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: coa
- * Date: 8/18/17
- * Time: 11:00 PM
- */
 
 namespace RequestHandler\Utils\InputValidator;
-
 
 interface IInputValidatorRule
 {
 
     /**
      *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool;
+    public function validate(IInputValidator $validator, $value): bool;
 
     /**
      *

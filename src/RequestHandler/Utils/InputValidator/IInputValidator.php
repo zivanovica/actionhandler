@@ -26,6 +26,15 @@ interface IInputValidator
 
     /**
      *
+     * Set fields that will be validated
+     *
+     * @param array $fields
+     * @return IInputValidator
+     */
+    public function setFields(array $fields): IInputValidator;
+
+    /**
+     *
      * @return array
      */
     public function getErrors(): array;
@@ -40,6 +49,7 @@ interface IInputValidator
      * @return array
      */
     public function getInput(): array;
+
     /**
      *
      *
@@ -49,7 +59,21 @@ interface IInputValidator
      */
     public function hasError(string $field, ?string $errorType = null): bool;
 
+    /**
+     *
+     * Add (register) new validator rule
+     *
+     * @param IInputValidatorRule $rule
+     * @return IInputValidator
+     */
     public function addRule(IInputValidatorRule $rule): IInputValidator;
 
+    /**
+     *
+     * Add (register) multiple validator rules
+     *
+     * @param array $rules
+     * @return IInputValidator
+     */
     public function addRules(array $rules): IInputValidator;
 }

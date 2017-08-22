@@ -2,8 +2,8 @@
 
 namespace RequestHandler\Utils\InputValidator\Rules;
 
+use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -11,14 +11,16 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleMayNotExists extends InputValidatorRule
+class RuleMayNotExists implements IInputValidatorRule
 {
 
     /**
+     *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
         return false === isset($value);
     }

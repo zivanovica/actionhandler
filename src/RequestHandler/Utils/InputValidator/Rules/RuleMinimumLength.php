@@ -4,7 +4,6 @@ namespace RequestHandler\Utils\InputValidator\Rules;
 
 use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\InputValidator\InputValidatorRule;
 
 /**
  *
@@ -12,7 +11,7 @@ use RequestHandler\Utils\InputValidator\InputValidatorRule;
  *
  * @author Aleksandar Zivanovic
  */
-class RuleMinimumLength extends InputValidatorRule
+class RuleMinimumLength implements IInputValidatorRule
 {
 
     private const PARAMETER_MIN = 0;
@@ -21,10 +20,12 @@ class RuleMinimumLength extends InputValidatorRule
     private $_min = 0;
 
     /**
+     *
+     * @param IInputValidator $validator
      * @param mixed $value
      * @return bool
      */
-    public function validate($value): bool
+    public function validate(IInputValidator $validator, $value): bool
     {
 
         return null === $value || ($value && strlen($value) >= $this->_min);
