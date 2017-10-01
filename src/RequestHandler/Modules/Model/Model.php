@@ -172,9 +172,14 @@ abstract class Model implements IModel
 
         $query = $this->_buildSaveQuery($this->table(), $this->primary(), $this->_updatedAttributes);
 
-        $updateBindings = $this->_attributes;
+        $updateBindings = $this->_updatedAttributes;
 
-        $id = $this->_db->store($query, array_merge(array_values($updateBindings), array_values($this->_updatedAttributes)));
+        if (isset($updateBindings[$this->primary()])) {
+
+            unset($updateBindings[$this->primary()]);
+        }
+
+        $id = $this->_db->store($query, array_merge(array_values($this->_updatedAttributes), array_values($updateBindings)));
 
         if ($id) {
 
@@ -342,14 +347,12 @@ abstract class Model implements IModel
     private function _buildSaveQuery(string $table, string $primary, array $attributes): string
     {
 
-        $fields = array_keys(array_merge($this->_attributes, $attributes));
+        $fields = array_keys($attributes);
 
         if (isset($attributes[$primary])) {
 
             unset($attributes[$primary]);
         }
-
-
 
         $updateFields = array_keys($attributes);
 
