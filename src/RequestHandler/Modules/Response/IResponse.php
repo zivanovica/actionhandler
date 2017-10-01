@@ -96,4 +96,28 @@ interface IResponse
      * @return int
      */
     public function getStatus(): int;
+
+    /**
+     *
+     * Retrieve all response headers in format ["HEADER"=>"VALUE"]
+     *
+     * @return array
+     */
+    public function getHeaders(): array;
+
+    /**
+     *
+     * Set headers
+     *
+     * @param array $headers
+     */
+    public function setHeaders(array $headers): void;
+
+    /**
+     * Set single header
+     *
+     * @param string $header
+     * @param $value
+     */
+    public function setHeader(string $header, $value): void;
 }

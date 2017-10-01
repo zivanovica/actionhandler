@@ -29,6 +29,8 @@ class Response implements IResponse
 
     private $_errors = [];
 
+    private $_headers =[];
+
     private function __construct()
     {
 
@@ -190,5 +192,41 @@ class Response implements IResponse
     {
 
         return $this->_status;
+    }
+
+    /**
+     *
+     * Retrieve all response headers in format ["HEADER"=>"VALUE"]
+     *
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+
+        return $this->_headers;
+    }
+
+    /**
+     *
+     * Set headers
+     *
+     * @param array $headers
+     */
+    public function setHeaders(array $headers): void
+    {
+
+        $this->_headers = $headers;
+    }
+
+    /**
+     * Set single header
+     *
+     * @param string $header
+     * @param $value
+     */
+    public function setHeader(string $header, $value): void
+    {
+
+        $this->_headers[$header] = $value;
     }
 }

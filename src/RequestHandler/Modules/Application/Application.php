@@ -142,7 +142,7 @@ class Application implements IApplication
                 $this->_execute($this->_router);
             } catch (\Throwable $exception) {
 
-                $this->_response->status(500)->errors([
+                $this->_response->status(IResponseStatus::INTERNAL_ERROR)->errors([
                     'message' => 'There were some errors',
                     'code' => $exception->getCode(),
                     'exception' => get_class($exception)
@@ -190,7 +190,9 @@ class Application implements IApplication
 
         if (null === $route) {
 
-            $this->_response->status(404)->errors(['action' => "Route '{$requestRoute}' not found"]);
+            $this->_response
+                ->status(IResponseStatus::NOT_FOUND)
+                ->errors(['action' => "Route '{$requestRoute}' not found"]);
 
             $this->_finishRequest();
 
@@ -333,7 +335,12 @@ class Application implements IApplication
 
         $response = $this->_response;
 
-        http_response_code($response->getStatus());
+        foreach ($response->getHeaders() as $header => $value) {
+
+            header("{$header}: {$value}");
+        }
+
+        header('Content-Type: application/json', true, $response->getStatus());
 
         echo json_encode([
             'status' => $response->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
