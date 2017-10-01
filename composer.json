@@ -1,5 +1,5 @@
 {
-  "name": "webactionhandler",
+  "name": "webactionhandler/framework",
   "description": "Unique and easy to use PHP 7.1+ framework",
   "require": {
     "php": "^7.1"
