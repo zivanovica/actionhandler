@@ -1,0 +1,13 @@
+{
+  "application": {
+    "debug": true,
+    "actionIdentifier": "_route"
+  },
+  "database": {
+    "host": "localhost",
+    "dbname": "dbname",
+    "username": "root",
+    "password": "",
+    "port": 3306
+  }
+}
