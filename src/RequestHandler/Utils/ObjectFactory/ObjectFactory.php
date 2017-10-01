@@ -92,7 +92,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @param string $class
      * @param array $arguments
-     * @return $this
+     * @return object
      */
     private static function getNewInstanceArgs(string $class, array $arguments = [])
     {
@@ -129,13 +129,8 @@ class ObjectFactory implements IObjectFactory
      * @return array
      * @throws ObjectFactoryException
      */
-    private static function getDependencies(?\ReflectionMethod $reflectionMethod, array $parameters = []): array
+    private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {
-
-        if (null === $reflectionMethod) {
-
-            return [];
-        }
 
         $arguments = [];
 
@@ -144,7 +139,7 @@ class ObjectFactory implements IObjectFactory
             if ($parameter->getClass()) {
 
                 $arguments[] = ObjectFactory::create($parameter->getClass()->getName());
-            } else if (null === $parameter->getClass() && $parameter->isOptional()) {
+            } else if (empty($parameters) && null !== $parameter->getDefaultValue()) {
 
                 $arguments[] = $parameter->getDefaultValue();
             } else if (empty($parameters) && $parameter->allowsNull()) {
@@ -154,11 +149,12 @@ class ObjectFactory implements IObjectFactory
 
                 throw new ObjectFactoryException(
                     ObjectFactoryException::ERROR_UNRESOLVED_PARAMETER,
-                    "{$parameter->getName()} for {$parameter->getDeclaringClass()->getName()}"
+                    "{$parameter->getName()} for {$reflectionMethod->getDeclaringClass()->getName()}"
                 );
-            }
+            } else if (false === empty($parameters)) {
 
-            $arguments[] = array_shift($parameters);
+                $arguments[] = array_shift($parameters);
+            }
         }
 
         return $arguments;

@@ -4,6 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
+/** @var \RequestHandler\Modules\Application\IApplication $app */
 $app = ObjectFactory::create(
     \RequestHandler\Modules\Application\IApplication::class, __DIR__ . '/config.json'
 );

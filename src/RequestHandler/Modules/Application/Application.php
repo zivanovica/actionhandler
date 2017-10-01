@@ -53,9 +53,11 @@ class Application implements IApplication
     /**
      * @param string $configPath Path to configuration file
      * @param array $attributes
+     * @param IRequest $request
+     * @param IResponse $response
      * @throws ApplicationException
      */
-    private function __construct(string $configPath, array $attributes = [])
+    private function __construct(string $configPath, array $attributes = [], IRequest $request, IResponse $response)
     {
 
         if (false === $this->_loadConfig($configPath)) {
@@ -76,9 +78,9 @@ class Application implements IApplication
             $this->_dbConfig['port']
         );
 
-        $this->_request = ObjectFactory::create(IRequest::class);
+        $this->_request = $request;
 
-        $this->_response = ObjectFactory::create(IResponse::class);
+        $this->_response = $response;
 
         $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
 
