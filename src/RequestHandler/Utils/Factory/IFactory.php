@@ -2,7 +2,7 @@
 
 namespace RequestHandler\Utils\Factory;
 
-use RequestHandler\Exceptions\ObjectFactoryException;
+use RequestHandler\Exceptions\FactoryException;
 
 interface IFactory
 {
@@ -24,7 +24,7 @@ interface IFactory
      * @param string $interface
      * @param string $className
      * @return void
-     * @throws ObjectFactoryException
+     * @throws FactoryException
      */
     public static function map(string $interface, string $className): void;
 

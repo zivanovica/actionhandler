@@ -2,7 +2,7 @@
 
 namespace RequestHandler\Utils\Factory;
 
-use RequestHandler\Exceptions\ObjectFactoryException;
+use RequestHandler\Exceptions\FactoryException;
 
 /**
  *
@@ -47,25 +47,25 @@ class Factory implements IFactory
      * @param string $interface
      * @param string $className
      * @return void
-     * @throws ObjectFactoryException
+     * @throws FactoryException
      */
     public static function map(string $interface, string $className): void
     {
 
         if (false === (interface_exists($interface) || class_exists($interface))) {
 
-            throw new ObjectFactoryException(ObjectFactoryException::ERROR_INVALID_INTERFACE, $interface);
+            throw new FactoryException(FactoryException::ERROR_INVALID_INTERFACE, $interface);
         }
 
         if (false === class_exists($className)) {
 
-            throw new ObjectFactoryException(ObjectFactoryException::ERROR_INVALID_CLASS, $className);
+            throw new FactoryException(FactoryException::ERROR_INVALID_CLASS, $className);
         }
 
         if (false === is_subclass_of($className, $interface) && 0 !== strcasecmp($className, $interface)) {
 
-            throw new ObjectFactoryException(
-                ObjectFactoryException::ERROR_INTERFACE_MISMATCH,
+            throw new FactoryException(
+                FactoryException::ERROR_INTERFACE_MISMATCH,
                 "{$className} does not implements {$interface}"
             );
         }
@@ -127,7 +127,7 @@ class Factory implements IFactory
      * @param null|\ReflectionMethod $reflectionMethod
      * @param array $parameters
      * @return array
-     * @throws ObjectFactoryException
+     * @throws FactoryException
      */
     private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {
@@ -147,8 +147,8 @@ class Factory implements IFactory
                 $arguments[] = null;
             } else if (empty($parameters)) {
 
-                throw new ObjectFactoryException(
-                    ObjectFactoryException::ERROR_UNRESOLVED_PARAMETER,
+                throw new FactoryException(
+                    FactoryException::ERROR_UNRESOLVED_PARAMETER,
                     "{$parameter->getName()} for {$reflectionMethod->getDeclaringClass()->getName()}"
                 );
             } else if (false === empty($parameters)) {

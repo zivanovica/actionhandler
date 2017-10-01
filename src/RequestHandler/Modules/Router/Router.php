@@ -2,6 +2,7 @@
 
 namespace RequestHandler\Modules\Router;
 
+use RequestHandler\Exceptions\RouterException;
 use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Request\IRequestMethod;
@@ -294,6 +295,11 @@ class Router implements IRouter
                 if (false === is_a($this->_handler, $this->_handlerClass)) {
 
                     $this->_handler = new $this->_handlerClass();
+                }
+
+                if (false === $this->_handler instanceof IHandle) {
+
+                    throw new RouterException(RouterException::ERROR_INVALID_ROUTE_HANDLER);
                 }
 
                 return $this->_handler;
