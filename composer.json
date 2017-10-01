@@ -4,6 +4,16 @@
   "require": {
     "php": "^7.1"
   },
+  "keywords": ["framework"],
+  "homepage": "https://bitbucket.org/coapsy/actionhandler",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aleksandar Zivanovic",
+      "email": "coapsyfactor@gmail.com",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "files": [
       "src/index.php"
