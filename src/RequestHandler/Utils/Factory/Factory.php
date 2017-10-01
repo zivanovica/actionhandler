@@ -40,6 +40,16 @@ class Factory implements IFactory
         return static::$_instances[$class];
     }
 
+    public static function createNew(string $interface, ... $arguments)
+    {
+
+        $class = static::_getInterfaceClass($interface);
+
+        return static::getNewInstanceArgs(
+            $class, is_array($arguments) ? $arguments : []
+        );
+    }
+
     /**
      *
      * Maps interface with corresponding class
