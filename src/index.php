@@ -1,30 +1,15 @@
 <?php
 
-use \RequestHandler\Utils\ObjectFactory\ObjectFactory;
-
-use \RequestHandler\Modules\{
-    Application\IApplication, Application\Application,
-    Database\IDatabase, Database\Database,
-    Request\IRequest, Request\Request,
-    Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter,
-    Response\IResponse, Response\Response,
-    Router\IRouter, Router\Router,
-    Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer
+use RequestHandler\Modules\{
+    Application\Application, Application\IApplication, Database\Database, Database\IDatabase, Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request, Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response, Router\IRouter, Router\Router
 };
-
-use \RequestHandler\Utils\{
-    InputValidator\IInputValidator, InputValidator\InputValidator,
-    DataFilter\Filters\FloatFilter, DataFilter\Filters\ModelFilter,
-    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter,
-    DataFilter\Filters\IntFilter, DataFilter\Filters\StringFilter,
-    DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter
+use RequestHandler\Utils\{
+    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\ModelFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
 };
-
 use RequestHandler\Utils\InputValidator\Rules\{
-    RuleEmail, RuleEntityExists, RuleEnum, RuleEqual,
-    RuleFieldSameAsOther, RuleMaximumLength, RuleMinimumLength,
-    RuleMayNotExists, RuleRequired, RuleUniqueEntity
+    RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
 };
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 ObjectFactory::setMap([
     IApplication::class => Application::class,

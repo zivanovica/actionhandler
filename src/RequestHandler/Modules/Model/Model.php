@@ -2,13 +2,12 @@
 
 namespace RequestHandler\Modules\Model;
 
-use RequestHandler\Modules\Database\IDatabase;
-use RequestHandler\Utils\{
-    Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory, DataFilter\IDataFilter
-};
-
 use RequestHandler\Exceptions\ModelException;
 use RequestHandler\Modules\Database\Database;
+use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Utils\{
+    DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory
+};
 
 /**
  *
@@ -18,7 +17,6 @@ use RequestHandler\Modules\Database\Database;
  */
 abstract class Model implements IModel
 {
-
 
 
     /** @var array */

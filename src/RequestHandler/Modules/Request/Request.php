@@ -4,9 +4,9 @@ namespace RequestHandler\Modules\Request;
 
 use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
 use RequestHandler\Modules\Router\IRouter;
+use RequestHandler\Modules\Router\Router;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
-use RequestHandler\Modules\Router\Router;
 
 /**
  *

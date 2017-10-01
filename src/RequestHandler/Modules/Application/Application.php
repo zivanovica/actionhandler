@@ -47,17 +47,20 @@ class Application implements IApplication
     /** @var Response */
     private $_response;
 
+    /** @var IRouter */
+    private $_router;
+
     /** @var array */
     private $_attributes;
 
     /**
      * @param string $configPath Path to configuration file
-     * @param array $attributes
+     * @param IRouter $router
      * @param IRequest $request
      * @param IResponse $response
      * @throws ApplicationException
      */
-    private function __construct(string $configPath, array $attributes = [], IRequest $request, IResponse $response)
+    private function __construct(string $configPath, IRouter $router, IRequest $request, IResponse $response)
     {
 
         if (false === $this->_loadConfig($configPath)) {
@@ -78,13 +81,15 @@ class Application implements IApplication
             $this->_dbConfig['port']
         );
 
+        $this->_router = $router;
+
         $this->_request = $request;
 
         $this->_response = $response;
 
         $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
 
-        $this->_attributes = array_merge(['config' => $this->_config], $attributes);
+        $this->_attributes = ['config' => $this->_config];
     }
 
     /**
@@ -123,17 +128,18 @@ class Application implements IApplication
     /**
      * Executes handler for requested action
      *
-     * @param IRouter $router
+     * @param \Closure $routeRegisterCallback
      * @throws \Throwable
      */
-    public function run(IRouter $router): void
+    public function boot(\Closure $routeRegisterCallback): void
     {
 
+        $routeRegisterCallback($this->_router);
 
         if (false === $this->_appConfig['debug']) {
             try {
 
-                $this->_execute($router);
+                $this->_execute($this->_router);
             } catch (\Throwable $exception) {
 
                 $this->_response->status(500)->errors([
@@ -148,7 +154,7 @@ class Application implements IApplication
             return;
         }
 
-        $this->_execute($router);
+        $this->_execute($this->_router);
 
         return;
     }

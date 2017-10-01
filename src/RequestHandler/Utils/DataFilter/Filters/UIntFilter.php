@@ -10,11 +10,9 @@ namespace RequestHandler\Utils\DataFilter\Filters;
 
 
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 class UIntFilter implements IDataFilter
 {
-
 
 
     /**

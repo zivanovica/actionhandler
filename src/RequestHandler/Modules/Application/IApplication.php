@@ -11,10 +11,10 @@ interface IApplication
     /**
      * Executes handler for requested action
      *
-     * @param IRouter $router
+     * @param \Closure $routeRegisterCallback
      * @throws \Throwable
      */
-    public function run(IRouter $router): void;
+    public function boot(\Closure $routeRegisterCallback): void;
 
     /**
      *

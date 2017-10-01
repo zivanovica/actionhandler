@@ -3,7 +3,6 @@
 namespace RequestHandler\Modules\Request\RequestFilter;
 
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  *
@@ -15,7 +14,6 @@ use RequestHandler\Utils\ObjectFactory\ObjectFactory;
  */
 class RequestFilter implements IRequestFilter
 {
-
 
 
     /** @var array */

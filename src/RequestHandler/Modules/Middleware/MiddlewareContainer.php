@@ -2,10 +2,9 @@
 
 namespace RequestHandler\Modules\Middleware;
 
+use RequestHandler\Exceptions\MiddlewareException;
 use RequestHandler\Modules\Request\IRequest;
 use RequestHandler\Modules\Response\IResponse;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
-use RequestHandler\Exceptions\MiddlewareException;
 use RequestHandler\Modules\Response\Response;
 
 /**
@@ -16,7 +15,6 @@ use RequestHandler\Modules\Response\Response;
  */
 class MiddlewareContainer implements IMiddlewareContainer
 {
-
 
 
     /** @var array IMiddleware[] */

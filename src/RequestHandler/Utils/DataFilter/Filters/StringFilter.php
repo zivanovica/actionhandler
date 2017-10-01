@@ -3,7 +3,6 @@
 namespace RequestHandler\Utils\DataFilter\Filters;
 
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  * Filter that is used to convert value to string
@@ -12,7 +11,6 @@ use RequestHandler\Utils\ObjectFactory\ObjectFactory;
  */
 class StringFilter implements IDataFilter
 {
-
 
 
     /**

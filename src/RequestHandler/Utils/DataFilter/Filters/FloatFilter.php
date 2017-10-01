@@ -19,6 +19,6 @@ class FloatFilter implements IDataFilter
             return null;
         }
 
-        return (float) $value;
+        return (float)$value;
     }
 }

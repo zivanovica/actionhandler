@@ -3,7 +3,6 @@
 namespace RequestHandler\Exceptions;
 
 use RequestHandler\Modules\Exception\BaseException;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 class ObjectFactoryException extends BaseException
 {

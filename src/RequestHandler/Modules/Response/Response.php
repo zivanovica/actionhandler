@@ -2,7 +2,6 @@
 
 namespace RequestHandler\Modules\Response;
 
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Exceptions\ResponseException;
 use RequestHandler\Modules\Model\Model;
 
@@ -15,7 +14,6 @@ use RequestHandler\Modules\Model\Model;
  */
 class Response implements IResponse
 {
-
 
 
     const STATUS_SUCCESS = 'succes';
