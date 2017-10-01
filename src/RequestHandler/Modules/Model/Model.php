@@ -172,12 +172,7 @@ abstract class Model implements IModel
 
         $query = $this->_buildSaveQuery($this->table(), $this->primary(), $this->_updatedAttributes);
 
-        $updateBindings = $this->_updatedAttributes;
-
-        if (isset($updateBindings[$this->primary()])) {
-
-            unset($updateBindings[$this->primary()]);
-        }
+        $updateBindings = $this->_attributes;
 
         $id = $this->_db->store($query, array_merge(array_values($updateBindings), array_values($this->_updatedAttributes)));
 
@@ -353,6 +348,8 @@ abstract class Model implements IModel
 
             unset($attributes[$primary]);
         }
+
+
 
         $updateFields = array_keys($attributes);
 
