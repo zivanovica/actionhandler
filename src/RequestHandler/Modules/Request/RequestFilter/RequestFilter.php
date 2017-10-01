@@ -3,7 +3,7 @@
 namespace RequestHandler\Modules\Request\RequestFilter;
 
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  *

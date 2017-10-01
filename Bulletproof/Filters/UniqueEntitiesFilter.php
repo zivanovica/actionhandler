@@ -4,7 +4,7 @@ namespace Bulletproof\Filters;
 
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Model\Model;
 
@@ -17,7 +17,7 @@ class UniqueEntitiesFilter implements IDataFilter
     public function __construct()
     {
 
-        $this->_db = SingletonFactory::getSharedInstance(IDatabase::class);
+        $this->_db = ObjectFactory::create(IDatabase::class);
     }
 
     /**

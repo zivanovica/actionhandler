@@ -17,7 +17,7 @@ use RequestHandler\Modules\Router\IRoute;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 use RequestHandler\Utils\InputValidator\IInputValidator;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  *
@@ -67,19 +67,18 @@ class Application implements IApplication
 
         $this->_dbConfig = $this->_config['database'];
 
-        SingletonFactory::getSharedInstanceArgs(
+        ObjectFactory::create(
             IDatabase::class,
-            [
-                $this->_dbConfig['host'],
-                $this->_dbConfig['dbname'],
-                $this->_dbConfig['username'],
-                $this->_dbConfig['password'],
-                $this->_dbConfig['port']
-            ]);
+            $this->_dbConfig['host'],
+            $this->_dbConfig['dbname'],
+            $this->_dbConfig['username'],
+            $this->_dbConfig['password'],
+            $this->_dbConfig['port']
+        );
 
-        $this->_request = SingletonFactory::getSharedInstance(IRequest::class);
+        $this->_request = ObjectFactory::create(IRequest::class);
 
-        $this->_response = SingletonFactory::getSharedInstance(IResponse::class);
+        $this->_response = ObjectFactory::create(IResponse::class);
 
         $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
 
@@ -164,7 +163,7 @@ class Application implements IApplication
             return;
         }
 
-        $this->_request->setFilter($handler->filter(SingletonFactory::getSharedInstance(IRequestFilter::class)));
+        $this->_request->setFilter($handler->filter(ObjectFactory::create(IRequestFilter::class)));
     }
 
     /**
@@ -237,7 +236,7 @@ class Application implements IApplication
         }
 
         /** @var IInputValidator $validator */
-        $validator = SingletonFactory::getSharedInstanceArgs(IInputValidator::class);
+        $validator = ObjectFactory::create(IInputValidator::class);
 
         $validator->setFields($this->_request->getAll());
 
@@ -271,7 +270,7 @@ class Application implements IApplication
         }
 
         /** @var IMiddlewareContainer $middleware */
-        $middleware = SingletonFactory::getSharedInstanceArgs(IMiddlewareContainer::class, [$this->_request, $this->_response]);
+        $middleware = ObjectFactory::create(IMiddlewareContainer::class, $this->_request, $this->_response);
 
         $handler->middleware($middleware);
 

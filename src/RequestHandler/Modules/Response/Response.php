@@ -2,7 +2,7 @@
 
 namespace RequestHandler\Modules\Response;
 
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Exceptions\ResponseException;
 use RequestHandler\Modules\Model\Model;
 

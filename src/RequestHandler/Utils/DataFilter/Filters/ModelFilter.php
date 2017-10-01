@@ -4,7 +4,7 @@ namespace RequestHandler\Utils\DataFilter\Filters;
 
 use RequestHandler\Modules\Model\IModel;
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Exceptions\ModelFilterException;
 use RequestHandler\Modules\Model\Model;
 

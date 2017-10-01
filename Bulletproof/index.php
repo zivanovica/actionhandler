@@ -1,14 +1,15 @@
 <?php
 
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/** @var \RequestHandler\Modules\Application\IApplication $app */
-$app = SingletonFactory::getSharedInstance(\RequestHandler\Modules\Application\IApplication::class, __DIR__ . '/config.json');
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+
+$app = ObjectFactory::create(
+    \RequestHandler\Modules\Application\IApplication::class, __DIR__ . '/config.json'
+);
 
 /** @var \RequestHandler\Modules\Router\IRouter $router */
-$router = SingletonFactory::getSharedInstance(\RequestHandler\Modules\Router\IRouter::class);
+$router = ObjectFactory::create(\RequestHandler\Modules\Router\IRouter::class);
 
 $app->run(
     $router

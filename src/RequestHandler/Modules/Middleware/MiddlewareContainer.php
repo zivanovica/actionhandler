@@ -4,7 +4,7 @@ namespace RequestHandler\Modules\Middleware;
 
 use RequestHandler\Modules\Request\IRequest;
 use RequestHandler\Modules\Response\IResponse;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Exceptions\MiddlewareException;
 use RequestHandler\Modules\Response\Response;
 

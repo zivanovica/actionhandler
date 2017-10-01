@@ -5,7 +5,7 @@ namespace RequestHandler\Modules\Request;
 use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Modules\Router\Router;
 
 /**
@@ -59,7 +59,7 @@ class Request implements IRequest
 
         $this->_data = false === is_array($data) ? [] : $data;
 
-        $this->_router = SingletonFactory::getSharedInstance(IRouter::class);
+        $this->_router = ObjectFactory::create(IRouter::class);
 
     }
 

@@ -1,37 +1,60 @@
 <?php
 
-use \RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use \RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
-SingletonFactory::setMap([
-    \RequestHandler\Modules\Application\IApplication::class => \RequestHandler\Modules\Application\Application::class,
-    \RequestHandler\Modules\Database\IDatabase::class => \RequestHandler\Modules\Database\Database::class,
-    \RequestHandler\Modules\Request\IRequest::class => \RequestHandler\Modules\Request\Request::class,
-    \RequestHandler\Modules\Response\IResponse::class => \RequestHandler\Modules\Response\Response::class,
-    \RequestHandler\Modules\Router\IRouter::class => \RequestHandler\Modules\Router\Router::class,
-    \RequestHandler\Utils\InputValidator\IInputValidator::class => \RequestHandler\Utils\InputValidator\InputValidator::class,
-    \RequestHandler\Modules\Middleware\IMiddlewareContainer::class => \RequestHandler\Modules\Middleware\MiddlewareContainer::class,
-    \RequestHandler\Modules\Request\RequestFilter\IRequestFilter::class => \RequestHandler\Modules\Request\RequestFilter\RequestFilter::class,
+use \RequestHandler\Modules\{
+    Application\IApplication, Application\Application,
+    Database\IDatabase, Database\Database,
+    Request\IRequest, Request\Request,
+    Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter,
+    Response\IResponse, Response\Response,
+    Router\IRouter, Router\Router,
+    Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer
+};
 
-    \RequestHandler\Utils\DataFilter\Filters\BoolFilter::class => \RequestHandler\Utils\DataFilter\Filters\BoolFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\EmailFilter::class => \RequestHandler\Utils\DataFilter\Filters\EmailFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\IntFilter::class => \RequestHandler\Utils\DataFilter\Filters\IntFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\FloatFilter::class => \RequestHandler\Utils\DataFilter\Filters\FloatFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\ModelFilter::class => \RequestHandler\Utils\DataFilter\Filters\ModelFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\StringFilter::class => \RequestHandler\Utils\DataFilter\Filters\StringFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\UIntFilter::class => \RequestHandler\Utils\DataFilter\Filters\UIntFilter::class,
-    \RequestHandler\Utils\DataFilter\Filters\WaterfallFilter::class => \RequestHandler\Utils\DataFilter\Filters\WaterfallFilter::class
+use \RequestHandler\Utils\{
+    InputValidator\IInputValidator, InputValidator\InputValidator,
+    DataFilter\Filters\FloatFilter, DataFilter\Filters\ModelFilter,
+    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter,
+    DataFilter\Filters\IntFilter, DataFilter\Filters\StringFilter,
+    DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter
+};
+
+use RequestHandler\Utils\InputValidator\Rules\{
+    RuleEmail, RuleEntityExists, RuleEnum, RuleEqual,
+    RuleFieldSameAsOther, RuleMaximumLength, RuleMinimumLength,
+    RuleMayNotExists, RuleRequired, RuleUniqueEntity
+};
+
+ObjectFactory::setMap([
+    IApplication::class => Application::class,
+    IDatabase::class => Database::class,
+    IRequest::class => Request::class,
+    IRequestFilter::class => RequestFilter::class,
+    IResponse::class => Response::class,
+    IRouter::class => Router::class,
+    IMiddlewareContainer::class => MiddlewareContainer::class,
+    IInputValidator::class => InputValidator::class,
+    BoolFilter::class => BoolFilter::class,
+    EmailFilter::class => EmailFilter::class,
+    IntFilter::class => IntFilter::class,
+    FloatFilter::class => FloatFilter::class,
+    ModelFilter::class => ModelFilter::class,
+    StringFilter::class => StringFilter::class,
+    UIntFilter::class => UIntFilter::class,
+    WaterfallFilter::class => WaterfallFilter::class
 ]);
 
-SingletonFactory::getSharedInstance(\RequestHandler\Utils\InputValidator\IInputValidator::class)
+ObjectFactory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)
     ->addRules([
-        new \RequestHandler\Utils\InputValidator\Rules\RuleEmail(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleEntityExists(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleEnum(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleEqual(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleMayNotExists(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleRequired(),
-        new \RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity()
+        new RuleEmail(),
+        new RuleEntityExists(),
+        new RuleEnum(),
+        new RuleEqual(),
+        new RuleFieldSameAsOther(),
+        new RuleMaximumLength(),
+        new RuleMinimumLength(),
+        new RuleMayNotExists(),
+        new RuleRequired(),
+        new RuleUniqueEntity()
     ]);

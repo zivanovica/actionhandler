@@ -2,6 +2,7 @@
 
 namespace RequestHandler\Utils\InputValidator;
 
+use RequestHandler\Modules\Database\IDatabase;
 use RuntimeException;
 
 /**

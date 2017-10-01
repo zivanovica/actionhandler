@@ -22,7 +22,7 @@ use RequestHandler\Modules\Response\{
 use RequestHandler\Modules\Request\IRequest;
 use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\InputValidator;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 
 class CreatePost implements IApplicationAware, IHandle, IValidate, IMiddleware
@@ -108,7 +108,7 @@ class CreatePost implements IApplicationAware, IHandle, IValidate, IMiddleware
             public function handle(IRequest $request, IResponse $response, IMiddlewareContainer $middleware): void
             {
 
-                SingletonFactory::getSharedInstance(IApplication::class)->setAttribute('max_content_length', 'coa');
+                ObjectFactory::create(IApplication::class)->setAttribute('max_content_length', 'coa');
 
                 $middleware->next();
             }

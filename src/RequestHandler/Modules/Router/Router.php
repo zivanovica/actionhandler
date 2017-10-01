@@ -6,7 +6,7 @@ use RequestHandler\Modules\Application\Application;
 use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Request\IRequestMethod;
-use RequestHandler\Utils\SingletonFactory\SingletonFactory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 class Router implements IRouter
 {
@@ -246,7 +246,7 @@ class Router implements IRouter
     private function _getIRouteInstance($regex, array $methods, array $parameters, string $handlerClass): IRoute
     {
 
-        $app = SingletonFactory::getSharedInstance(IApplication::class);
+        $app = ObjectFactory::create(IApplication::class);
 
         return new class($app, $regex, $methods, $parameters, $handlerClass) implements IRoute
         {

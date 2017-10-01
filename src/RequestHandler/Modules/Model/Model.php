@@ -4,7 +4,7 @@ namespace RequestHandler\Modules\Model;
 
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\{
-    Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, SingletonFactory\SingletonFactory, DataFilter\IDataFilter
+    Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory, DataFilter\IDataFilter
 };
 
 use RequestHandler\Exceptions\ModelException;
@@ -46,7 +46,7 @@ abstract class Model implements IModel
     public function __construct(array $attributes = [], ?bool $isDirty = null)
     {
 
-        $this->_db = SingletonFactory::getSharedInstance(IDatabase::class);
+        $this->_db = ObjectFactory::create(IDatabase::class);
 
         if (false === $isDirty) {
 
