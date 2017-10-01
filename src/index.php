@@ -6,10 +6,10 @@ use RequestHandler\Modules\{
 use RequestHandler\Utils\{
     DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\ModelFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
 };
+use RequestHandler\Utils\Factory\Factory;
 use RequestHandler\Utils\InputValidator\Rules\{
     RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
 };
-use RequestHandler\Utils\Factory\Factory;
 
 Factory::setMap([
     IApplication::class => Application::class,
@@ -30,16 +30,15 @@ Factory::setMap([
     WaterfallFilter::class => WaterfallFilter::class
 ]);
 
-Factory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)
-    ->addRules([
-        new RuleEmail(),
-        new RuleEntityExists(),
-        new RuleEnum(),
-        new RuleEqual(),
-        new RuleFieldSameAsOther(),
-        new RuleMaximumLength(),
-        new RuleMinimumLength(),
-        new RuleMayNotExists(),
-        new RuleRequired(),
-        new RuleUniqueEntity()
-    ]);
+Factory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)->addRules([
+    new RuleEmail(),
+    new RuleEntityExists(),
+    new RuleEnum(),
+    new RuleEqual(),
+    new RuleFieldSameAsOther(),
+    new RuleMaximumLength(),
+    new RuleMinimumLength(),
+    new RuleMayNotExists(),
+    new RuleRequired(),
+    new RuleUniqueEntity()
+]);
