@@ -17,7 +17,7 @@ use RequestHandler\Utils\DataFilter\Filters\ModelFilter;
 use RequestHandler\Utils\DataFilter\Filters\WaterfallFilter;
 
 use RequestHandler\Utils\InputValidator\IInputValidator;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
 class GetPost implements IHandle, IValidate, IFilter, IMiddleware
 {
@@ -33,8 +33,8 @@ class GetPost implements IHandle, IValidate, IFilter, IMiddleware
     {
 
         $postFilter = new WaterfallFilter([
-            ObjectFactory::create(IntFilter::class),
-            ObjectFactory::create(ModelFilter::class, PostModel::class, 'id')
+            Factory::create(IntFilter::class),
+            Factory::create(ModelFilter::class, PostModel::class, 'id')
         ]);
 
         return $filter->add('post_id', $postFilter);

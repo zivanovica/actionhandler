@@ -6,7 +6,7 @@ use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Modules\Router\Router;
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
 /**
  *
@@ -59,7 +59,7 @@ class Request implements IRequest
 
         $this->_data = false === is_array($data) ? [] : $data;
 
-        $this->_router = ObjectFactory::create(IRouter::class);
+        $this->_router = Factory::create(IRouter::class);
 
     }
 

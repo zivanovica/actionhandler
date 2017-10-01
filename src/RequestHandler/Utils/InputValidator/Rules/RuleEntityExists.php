@@ -5,7 +5,7 @@ namespace RequestHandler\Utils\InputValidator\Rules;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
 /**
  *
@@ -50,7 +50,7 @@ class RuleEntityExists implements IInputValidatorRule
 
         $this->_value = $value;
 
-        $results = ObjectFactory::create(IDatabase::class)
+        $results = Factory::create(IDatabase::class)
             ->fetchAll("SELECT `{$this->_field}` FROM `{$this->_table}` WHERE `{$this->_field}` = ?;", [$value]);
 
         return false === empty($results);
@@ -111,7 +111,7 @@ class RuleEntityExists implements IInputValidatorRule
 
         $query = "SELECT `{$this->_field}` FROM `{$this->_table}` WHERE `{$this->_field}` IN ({$placeholders});";
 
-        $results = ObjectFactory::create(IDatabase::class)->fetchAll($query, $values);
+        $results = Factory::create(IDatabase::class)->fetchAll($query, $values);
 
         return count($values) === count($results);
     }

@@ -5,7 +5,7 @@ namespace Bulletproof\Filters;
 use Api\Models\Unique;
 use RequestHandler\Utils\DataFilter\Filters\IntFilter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
 class UniqueEntityFilter implements IDataFilter
 {

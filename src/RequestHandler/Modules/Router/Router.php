@@ -5,7 +5,7 @@ namespace RequestHandler\Modules\Router;
 use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Request\IRequestMethod;
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
 class Router implements IRouter
 {
@@ -245,7 +245,7 @@ class Router implements IRouter
     private function _getIRouteInstance($regex, array $methods, array $parameters, string $handlerClass): IRoute
     {
 
-        $app = ObjectFactory::create(IApplication::class);
+        $app = Factory::create(IApplication::class);
 
         return new class($app, $regex, $methods, $parameters, $handlerClass) implements IRoute
         {

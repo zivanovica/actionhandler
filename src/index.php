@@ -9,9 +9,9 @@ use RequestHandler\Utils\{
 use RequestHandler\Utils\InputValidator\Rules\{
     RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
 };
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\Factory\Factory;
 
-ObjectFactory::setMap([
+Factory::setMap([
     IApplication::class => Application::class,
     IDatabase::class => Database::class,
     IRequest::class => Request::class,
@@ -30,7 +30,7 @@ ObjectFactory::setMap([
     WaterfallFilter::class => WaterfallFilter::class
 ]);
 
-ObjectFactory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)
+Factory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)
     ->addRules([
         new RuleEmail(),
         new RuleEntityExists(),
