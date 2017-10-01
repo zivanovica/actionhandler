@@ -1,12 +1,15 @@
 {
+  "name": "webactionhandler",
+  "description": "Unique and easy to use PHP 7.1+ framework",
+  "require": {
+    "php": "^7.1"
+  },
   "autoload": {
     "files": [
       "src/index.php"
     ],
     "psr-4": {
-      "RequestHandler\\": "src/RequestHandler",
-      "Api\\": "Api",
-      "Bulletproof\\": "Bulletproof"
+      "RequestHandler\\": "src/RequestHandler"
     }
   }
 }
