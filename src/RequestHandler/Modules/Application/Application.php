@@ -4,6 +4,7 @@ namespace RequestHandler\Modules\Application;
 
 use RequestHandler\Exceptions\ApplicationException;
 use RequestHandler\Modules\Application\ApplicationRequest\IFilter;
+use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\ApplicationRequest\IMiddleware;
 use RequestHandler\Modules\Application\ApplicationRequest\IValidate;
 use RequestHandler\Modules\Database\IDatabase;
@@ -17,7 +18,7 @@ use RequestHandler\Modules\Router\IRoute;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 use RequestHandler\Utils\InputValidator\IInputValidator;
-use RequestHandler\Utils\Factory\Factory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  *
@@ -72,7 +73,7 @@ class Application implements IApplication
 
         $this->_dbConfig = $this->_config['database'];
 
-        Factory::create(
+        ObjectFactory::create(
             IDatabase::class,
             $this->_dbConfig['host'],
             $this->_dbConfig['dbname'],
@@ -171,7 +172,7 @@ class Application implements IApplication
             return;
         }
 
-        $this->_request->setFilter($handler->filter(Factory::create(IRequestFilter::class)));
+        $this->_request->setFilter($handler->filter(ObjectFactory::create(IRequestFilter::class)));
     }
 
     /**
@@ -217,8 +218,8 @@ class Application implements IApplication
 
         $handler = $route->handler();
 
-        if ($handler instanceof IApplicationAware)
-            $handler->onApplication($this);
+        if (false === $handler instanceof IHandle)
+            throw new ApplicationException(ApplicationException::ERROR_INVALID_REQUEST_HANDLER, get_class($handler));
 
         if (false === $this->_executeValidator($handler))
             return;
@@ -246,7 +247,7 @@ class Application implements IApplication
         }
 
         /** @var IInputValidator $validator */
-        $validator = Factory::create(IInputValidator::class);
+        $validator = ObjectFactory::create(IInputValidator::class);
 
         $validator->setFields($this->_request->getAll());
 
@@ -280,7 +281,7 @@ class Application implements IApplication
         }
 
         /** @var IMiddlewareContainer $middleware */
-        $middleware = Factory::create(IMiddlewareContainer::class, $this->_request, $this->_response);
+        $middleware = ObjectFactory::create(IMiddlewareContainer::class, $this->_request, $this->_response);
 
         $handler->middleware($middleware);
 

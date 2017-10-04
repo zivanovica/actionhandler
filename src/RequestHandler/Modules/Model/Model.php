@@ -6,7 +6,7 @@ use RequestHandler\Exceptions\ModelException;
 use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\{
-    DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, Factory\Factory
+    DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory
 };
 
 /**
@@ -44,7 +44,7 @@ abstract class Model implements IModel
     public function __construct(array $attributes = [], ?bool $isDirty = null)
     {
 
-        $this->_db = Factory::create(IDatabase::class);
+        $this->_db = ObjectFactory::create(IDatabase::class);
 
         if (false === $isDirty) {
 

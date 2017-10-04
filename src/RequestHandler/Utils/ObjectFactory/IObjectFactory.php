@@ -1,10 +1,10 @@
 <?php
 
-namespace RequestHandler\Utils\Factory;
+namespace RequestHandler\Utils\ObjectFactory;
 
 use RequestHandler\Exceptions\FactoryException;
 
-interface IFactory
+interface IObjectFactory
 {
 
     /**

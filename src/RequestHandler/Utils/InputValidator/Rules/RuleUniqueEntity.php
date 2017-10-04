@@ -5,7 +5,7 @@ namespace RequestHandler\Utils\InputValidator\Rules;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\InputValidator\IInputValidator;
 use RequestHandler\Utils\InputValidator\IInputValidatorRule;
-use RequestHandler\Utils\Factory\Factory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 /**
  *
@@ -38,7 +38,7 @@ class RuleUniqueEntity implements IInputValidatorRule
 
         $this->_value = $value;
 
-        $results = Factory::create(IDatabase::class)
+        $results = ObjectFactory::create(IDatabase::class)
             ->fetchAll("SELECT `{$this->_field}` FROM `{$this->_table}` WHERE `{$this->_field}` = ?;", [$value]);
 
         return empty($results);

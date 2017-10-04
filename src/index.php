@@ -6,12 +6,12 @@ use RequestHandler\Modules\{
 use RequestHandler\Utils\{
     DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\ModelFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
 };
-use RequestHandler\Utils\Factory\Factory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Utils\InputValidator\Rules\{
     RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
 };
 
-Factory::setMap([
+ObjectFactory::setMap([
     IApplication::class => Application::class,
     IDatabase::class => Database::class,
     IRequest::class => Request::class,
@@ -30,7 +30,7 @@ Factory::setMap([
     WaterfallFilter::class => WaterfallFilter::class
 ]);
 
-Factory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)->addRules([
+ObjectFactory::create(\RequestHandler\Utils\InputValidator\IInputValidator::class)->addRules([
     new RuleEmail(),
     new RuleEntityExists(),
     new RuleEnum(),

@@ -6,7 +6,7 @@ use RequestHandler\Exceptions\RouterException;
 use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Request\IRequestMethod;
-use RequestHandler\Utils\Factory\Factory;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 class Router implements IRouter
 {
@@ -246,7 +246,7 @@ class Router implements IRouter
     private function _getIRouteInstance($regex, array $methods, array $parameters, string $handlerClass): IRoute
     {
 
-        $app = Factory::create(IApplication::class);
+        $app = ObjectFactory::create(IApplication::class);
 
         return new class($app, $regex, $methods, $parameters, $handlerClass) implements IRoute
         {
@@ -295,11 +295,6 @@ class Router implements IRouter
                 if (false === is_a($this->_handler, $this->_handlerClass)) {
 
                     $this->_handler = new $this->_handlerClass();
-                }
-
-                if (false === $this->_handler instanceof IHandle) {
-
-                    throw new RouterException(RouterException::ERROR_INVALID_ROUTE_HANDLER);
                 }
 
                 return $this->_handler;

@@ -1,6 +1,6 @@
 <?php
 
-namespace RequestHandler\Utils\Factory;
+namespace RequestHandler\Utils\ObjectFactory;
 
 use RequestHandler\Exceptions\FactoryException;
 
@@ -8,7 +8,7 @@ use RequestHandler\Exceptions\FactoryException;
  *
  * @package Modules\Singleton
  */
-class Factory implements IFactory
+class ObjectFactory implements IObjectFactory
 {
 
     /** @var array */
@@ -40,6 +40,14 @@ class Factory implements IFactory
         return static::$_instances[$class];
     }
 
+    /**
+     *
+     * Creates new instance
+     *
+     * @param string $interface
+     * @param array ...$arguments
+     * @return object
+     */
     public static function createNew(string $interface, ... $arguments)
     {
 
@@ -148,7 +156,7 @@ class Factory implements IFactory
 
             if ($parameter->getClass()) {
 
-                $arguments[] = Factory::create($parameter->getClass()->getName());
+                $arguments[] = ObjectFactory::create($parameter->getClass()->getName());
             } else if (empty($parameters) && null !== $parameter->getDefaultValue()) {
 
                 $arguments[] = $parameter->getDefaultValue();
