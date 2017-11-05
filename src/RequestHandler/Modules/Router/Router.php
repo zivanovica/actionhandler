@@ -20,6 +20,8 @@ class Router implements IRouter
 
     private function __construct()
     {
+
+        $this->_routes = [];
     }
 
     /**

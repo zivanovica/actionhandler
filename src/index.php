@@ -1,7 +1,10 @@
 <?php
 
 use RequestHandler\Modules\{
-    Application\Application, Application\IApplication, Database\Database, Database\IDatabase, Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request, Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response, Router\IRouter, Router\Router
+    Application\Application, Application\IApplication, Database\Database, Database\IDatabase,
+    Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request,
+    Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response,
+    Router\IRouter, Router\Router, Event\IDispatcher, Event\Dispatcher
 };
 use RequestHandler\Utils\{
     DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\ModelFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
@@ -18,6 +21,7 @@ ObjectFactory::setMap([
     IRequestFilter::class => RequestFilter::class,
     IResponse::class => Response::class,
     IRouter::class => Router::class,
+    IDispatcher::class => Dispatcher::class,
     IMiddlewareContainer::class => MiddlewareContainer::class,
     IInputValidator::class => InputValidator::class,
     BoolFilter::class => BoolFilter::class,

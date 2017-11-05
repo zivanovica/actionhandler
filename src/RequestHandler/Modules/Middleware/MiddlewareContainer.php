@@ -60,36 +60,6 @@ class MiddlewareContainer implements IMiddlewareContainer
 
     /**
      *
-     * Add identified data to bag
-     *
-     * @param string $identifier
-     * @param $object
-     * @return IMiddlewareContainer
-     */
-    public function put(string $identifier, $object): IMiddlewareContainer
-    {
-
-        $this->_bag[$identifier] = $object;
-
-        return $this;
-    }
-
-    /**
-     *
-     * Retrieve value of given identifier from bag
-     *
-     * @param string $identifier
-     * @param null $default
-     * @return mixed|null
-     */
-    public function get(string $identifier, $default = null)
-    {
-
-        return isset($this->_bag[$identifier]) ? $this->_bag[$identifier] : $default;
-    }
-
-    /**
-     *
      * Execute next middleware
      *
      * @throws MiddlewareException

@@ -8,6 +8,7 @@ use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\ApplicationRequest\IMiddleware;
 use RequestHandler\Modules\Application\ApplicationRequest\IValidate;
 use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Modules\Event\IDispatcher;
 use RequestHandler\Modules\Middleware\IMiddlewareContainer;
 use RequestHandler\Modules\Request\IRequest;
 use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
@@ -51,6 +52,9 @@ class Application implements IApplication
     /** @var IRouter */
     private $_router;
 
+    /** @var IDispatcher */
+    private $_dispatcher;
+
     /** @var array */
     private $_attributes;
 
@@ -59,10 +63,12 @@ class Application implements IApplication
      * @param IRouter $router
      * @param IRequest $request
      * @param IResponse $response
+     * @param IDispatcher $dispatcher
      * @throws ApplicationException
      */
-    private function __construct(string $configPath, IRouter $router, IRequest $request, IResponse $response)
-    {
+    private function __construct(
+        string $configPath, IRouter $router, IRequest $request, IResponse $response, IDispatcher $dispatcher
+    ) {
 
         if (false === $this->_loadConfig($configPath)) {
 
@@ -87,6 +93,8 @@ class Application implements IApplication
         $this->_request = $request;
 
         $this->_response = $response;
+
+        $this->_dispatcher = $dispatcher;
 
         $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
 
@@ -138,6 +146,7 @@ class Application implements IApplication
         $routeRegisterCallback($this->_router);
 
         if (false === $this->_appConfig['debug']) {
+
             try {
 
                 $this->_execute($this->_router);
@@ -148,14 +157,20 @@ class Application implements IApplication
                     'code' => $exception->getCode(),
                     'exception' => get_class($exception)
                 ]);
-
-                $this->_finishRequest();
             }
+        } else {
 
-            return;
+            $this->_execute($this->_router);
         }
 
-        $this->_execute($this->_router);
+        $this->_finishRequest();
+
+        if (function_exists('fastcgi_finish_request')) {
+
+            fastcgi_finish_request();
+        }
+
+        $this->_dispatcher->fire();
 
         return;
     }
@@ -230,8 +245,6 @@ class Application implements IApplication
         $this->_setRequestFilter($handler);
 
         $this->_response = $handler->handle($this->_request, $this->_response);
-
-        $this->_finishRequest();
     }
 
     /**
@@ -347,8 +360,6 @@ class Application implements IApplication
             'status' => $response->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
             'data' => $response->hasErrors() ? $response->getErrors() : $response->getData()
         ]);
-
-        return;
     }
 
 }

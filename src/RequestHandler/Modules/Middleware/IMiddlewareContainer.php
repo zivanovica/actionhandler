@@ -25,26 +25,6 @@ interface IMiddlewareContainer
 
     /**
      *
-     * Add identified data to bag
-     *
-     * @param string $identifier
-     * @param $object
-     * @return IMiddlewareContainer
-     */
-    public function put(string $identifier, $object): IMiddlewareContainer;
-
-    /**
-     *
-     * Retrieve value of given identifier from bag
-     *
-     * @param string $identifier
-     * @param null $default
-     * @return mixed|null
-     */
-    public function get(string $identifier, $default = null);
-
-    /**
-     *
      * Execute next middleware
      *
      * @throws MiddlewareException

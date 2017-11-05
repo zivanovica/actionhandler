@@ -3,4 +3,4 @@ vendor/
 .idea
 *.iml
 .DS_Store
-Public/idea/node_modules
+public/
