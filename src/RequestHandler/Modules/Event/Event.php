@@ -18,9 +18,6 @@ class Event implements IEvent
     /** @var string */
     private $_name;
 
-    /** @var bool */
-    private $_isCanceled;
-
     /**
      * Event constructor.
      * @param null|string $name
@@ -31,23 +28,6 @@ class Event implements IEvent
 
         $this->_callback = $callback;
         $this->_name = $name;
-
-        $this->_isCanceled = false;
-    }
-
-    /**
-     * Prevent
-     */
-    public function cancel(): void
-    {
-
-        $this->_isCanceled = true;
-    }
-
-    public function isCanceled(): bool
-    {
-
-        return $this->_isCanceled;
     }
 
     public function execute(... $data): ?bool

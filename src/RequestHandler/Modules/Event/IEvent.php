@@ -13,16 +13,6 @@ interface IEvent
 {
 
     /**
-     * Prevent event from executing
-     */
-    public function cancel(): void;
-
-    /**
-     * Retrieve flag that determines should event be executed or not
-     */
-    public function isCanceled(): bool;
-
-    /**
      *
      * Execute event callback
      *
