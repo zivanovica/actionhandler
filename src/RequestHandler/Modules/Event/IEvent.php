@@ -16,9 +16,10 @@ interface IEvent
      *
      * Execute event callback
      *
+     * @param array ...$data
      * @return bool|null
      */
-    public function execute(): ?bool;
+    public function execute(... $data): ?bool;
 
     /**
      *

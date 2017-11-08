@@ -31,6 +31,16 @@ interface IDispatcher
     public function trigger(string $name, ... $data): int;
 
     /**
+     *
+     * Register callback that is triggered after event is triggered
+     *
+     * @param string $name
+     * @param callable $callback
+     * @return callable Unsubscribe method
+     */
+    public function subscribe(string $name, callable $callback): callable;
+
+    /**
      * Fire all queued events
      */
     public function fire(): void;
@@ -41,5 +51,5 @@ interface IDispatcher
      *
      * @param int $handle
      */
-    public function preventEvent(int $handle): void;
+    public function prevent(int $handle): void;
 }

@@ -12,7 +12,7 @@ namespace RequestHandler\Modules\Event;
 class Event implements IEvent
 {
 
-    /** @var callable */
+    /** @var \Closure */
     private $_callback;
 
     /** @var string */
@@ -26,20 +26,31 @@ class Event implements IEvent
     public function __construct(string $name, callable $callback)
     {
 
-        $this->_callback = $callback;
+        $this->_callback = \Closure::fromCallable($callback);
         $this->_name = $name;
     }
 
+    /**
+     *
+     * Execute event callback
+     *
+     * @param array ...$data
+     * @return bool|null
+     */
     public function execute(... $data): ?bool
     {
 
-        $closure = \Closure::fromCallable($this->_callback);
-
         array_unshift($data, $this);
 
-        return call_user_func_array([$closure, 'call'], $data);
+        return call_user_func_array([$this->_callback, 'call'], $data);
     }
 
+    /**
+     *
+     * Retrieve event name
+     *
+     * @return string
+     */
     public function getName(): string
     {
 
