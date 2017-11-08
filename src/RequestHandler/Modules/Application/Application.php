@@ -209,8 +209,6 @@ class Application implements IApplication
                 ->status(IResponseStatus::NOT_FOUND)
                 ->errors(['action' => "Route '{$requestRoute}' not found"]);
 
-//            $this->_finishRequest();
-
             return null;
         }
 
@@ -272,8 +270,6 @@ class Application implements IApplication
                 ->errors($validator->getErrors())
                 ->addError('_request.validate', 'Action did not pass validation.');
 
-//            $this->_finishRequest();
-
             return false;
         }
 
@@ -302,8 +298,6 @@ class Application implements IApplication
         if (false === $middleware->finished()) {
 
             $this->_response->addError('_request.middleware', 'Middlewares did not finished.');
-
-//            $this->_finishRequest();
 
             return false;
         }
