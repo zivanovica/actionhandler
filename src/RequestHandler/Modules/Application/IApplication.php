@@ -12,7 +12,6 @@ interface IApplication
      * Executes handler for requested action
      *
      * @param \Closure $routeRegisterCallback
-     * @throws \Throwable
      */
     public function boot(\Closure $routeRegisterCallback): void;
 

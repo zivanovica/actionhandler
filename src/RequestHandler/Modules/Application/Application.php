@@ -138,7 +138,6 @@ class Application implements IApplication
      * Executes handler for requested action
      *
      * @param \Closure $routeRegisterCallback
-     * @throws \Throwable
      */
     public function boot(\Closure $routeRegisterCallback): void
     {
@@ -210,7 +209,7 @@ class Application implements IApplication
                 ->status(IResponseStatus::NOT_FOUND)
                 ->errors(['action' => "Route '{$requestRoute}' not found"]);
 
-            $this->_finishRequest();
+//            $this->_finishRequest();
 
             return null;
         }
@@ -273,7 +272,7 @@ class Application implements IApplication
                 ->errors($validator->getErrors())
                 ->addError('_request.validate', 'Action did not pass validation.');
 
-            $this->_finishRequest();
+//            $this->_finishRequest();
 
             return false;
         }
@@ -304,7 +303,7 @@ class Application implements IApplication
 
             $this->_response->addError('_request.middleware', 'Middlewares did not finished.');
 
-            $this->_finishRequest();
+//            $this->_finishRequest();
 
             return false;
         }

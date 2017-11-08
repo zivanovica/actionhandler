@@ -19,7 +19,8 @@
       "src/index.php"
     ],
     "psr-4": {
-      "RequestHandler\\": "src/RequestHandler"
+      "RequestHandler\\": "src/RequestHandler",
+      "App\\": "public"
     }
   }
 }
