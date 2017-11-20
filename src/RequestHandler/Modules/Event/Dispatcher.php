@@ -66,7 +66,7 @@ class Dispatcher implements IDispatcher
 
         if (false === isset($this->_events[$name])) {
 
-            throw new DispatcherException(DispatcherException::ERROR_EVENT_NOT_FOUND, $name);
+            throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
         }
 
         if (false === is_array($this->_subscription[$name])) {
@@ -104,7 +104,7 @@ class Dispatcher implements IDispatcher
 
         if (false === isset($this->_events[$name])) {
 
-            throw new DispatcherException(DispatcherException::ERROR_EVENT_NOT_FOUND, $name);
+            throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
         }
 
         $index = count($this->_prepared);
@@ -121,6 +121,8 @@ class Dispatcher implements IDispatcher
      */
     public function fire(): void
     {
+
+//        ob_start();
 
         foreach ($this->_prepared as $eventData) {
 
@@ -146,6 +148,9 @@ class Dispatcher implements IDispatcher
                 $callback($eventData[Dispatcher::PARAM_EVENT_DATA]);
             }
         }
+
+
+//        ob_end_clean();
     }
 
     /**
@@ -159,7 +164,7 @@ class Dispatcher implements IDispatcher
 
         if (false === isset($this->_prepared[$handle])) {
 
-            throw new DispatcherException(DispatcherException::ERROR_INVALID_EVENT_HANDLE, $handle);
+            throw new DispatcherException(DispatcherException::ERR_BAD_EVENT_HANDLE, $handle);
         }
 
         $this->_prepared[$handle] = null;

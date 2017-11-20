@@ -2,7 +2,7 @@
 
 namespace RequestHandler\Utils\ObjectFactory;
 
-use RequestHandler\Exceptions\FactoryException;
+use RequestHandler\Exceptions\ObjectFactoryException;
 
 /**
  *
@@ -32,9 +32,7 @@ class ObjectFactory implements IObjectFactory
 
         if (empty(static::$_instances[$class])) {
 
-            static::$_instances[$class] = static::getNewInstanceArgs(
-                $class, is_array($arguments) ? $arguments : []
-            );
+            static::$_instances[$class] = static::getNewInstanceArgs($class, $arguments);
         }
 
         return static::$_instances[$class];
@@ -53,9 +51,7 @@ class ObjectFactory implements IObjectFactory
 
         $class = static::_getInterfaceClass($interface);
 
-        return static::getNewInstanceArgs(
-            $class, is_array($arguments) ? $arguments : []
-        );
+        return static::getNewInstanceArgs($class, $arguments);
     }
 
     /**
@@ -65,43 +61,25 @@ class ObjectFactory implements IObjectFactory
      * @param string $interface
      * @param string $className
      * @return void
-     * @throws FactoryException
+     * @throws ObjectFactoryException
      */
-    public static function map(string $interface, string $className): void
+    public static function register(string $interface, string $className): void
     {
 
         if (false === (interface_exists($interface) || class_exists($interface))) {
 
-            throw new FactoryException(FactoryException::ERROR_INVALID_INTERFACE, $interface);
-        }
-
-        if (false === class_exists($className)) {
-
-            throw new FactoryException(FactoryException::ERROR_INVALID_CLASS, $className);
+            throw new ObjectFactoryException(ObjectFactoryException::ERR_BAD_CLASS, $className);
         }
 
         if (false === is_subclass_of($className, $interface) && 0 !== strcasecmp($className, $interface)) {
 
-            throw new FactoryException(
-                FactoryException::ERROR_INTERFACE_MISMATCH,
+            throw new ObjectFactoryException(
+                ObjectFactoryException::ERR_INTERFACE_MISMATCH,
                 "{$className} does not implements {$interface}"
             );
         }
 
         static::$_map[$interface] = $className;
-    }
-
-    /**
-     * @param array $map
-     * @return void
-     */
-    public static function setMap(array $map): void
-    {
-
-        foreach ($map as $interface => $class) {
-
-            static::map($interface, $class);
-        }
     }
 
     /**
@@ -145,7 +123,7 @@ class ObjectFactory implements IObjectFactory
      * @param null|\ReflectionMethod $reflectionMethod
      * @param array $parameters
      * @return array
-     * @throws FactoryException
+     * @throws ObjectFactoryException
      */
     private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {
@@ -157,7 +135,7 @@ class ObjectFactory implements IObjectFactory
             if ($parameter->getClass()) {
 
                 $arguments[] = ObjectFactory::create($parameter->getClass()->getName());
-            } else if (empty($parameters) && null !== $parameter->getDefaultValue()) {
+            } else if (empty($parameters) && $parameter->isOptional()) {
 
                 $arguments[] = $parameter->getDefaultValue();
             } else if (empty($parameters) && $parameter->allowsNull()) {
@@ -165,8 +143,8 @@ class ObjectFactory implements IObjectFactory
                 $arguments[] = null;
             } else if (empty($parameters)) {
 
-                throw new FactoryException(
-                    FactoryException::ERROR_UNRESOLVED_PARAMETER,
+                throw new ObjectFactoryException(
+                    ObjectFactoryException::ERR_UNRESOLVED_PARAMETER,
                     "{$parameter->getName()} for {$reflectionMethod->getDeclaringClass()->getName()}"
                 );
             } else if (false === empty($parameters)) {
@@ -191,12 +169,12 @@ class ObjectFactory implements IObjectFactory
 
         $mapped = empty(static::$_map[$interface]) ? $interface : static::$_map[$interface];
 
-        if (class_exists($mapped)) {
-
-            return $mapped;
-        } else if (interface_exists($mapped)) {
+        if (interface_exists($mapped)) {
 
             return self::_getInterfaceClass($mapped);
+        } else if (class_exists($mapped)) {
+
+            return $mapped;
         }
 
         return $interface;

@@ -12,6 +12,14 @@ use RequestHandler\Utils\DataFilter\IDataFilter;
 class StringFilter implements IDataFilter
 {
 
+    /** @var int|null */
+    private $_maxLength = null;
+
+    public function __construct(?int $maxLength = null)
+    {
+
+        $this->_maxLength = $maxLength;
+    }
 
     /**
      *
@@ -23,11 +31,8 @@ class StringFilter implements IDataFilter
     public function filter($value)
     {
 
-        if (is_string($value)) {
+        $value = is_string($value) ? $value : (string) $value;
 
-            return $value;
-        }
-
-        return (string)$value;
+        return null === $this->_maxLength ? $value : substr($value, 0, $this->_maxLength);
     }
 }

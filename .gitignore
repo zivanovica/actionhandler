@@ -3,4 +3,7 @@ vendor/
 .idea
 *.iml
 .DS_Store
-public/
+public/*
+docker/storage/mysql/*
+docker/storage/redis/*
+docker/storage/mongodb/*

@@ -24,7 +24,7 @@ abstract class DecoratorFactory implements IDecoratorFactory
 
         if (false === class_exists($decoratorClassName)) {
 
-            throw new DecoratorFactoryException(DecoratorFactoryException::ERROR_DECORATOR_NOT_FOUND, $decoratorClassName);
+            throw new DecoratorFactoryException(DecoratorFactoryException::ERR_DECORATOR_NOT_FOUND, $decoratorClassName);
         }
 
         /** @var IDecorator $decorator */
@@ -32,7 +32,7 @@ abstract class DecoratorFactory implements IDecoratorFactory
 
         if (false === $decorator instanceof IDecorator) {
 
-            throw new DecoratorFactoryException(DecoratorFactoryException::ERROR_DECORATOR_NOT_VALID, $decoratorClassName);
+            throw new DecoratorFactoryException(DecoratorFactoryException::ERR_DECORATOR_NOT_VALID, $decoratorClassName);
         }
 
         if ($decorator instanceof ITypedDecorator) {
@@ -58,7 +58,7 @@ abstract class DecoratorFactory implements IDecoratorFactory
 
         if (false === is_object($object)) {
 
-            throw new DecoratorFactoryException(DecoratorFactoryException::ERROR_INVALID_OBJECT_TYPE, gettype($object));
+            throw new DecoratorFactoryException(DecoratorFactoryException::ERR_BAD_OBJECT_TYPE, gettype($object));
         }
 
         if (false === is_a($object, $decorator->getObjectClass())) {
@@ -66,7 +66,7 @@ abstract class DecoratorFactory implements IDecoratorFactory
             $class = get_class($object);
 
             throw new DecoratorFactoryException(
-                DecoratorFactoryException::ERROR_OBJECT_TYPE_MISMATCH, "Expected {$decorator->getObjectClass()} got {$class}"
+                DecoratorFactoryException::ERR_OBJECT_TYPE_MISMATCH, "Expected {$decorator->getObjectClass()} got {$class}"
             );
         }
     }

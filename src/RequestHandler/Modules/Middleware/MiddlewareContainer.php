@@ -79,7 +79,7 @@ class MiddlewareContainer implements IMiddlewareContainer
 
         if (false === $middleware instanceof IMiddlewareHandler) {
 
-            throw new MiddlewareException(MiddlewareException::ERROR_INVALID_MIDDLEWARE, $middleware);
+            throw new MiddlewareException(MiddlewareException::ERR_BAD_MIDDLEWARE, $middleware);
         }
 
         $middleware->handle($this->_request, $this->_response, $this);

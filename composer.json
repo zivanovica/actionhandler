@@ -2,7 +2,8 @@
   "name": "webactionhandler/framework",
   "description": "Unique and easy to use PHP 7.1+ framework",
   "require": {
-    "php": "^7.1"
+    "php": "^7.1",
+    "psr/http-message": "^1.0"
   },
   "keywords": ["framework"],
   "homepage": "https://bitbucket.org/coapsy/actionhandler",

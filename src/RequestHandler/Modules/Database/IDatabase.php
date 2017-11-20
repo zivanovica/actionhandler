@@ -2,6 +2,11 @@
 
 namespace RequestHandler\Modules\Database;
 
+/**
+ * TODO: Add transaction support
+ *
+ * @package RequestHandler\Modules\Database
+ */
 interface IDatabase
 {
 

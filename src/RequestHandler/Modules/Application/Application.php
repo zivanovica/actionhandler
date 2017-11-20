@@ -72,21 +72,12 @@ class Application implements IApplication
 
         if (false === $this->_loadConfig($configPath)) {
 
-            throw new ApplicationException(ApplicationException::ERROR_INVALID_CONFIG);
+            throw new ApplicationException(ApplicationException::ERR_BAD_CONFIG);
         }
 
         $this->_appConfig = $this->_config['application'];
 
         $this->_dbConfig = $this->_config['database'];
-
-        ObjectFactory::create(
-            IDatabase::class,
-            $this->_dbConfig['host'],
-            $this->_dbConfig['dbname'],
-            $this->_dbConfig['username'],
-            $this->_dbConfig['password'],
-            $this->_dbConfig['port']
-        );
 
         $this->_router = $router;
 
@@ -99,6 +90,18 @@ class Application implements IApplication
         $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
 
         $this->_attributes = ['config' => $this->_config];
+    }
+
+    /**
+     *
+     * Retrieve database configuration
+     *
+     * @return array
+     */
+    public function config(): array
+    {
+
+        return $this->_config;
     }
 
     /**
@@ -144,6 +147,10 @@ class Application implements IApplication
 
         $routeRegisterCallback($this->_router);
 
+        ignore_user_abort(true);
+
+        ObjectFactory::create(IDatabase::class);
+
         if (false === $this->_appConfig['debug']) {
 
             try {
@@ -163,11 +170,6 @@ class Application implements IApplication
         }
 
         $this->_finishRequest();
-
-        if (function_exists('fastcgi_finish_request')) {
-
-            fastcgi_finish_request();
-        }
 
         $this->_dispatcher->fire();
 
@@ -231,7 +233,7 @@ class Application implements IApplication
         $handler = $route->handler();
 
         if (false === $handler instanceof IHandle)
-            throw new ApplicationException(ApplicationException::ERROR_INVALID_REQUEST_HANDLER, get_class($handler));
+            throw new ApplicationException(ApplicationException::ERR_BAD_REQUEST_HANDLER, get_class($handler));
 
         if (false === $this->_executeValidator($handler))
             return;
@@ -353,6 +355,11 @@ class Application implements IApplication
             'status' => $response->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
             'data' => $response->hasErrors() ? $response->getErrors() : $response->getData()
         ]);
+
+        if (function_exists('fastcgi_finish_request')) {
+
+            fastcgi_finish_request();
+        }
     }
 
 }

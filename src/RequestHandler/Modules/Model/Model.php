@@ -6,7 +6,7 @@ use RequestHandler\Exceptions\ModelException;
 use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\{
-    DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory
+    DataFilter\Filters\EntityModelFilter, DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory
 };
 
 /**
@@ -18,226 +18,92 @@ use RequestHandler\Utils\{
 abstract class Model implements IModel
 {
 
+    /** @var array */
+    protected static $_loadedFields;
 
     /** @var array */
     protected $_attributes = [];
 
-    /** @var array */
-    protected $_updatedAttributes = [];
-
     /** @var array Properties that will be excluded in toArray() method */
     protected $_hidden = [];
 
-    /** @var bool */
+    /** @var IDataFilter[] */
+    protected $_fields;
+
+    /** @var bool Flag that is used by Repository to determine should entity be updated on flush or not */
     protected $_isDirty;
-
-    /** @var Database */
-    protected $_db;
-
-    /** @var ITypedDecorator[] */
-    protected $_instantiatedDecorators = [];
 
     /**
      * @param array $attributes Initial model values
-     * @param bool $isDirty
      */
-    public function __construct(array $attributes = [], ?bool $isDirty = null)
+    public function __construct(array $attributes = [])
     {
 
-        $this->_db = ObjectFactory::create(IDatabase::class);
+        $this->_attributes = $attributes;
 
-        if (false === $isDirty) {
+        $this->_fields = $this->fields();
 
-            $this->_attributes = $attributes;
-
-            $this->_isDirty = false;
-
-            return;
-        }
-
-        $this->setAttributes($attributes);
-    }
-
-    /**
-     *
-     * Try setting parameter to model attributes
-     *
-     * @param string $name
-     * @param mixed $value
-     */
-    public function __set($name, $value)
-    {
-
-        $this->setAttribute($name, $value);
-    }
-
-    /**
-     *
-     * Try fetching required parameter from model attributes
-     *
-     * @param string $name
-     * @return mixed|null
-     */
-    public function __get($name)
-    {
-
-        return $this->getAttribute($name);
+        $this->hydrate($attributes);
     }
 
     /**
      * Retrieves value of primary key for current entity
      *
-     * @param IDataFilter $transformer
      * @return mixed
      */
-    public function primaryValue(?IDataFilter $transformer = null)
+    public function primaryValue()
     {
 
-        return $this->getAttribute($this->primary(), $transformer);
+        return $this->field($this->primary());
     }
 
     /**
      *
-     * Will retrieve single entity from database
+     * Retrieve value of model field (column)
      *
-     * @param $primaryValue
-     * @return $this|IModel|null
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
      */
-    public function find($primaryValue): IModel
+    public function field(string $name, $default = null)
     {
 
-        $results = $this->_db->fetch("SELECT * FROM `{$this->table()}` WHERE `{$this->primary()}` = ?;", [$primaryValue]);
+        if (false === isset($this->_fields[$name])) {
 
-        if (false === is_array($results)) {
-
-            return new $this;
+            throw new ModelException(ModelException::ERR_BAD_FIELD, $name);
         }
 
-        return new $this($results, false);
+        $rawFieldValue = isset($this->_attributes[$name]) ? $this->_attributes[$name] : $default;
+
+        return $this->_fields[$name] instanceof IDataFilter ?
+            $this->_fields[$name]->filter($rawFieldValue) : $rawFieldValue;
     }
 
     /**
      *
-     * Retrieve single entity with given criteria
+     * Set raw value for given field (column)
      *
-     * @param array $criteria
-     * @return $this|IModel
+     * NOTE: If filter to field is applied, then raw value is filtered when reading
+     *
+     * @param string $name
+     * @param $value
+     * @return IModel
      */
-    public function findOneWhere(array $criteria): IModel
-    {
-        $results = $this->_db->fetch($this->_buildCriteriaSelectQuery($this->table(), $criteria), array_values($criteria));
-
-        if (false === is_array($results)) {
-
-            return new $this;
-        }
-
-        return new $this($results, false);
-    }
-
-    /**
-     *
-     * Retrieve multiple entities with given criteria
-     *
-     * @param array $criteria
-     * @return $this[]|Model[]|null
-     */
-    public function findWhere(array $criteria): array
+    public function setField(string $name, $value): IModel
     {
 
-        return $this->_getModelsArray(
-            $this->_db->fetchAll($this->_buildCriteriaSelectQuery($this->table(), $criteria), array_values($criteria))
-        );
-    }
+        if (false === isset($this->_fields[$name])) {
 
-    public function all(): ?array
-    {
-
-        return $this->_getModelsArray($this->_db->fetchAll("SELECT * FROM `{$this->table()}`;"));
-    }
-
-    /**
-     *
-     * Save current entity into database
-     *
-     * @return bool
-     */
-    public function save(): bool
-    {
-
-        if (false === $this->_isDirty) {
-
-            return false;
+            throw new ModelException(ModelException::ERR_BAD_FIELD, $name);
         }
 
-        $query = $this->_buildSaveQuery($this->table(), $this->primary(), $this->_updatedAttributes);
+        $oldValue = $this->_attributes[$name];
 
-        $updateBindings = $this->_updatedAttributes;
+        $this->_attributes[$name] = $value instanceof IModel ? $value->primaryValue() : $value;
 
-        if (isset($updateBindings[$this->primary()])) {
+        if ($oldValue !== $this->_attributes[$name]) {
 
-            unset($updateBindings[$this->primary()]);
-        }
-
-        $id = $this->_db->store($query, array_merge(array_values($this->_updatedAttributes), array_values($updateBindings)));
-
-        if ($id) {
-
-            if ($this->primary()) {
-
-                $this->setAttribute($this->primary(), $id);
-            }
-
-            $this->_attributes = array_merge($this->_attributes, $this->_updatedAttributes);
-
-            $this->reset();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     * Removes current entity from database
-     *
-     * @return bool
-     * @throws ModelException
-     */
-    public function delete(): bool
-    {
-
-        if (empty($this->primary())) {
-
-            throw new ModelException(ModelException::ERROR_MISSING_PRIMARY, 'Primary key is required for deleting.');
-        }
-
-        $id = $this->primaryValue();
-
-        if (null === $id) {
-
-            throw new ModelException(ModelException::ERROR_MISSING_PRIMARY, 'Primary key value is required for deleting.');
-        }
-
-        $deleted = (bool)$this->_db->delete("DELETE FROM `{$this->table()}` WHERE `{$this->primary()}` = ?;", [$id]);
-
-        return $this->_isDirty = $deleted;
-    }
-
-    /**
-     *
-     * Bulk set of model values
-     *
-     * @param array $data
-     * @return $this|IModel
-     */
-    public function setAttributes(array $data): IModel
-    {
-
-        foreach ($data as $name => $value) {
-
-            $this->setAttribute($name, $value);
+            $this->_isDirty = true;
         }
 
         return $this;
@@ -245,91 +111,11 @@ abstract class Model implements IModel
 
     /**
      *
-     * Set specific field value
+     * If method returns true model will be updated when repository flushes
      *
-     * @param string $name Field name
-     * @param mixed $value Value of field
-     * @param IDataFilter|null $transformer
-     * @return $this|IModel
-     * @throws ModelException
+     * @return bool
      */
-    public function setAttribute(string $name, $value, ?IDataFilter $transformer = null): IModel
-    {
-
-        if (false === in_array($name, $this->fields())) {
-
-            throw new ModelException(ModelException::ERROR_INVALID_FIELD, $name);
-        }
-
-        if ($value instanceof Model) {
-
-            $value = $value->primaryValue();
-        }
-
-        $this->_isDirty = true;
-
-        $this->_updatedAttributes[$name] = null === $transformer ? $value : $transformer->filter($value);
-
-        return $this;
-    }
-
-    /**
-     *
-     * Get specific field value
-     *
-     * @param $name
-     * @param IDataFilter|null $filter
-     * @return mixed|null
-     */
-    public function getAttribute(string $name, ?IDataFilter $filter = null)
-    {
-
-        $attributes = array_merge($this->_attributes, $this->_updatedAttributes);
-
-        $value = isset($attributes[$name]) ? $attributes[$name] : null;
-
-        return null === $filter ? $value : $filter->filter($value);
-    }
-
-    /**
-     *
-     * Get bulk of field values
-     *
-     * TODO: Investigate could this anyhow result in false existence
-     *
-     * @param array $attributes
-     * @return array
-     */
-    public function getAttributes(array $attributes): array
-    {
-
-        return array_intersect_key(array_merge($this->_attributes, $this->_updatedAttributes), array_flip($attributes));
-    }
-
-    /**
-     *
-     * Retrieve all parameters with its associated values, parameters stored in "_hidden" property won't be retrieved in array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-
-        return array_diff_key(array_merge($this->_attributes, $this->_updatedAttributes), array_flip($this->_hidden));
-    }
-
-    /**
-     * Reset all changes to original values
-     */
-    public function reset(): void
-    {
-
-        $this->_updatedAttributes = [];
-
-        $this->_isDirty = false;
-    }
-
-    public function dirty(): bool
+    public function isDirty(): bool
     {
 
         return $this->_isDirty;
@@ -337,83 +123,19 @@ abstract class Model implements IModel
 
     /**
      *
-     * Generate INSERT query used for saving
+     * Hydrate model with new values
      *
-     * @param string $table Table name
-     * @param string $primary Name of primary key
-     * @param array $attributes Field values
-     * @return string
+     * @param array $data
      */
-    private function _buildSaveQuery(string $table, string $primary, array $attributes): string
+    public function hydrate(array $data): void
     {
 
-        $fields = array_keys($attributes);
+        foreach ($data as $field => $value) {
 
-        if (isset($attributes[$primary])) {
-
-            unset($attributes[$primary]);
+            $this->setField($field, $value);
         }
 
-        $updateFields = array_keys($attributes);
-
-        $fieldMapper = function ($key): string {
-
-            return "`{$key}`=?";
-        };
-
-        $fieldsString = implode(',', array_map($fieldMapper, $fields));
-
-        $updateFieldsString = implode(',', array_map($fieldMapper, $updateFields));
-
-        $query = "INSERT INTO `{$table}` SET {$fieldsString} ON DUPLICATE KEY UPDATE {$updateFieldsString};";
-
-        return $query;
-    }
-
-    /**
-     *
-     * Build select query with "WHERE" criteria
-     *
-     * @param string $table
-     * @param array $criteria
-     * @return string
-     */
-    private function _buildCriteriaSelectQuery(string $table, array $criteria): string
-    {
-
-        $mapFunction = function (string $field): string {
-            return "`{$field}` = ?";
-        };
-
-        $fields = implode(' AND ', array_map($mapFunction, array_keys($criteria)));
-
-        return "SELECT * FROM `{$table}` WHERE {$fields};";
-    }
-
-    /**
-     *
-     * Will convert RAW array data to collection of models
-     *
-     * @param array|null $results
-     * @return array|null
-     */
-    private function _getModelsArray(?array $results = null): ?array
-    {
-
-        if (null === $results) {
-
-            return [];
-        }
-
-
-        $resultModels = [];
-
-        foreach ($results as $result) {
-
-            $resultModels[] = new $this($result, false);
-        }
-
-        return $resultModels;
+        $this->_isDirty = false;
     }
 
     /**
@@ -441,18 +163,21 @@ abstract class Model implements IModel
     }
 
     /**
-     * @param string $decoratorClassName Class name of wanted decorator
-     * @param array $decoratorParameters Parameters that will be passed to decorator constructor
-     * @return ITypedDecorator
+     *
+     * Retrieve all parameters with its associated values, parameters stored in "_hidden" property won't be retrieved in array
+     *
+     * @return array
      */
-    public function decorate($decoratorClassName, array $decoratorParameters = []): ITypedDecorator
+    public function toArray(): array
     {
 
-        if (empty($this->_instantiatedDecorators[$decoratorClassName])) {
+        $values = array_diff_key($this->_attributes, array_flip($this->_hidden));
 
-            $this->_instantiatedDecorators[$decoratorClassName] = DecoratorFactory::create($decoratorClassName, $this, $decoratorParameters);
+        foreach ($values as $field => $value) {
+
+            $values[$field] = $this->field($field, $value);
         }
 
-        return $this->_instantiatedDecorators[$decoratorClassName];
+        return $values;
     }
 }

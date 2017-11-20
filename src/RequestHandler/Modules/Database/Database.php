@@ -3,6 +3,7 @@
 namespace RequestHandler\Modules\Database;
 
 use RequestHandler\Exceptions\DatabaseException;
+use RequestHandler\Modules\Application\IApplication;
 
 /**
  *
@@ -16,19 +17,26 @@ class Database implements IDatabase
     /** @var \PDO */
     public $connection;
 
+    /** @var string */
+    private $_dsn;
+
+    /** @var string */
+    private $_username;
+
+    /** @var string */
+    private $_password;
+
+    /** @var IApplication */
+    private $_application;
+
     /**
-     * @param string $host Host address
-     * @param string $database Database name
-     * @param string $username Username
-     * @param string $password Password
-     * @param int $port Port
+     * @param IApplication $application
      */
-    public function __construct(string $host, string $database, string $username, string $password, int $port = 3306)
+    public function __construct(IApplication $application)
     {
 
-        $dsn = "mysql:host={$host};port={$port};dbname={$database};";
 
-        $this->connection = new \PDO($dsn, $username, $password);
+        $this->_application = $application;
     }
 
     /**
@@ -41,6 +49,7 @@ class Database implements IDatabase
      */
     public function fetch(string $query, array $bindings = []): ?array
     {
+
 
         $statement = $this->_executeQuery($query, $bindings);
 
@@ -115,19 +124,82 @@ class Database implements IDatabase
     private function _executeQuery(string $query, array $bindings): \PDOStatement
     {
 
+        $this->connect();
+
         $statement = $this->connection->prepare($query);
 
         if (false === $statement) {
 
-            throw new DatabaseException(DatabaseException::ERROR_PREPARING_QUERY, "[{$statement->errorCode()}] {$query}");
+            throw new DatabaseException(DatabaseException::ERR_PREPARING_QUERY, "[{$statement->errorCode()}] {$query}");
         }
 
         if (false === $statement->execute($bindings)) {
 
-            throw new DatabaseException(DatabaseException::ERROR_EXECUTING_QUERY, "[{$statement->errorCode()}] {$query}");
+            throw new DatabaseException(DatabaseException::ERR_EXECUTING_QUERY, "[{$statement->errorCode()}] {$query}");
         }
 
         return $statement;
+    }
+
+    /**
+     * Connects to database if connection property doesn't hold instance of \PDO
+     */
+    private function connect(): void
+    {
+
+        if ($this->connection instanceof \PDO) {
+
+            return;
+        }
+
+        $config = $this->_application->config();
+
+        if (false === isset($config['database'])) {
+
+            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'database');
+        }
+
+        $this->validateConnectionParameters($config['database']);
+
+        $username = $config['database']['username'];
+
+        $password = $config['database']['password'];
+
+        $database = $config['database']['dbname'];
+
+        $host = isset($config['database']['host']) ? $config['database']['host'] : 'localhost';
+
+        $port = isset($config['database']['port']) ? $config['database']['port'] : 3306;
+
+        $dsn = "mysql:host={$host};port={$port};dbname={$database};";
+
+        $this->connection = new \PDO($dsn, $username, $password);
+    }
+
+    /**
+     *
+     * Validates existence of all parameters required for establishing connection to database
+     *
+     * @param array $config
+     * @throws DatabaseException
+     */
+    private function validateConnectionParameters(array $config): void
+    {
+
+        if (false === isset($config['username'])) {
+
+            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'username');
+        }
+
+        if (false === isset($config['password'])) {
+
+            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'password');
+        }
+
+        if (false === isset($config['dbname'])) {
+
+            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'dbname');
+        }
     }
 
 }

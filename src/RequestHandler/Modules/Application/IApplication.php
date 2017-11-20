@@ -17,6 +17,14 @@ interface IApplication
 
     /**
      *
+     * Retrieve configuration
+     *
+     * @return array
+     */
+    public function config(): array;
+
+    /**
+     *
      * Retrieve attribute value
      *
      * @param string $name

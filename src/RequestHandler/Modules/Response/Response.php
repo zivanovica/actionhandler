@@ -3,6 +3,7 @@
 namespace RequestHandler\Modules\Response;
 
 use RequestHandler\Exceptions\ResponseException;
+use RequestHandler\Modules\Model\IModel;
 use RequestHandler\Modules\Model\Model;
 
 /**
@@ -51,15 +52,11 @@ class Response implements IResponse
     public function addData(string $key, $value): IResponse
     {
 
-        if ($value instanceof Model) {
-
-            $value = $value->toArray();
-        }
-
-        $this->_data[$key] = $value;
+        $this->_data[$key] = $this->getCleanDataValue($value);
 
         return $this;
     }
+
 
     /**
      *
@@ -174,7 +171,7 @@ class Response implements IResponse
 
         if (false === isset(Response::$_commonStatusCodes[$status])) {
 
-            throw new ResponseException(ResponseException::ERROR_INVALID_STATUS_CODE);
+            throw new ResponseException(ResponseException::ERR_BAD_STATUS_CODE);
         }
 
         $this->_status = $status;
@@ -228,5 +225,36 @@ class Response implements IResponse
     {
 
         $this->_headers[$header] = $value;
+    }
+
+    /**
+     *
+     * Retrieve clean (transformed) value
+     *
+     * We use this method to properly set response data when instance of IModel or array of IModel is given as value
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    private function getCleanDataValue($value)
+    {
+
+        $returnValue = $value;
+
+        if ($value instanceof IModel) {
+
+            $returnValue = $value->toArray();
+        } else if (is_array($value)) {
+
+            $returnValue = [];
+
+            foreach ($value as $key => $val) {
+
+                $returnValue[$key] = $this->getCleanDataValue($val);
+            }
+        }
+
+        return $returnValue;
+
     }
 }

@@ -13,16 +13,16 @@ use RequestHandler\Modules\Exception\BaseException;
 class DispatcherException extends BaseException
 {
 
-    const ERROR_CLASS_NOT_FOUND = 100001;
-    const ERROR_EVENT_TYPE_MISMATCH = 100002;
-    const ERROR_EVENT_NOT_FOUND = 100003;
-    const ERROR_INVALID_EVENT_HANDLE = 100004;
+    const ERR_CLASS_NOT_FOUND = 100001;
+    const ERR_EVENT_TYPE_MISMATCH = 100002;
+    const ERR_EVENT_NOT_FOUND = 100003;
+    const ERR_BAD_EVENT_HANDLE = 100004;
 
     protected $_errors = [
 
-        DispatcherException::ERROR_CLASS_NOT_FOUND => 'Event class not found',
-        DispatcherException::ERROR_EVENT_TYPE_MISMATCH => 'Class does not implement ' . IListener::class,
-        DispatcherException::ERROR_EVENT_NOT_FOUND => 'Unknown event',
-        DispatcherException::ERROR_INVALID_EVENT_HANDLE => 'Trying to prevent invalid event',
+        DispatcherException::ERR_CLASS_NOT_FOUND => 'Event class not found',
+        DispatcherException::ERR_EVENT_TYPE_MISMATCH => 'Class does not implement ' . IListener::class,
+        DispatcherException::ERR_EVENT_NOT_FOUND => 'Unknown event',
+        DispatcherException::ERR_BAD_EVENT_HANDLE => 'Trying to prevent invalid event',
     ];
 }

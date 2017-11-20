@@ -1,32 +1,43 @@
-version: '3'
+version: '3.3'
 services:
   nginx:
+    container_name: ActionHandlerNGINX
     build: nginx
     links:
       - php
     ports:
       - "80:80"
   php:
+    container_name: ActionHandlerPHPFPM
     build: php
     links:
       - mysql
       - redis
       - mongo
     volumes:
-      - ..:/app:rw
+      - ..:/app
     ports:
       - "9000:9000"
   mysql:
-    image: mysql:latest
+    container_name: ActionHandlerMySQL
+    volumes:
+      - ./storage/mysql:/var/lib/mysql
+    image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - "3306:3306"
+    expose:
+      -  3306
   redis:
+    container_name: ActionHandlerRedis
     image: redis:latest
     ports:
       - "6379:6379"
   mongo:
+    container_name: ActionHandlerMongoDB
+    volumes:
+      - ./storage/mongodb:/data/db
     image: mongo:latest
     ports:
       - "27017:27017"
