@@ -3,7 +3,7 @@
 namespace RequestHandler\Modules\Response;
 
 use RequestHandler\Exceptions\ResponseException;
-use RequestHandler\Modules\Model\IModel;
+use RequestHandler\Modules\Entity\IModel;
 
 /**
  * This is used to set up response data, such as status code, data, errors, headers etc..

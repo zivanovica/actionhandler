@@ -6,7 +6,7 @@
  * Time: 2:47 AM
  */
 
-namespace RequestHandler\Modules\Model;
+namespace RequestHandler\Modules\Entity;
 
 
 interface IModel

@@ -3,9 +3,9 @@
 namespace RequestHandler\Utils\DataFilter\Filters;
 
 use RequestHandler\Exceptions\ModelFilterException;
-use RequestHandler\Modules\Model\IModel;
-use RequestHandler\Modules\Model\IRepository;
-use RequestHandler\Modules\Model\Model;
+use RequestHandler\Modules\Entity\IModel;
+use RequestHandler\Modules\Entity\IRepository;
+use RequestHandler\Modules\Entity\Model;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 

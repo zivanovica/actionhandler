@@ -6,7 +6,7 @@ use RequestHandler\Modules\{
 use RequestHandler\Modules\Event\{
     Event, IEvent
 };
-use RequestHandler\Modules\Model\{
+use RequestHandler\Modules\Entity\{
     IRepository, Repository
 };
 use RequestHandler\Utils\{

@@ -6,7 +6,7 @@
  * Time: 12:01 AM
  */
 
-namespace RequestHandler\Modules\Model;
+namespace RequestHandler\Modules\Entity;
 
 
 use RequestHandler\Exceptions\RepositoryException;

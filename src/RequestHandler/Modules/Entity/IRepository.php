@@ -6,7 +6,7 @@
  * Time: 11:53 PM
  */
 
-namespace RequestHandler\Modules\Model;
+namespace RequestHandler\Modules\Entity;
 
 
 interface IRepository

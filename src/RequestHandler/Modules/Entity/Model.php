@@ -1,6 +1,6 @@
 <?php
 
-namespace RequestHandler\Modules\Model;
+namespace RequestHandler\Modules\Entity;
 
 use RequestHandler\Exceptions\ModelException;
 use RequestHandler\Utils\{
