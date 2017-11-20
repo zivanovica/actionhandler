@@ -7,3 +7,7 @@ public/*
 docker/storage/mysql/*
 docker/storage/redis/*
 docker/storage/mongodb/*
+
+!docker/storage/mysql/.gitkeep
+!docker/storage/redis/.gitkeep
+!docker/storage/mongodb/.gitkeep
