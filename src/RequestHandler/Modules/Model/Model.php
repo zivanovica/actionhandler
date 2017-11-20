@@ -3,10 +3,8 @@
 namespace RequestHandler\Modules\Model;
 
 use RequestHandler\Exceptions\ModelException;
-use RequestHandler\Modules\Database\Database;
-use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\{
-    DataFilter\Filters\EntityModelFilter, DataFilter\IDataFilter, Decorator\DecoratorFactory, Decorator\IDecorator, Decorator\Types\ITypedDecorator, ObjectFactory\ObjectFactory
+    DataFilter\IDataFilter, Decorator\IDecorator
 };
 
 /**

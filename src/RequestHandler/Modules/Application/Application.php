@@ -68,7 +68,8 @@ class Application implements IApplication
      */
     private function __construct(
         string $configPath, IRouter $router, IRequest $request, IResponse $response, IDispatcher $dispatcher
-    ) {
+    )
+    {
 
         if (false === $this->_loadConfig($configPath)) {
 

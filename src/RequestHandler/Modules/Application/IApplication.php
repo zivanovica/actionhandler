@@ -2,7 +2,6 @@
 
 namespace RequestHandler\Modules\Application;
 
-use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Utils\DataFilter\IDataFilter;
 
 interface IApplication

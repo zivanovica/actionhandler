@@ -85,7 +85,7 @@ class Dispatcher implements IDispatcher
                 return false;
             }
 
-            unset($this->_subscription[$name][$index]);
+            $this->_subscription[$name][$index] = null;
 
             return true;
         };
@@ -97,9 +97,9 @@ class Dispatcher implements IDispatcher
      *
      * @param string $name
      * @param array ...$data
-     * @return int
+     * @return callable
      */
-    public function trigger(string $name, ... $data): int
+    public function trigger(string $name, ... $data): callable
     {
 
         if (false === isset($this->_events[$name])) {
@@ -113,7 +113,17 @@ class Dispatcher implements IDispatcher
             Dispatcher::PARAM_EVENT_NAME => $name, Dispatcher::PARAM_EVENT_DATA => $data
         ];
 
-        return $index;
+        return function () use ($index): bool {
+
+            if (false === isset($this->_prepared[$index])) {
+
+                return false;
+            }
+
+            $this->_prepared[$index] = null;
+
+            return true;
+        };
     }
 
     /**
@@ -122,7 +132,7 @@ class Dispatcher implements IDispatcher
     public function fire(): void
     {
 
-//        ob_start();
+        ob_start();
 
         foreach ($this->_prepared as $eventData) {
 
@@ -149,8 +159,7 @@ class Dispatcher implements IDispatcher
             }
         }
 
-
-//        ob_end_clean();
+        ob_end_clean();
     }
 
     /**

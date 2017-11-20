@@ -2,7 +2,6 @@
 
 namespace RequestHandler\Modules\Router;
 
-use RequestHandler\Exceptions\RouterException;
 use RequestHandler\Modules\Application\ApplicationRequest\IHandle;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Request\IRequestMethod;

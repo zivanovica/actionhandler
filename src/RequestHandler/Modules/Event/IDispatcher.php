@@ -26,9 +26,9 @@ interface IDispatcher
      *
      * @param string $name
      * @param array ...$data
-     * @return int
+     * @return callable By calling this method trigger will be ignored
      */
-    public function trigger(string $name, ... $data): int;
+    public function trigger(string $name, ... $data): callable;
 
     /**
      *

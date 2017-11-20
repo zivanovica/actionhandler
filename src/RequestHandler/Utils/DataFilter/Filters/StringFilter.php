@@ -31,7 +31,7 @@ class StringFilter implements IDataFilter
     public function filter($value)
     {
 
-        $value = is_string($value) ? $value : (string) $value;
+        $value = is_string($value) ? $value : (string)$value;
 
         return null === $this->_maxLength ? $value : substr($value, 0, $this->_maxLength);
     }

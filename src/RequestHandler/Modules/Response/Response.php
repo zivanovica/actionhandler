@@ -4,7 +4,6 @@ namespace RequestHandler\Modules\Response;
 
 use RequestHandler\Exceptions\ResponseException;
 use RequestHandler\Modules\Model\IModel;
-use RequestHandler\Modules\Model\Model;
 
 /**
  * This is used to set up response data, such as status code, data, errors, headers etc..
@@ -30,7 +29,7 @@ class Response implements IResponse
 
     private $_errors = [];
 
-    private $_headers =[];
+    private $_headers = [];
 
     private function __construct()
     {

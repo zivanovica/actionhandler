@@ -56,7 +56,7 @@ class EntityModelFilter implements IDataFilter
             /** @var IRepository $repository */
             $repository = ObjectFactory::create($this->_repositoryClassName);
 
-            self::$_cached[$uniqueId] = $repository->find("{$this->_searchField} = ?", [ $value ]);
+            self::$_cached[$uniqueId] = $repository->find("{$this->_searchField} = ?", [$value]);
 
             if (null !== self::$_cached[$uniqueId] && false === self::$_cached[$uniqueId] instanceof IModel) {
 

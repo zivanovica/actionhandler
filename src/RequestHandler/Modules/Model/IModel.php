@@ -9,9 +9,6 @@
 namespace RequestHandler\Modules\Model;
 
 
-use RequestHandler\Exceptions\ModelException;
-use RequestHandler\Utils\Decorator\Types\ITypedDecorator;
-
 interface IModel
 {
     const DEFAULT_PRIMARY_KEY = 'id';

@@ -1,22 +1,21 @@
 <?php
 
 use RequestHandler\Modules\{
-    Application\Application, Application\IApplication, Database\Database, Database\IDatabase,
-    Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request,
-    Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response,
-    Router\IRouter, Router\Router, Event\IDispatcher, Event\Dispatcher
+    Application\Application, Application\IApplication, Database\Database, Database\IDatabase, Event\Dispatcher, Event\IDispatcher, Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request, Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response, Router\IRouter, Router\Router
+};
+use RequestHandler\Modules\Event\{
+    Event, IEvent
+};
+use RequestHandler\Modules\Model\{
+    IRepository, Repository
 };
 use RequestHandler\Utils\{
-    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\EntityModelFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
+    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\EntityModelFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
 };
-use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 use RequestHandler\Utils\InputValidator\Rules\{
     RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
 };
-
-use RequestHandler\Modules\Event\{Event, IEvent};
-
-use RequestHandler\Modules\Model\{Repository, IRepository};
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 
 /**
