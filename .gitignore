@@ -4,9 +4,6 @@ vendor/
 *.iml
 .DS_Store
 public/*
-docker/storage/mysql/*
-docker/storage/redis/*
-docker/storage/mongodb/*
 
 !docker/storage/mysql/.gitkeep
 !docker/storage/redis/.gitkeep
