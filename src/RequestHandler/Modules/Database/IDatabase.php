@@ -1,6 +1,7 @@
 <?php
 
 namespace RequestHandler\Modules\Database;
+use RequestHandler\Utils\QueryBuilder\IQueryBuilder;
 
 /**
  * TODO: Add transaction support
@@ -35,11 +36,10 @@ interface IDatabase
      * Save record to database and retrieve its id
      * (INSERT, UPDATE queries)
      *
-     * @param string $query Query that will be executed
-     * @param array $bindings Parameters that will be bind to query execution
+     * @param IQueryBuilder $query
      * @return int
      */
-    public function store(string $query, array $bindings): int;
+    public function store(IQueryBuilder $query): int;
 
     /**
      *

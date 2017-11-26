@@ -169,11 +169,13 @@ abstract class Model implements IModel
     public function toArray(): array
     {
 
-        $values = array_diff_key($this->_attributes, array_flip($this->_hidden));
+//        $values = array_diff_key($this->_attributes, array_flip($this->_hidden));
 
-        foreach ($values as $field => $value) {
+        foreach ($this->_fields as $field => $value) {
 
-            $values[$field] = $this->field($field, $value);
+            unset($value);
+
+            $values[$field] = $this->field($field);
         }
 
         return $values;

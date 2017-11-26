@@ -12,6 +12,7 @@ namespace RequestHandler\Modules\Entity;
 use RequestHandler\Exceptions\RepositoryException;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
+use RequestHandler\Utils\QueryBuilder\Builder;
 
 /**
  *
@@ -171,6 +172,22 @@ class Repository implements IRepository
         $this->_persistModels[] = $model;
     }
 
+    public function fill(array $models): void
+    {
+
+        $primary = ObjectFactory::create($this->_modelClass)->primary();
+
+        foreach ($models as $model) {
+
+            if (false === isset($model[$primary])) {
+
+                continue;
+            }
+
+            $this->_models[$model[$primary]] = ObjectFactory::createNew($this->_modelClass, $model);
+        }
+    }
+
     /**
      *
      * Save all queued items to database
@@ -182,6 +199,25 @@ class Repository implements IRepository
         $this->insert();
 
         $this->update();
+    }
+
+    public function toArray(): array
+    {
+
+        return $this->_toArray($this->_models);
+    }
+
+    private function _toArray(array $inputModels): array
+    {
+
+        $models = [];
+
+        foreach ($inputModels as $model) {
+
+            $models[] = $model->toArray();
+        }
+
+        return $models;
     }
 
     private function update(): void
@@ -203,34 +239,16 @@ class Repository implements IRepository
     private function insert(): void
     {
 
-        foreach ($this->_persistModels as $model) {
+        if (false === empty($this->_persistModels)) {
 
-            $values = [];
+            $query = ObjectFactory::create(Builder::class)
+                ->insert($this->_persistModels[0]->table(), true)
+                ->values(array_keys($this->_persistModels[0]->fields()), $this->_toArray($this->_persistModels))
+                ->build();
 
-            foreach ($model->fields() as $field => $transformer) {
+            $this->_db->store($query);
 
-                if ($field === $model->primary()) {
-
-                    continue;
-                }
-
-                $values[$field] = $model->field($field);
-            }
-
-
-            $modelsFields = '`' . implode('`,`', array_keys($values)) . '`';
-
-            $placeholders = implode(',', array_fill(0, count($values), '?'));
-
-            $query = "INSERT INTO `{$model->table()}` ({$modelsFields}) VALUES ({$placeholders});";
-
-            $id = $this->_db->store($query, array_values($values));
-
-            $model->setField($model->primary(), $id);
-
-            $this->_models[$model->primaryValue()] = $model;
+            $this->_persistModels = [];
         }
-
-        $this->_persistModels = [];
     }
 }

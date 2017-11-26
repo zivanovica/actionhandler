@@ -4,6 +4,7 @@ namespace RequestHandler\Modules\Database;
 
 use RequestHandler\Exceptions\DatabaseException;
 use RequestHandler\Modules\Application\IApplication;
+use RequestHandler\Utils\QueryBuilder\IQueryBuilder;
 
 /**
  *
@@ -82,14 +83,13 @@ class Database implements IDatabase
      * Save record to database and retrieve its id
      * (INSERT, UPDATE queries)
      *
-     * @param string $query Query that will be executed
-     * @param array $bindings Parameters that will be bind to query execution
+     * @param IQueryBuilder $query
      * @return int
      */
-    public function store(string $query, array $bindings): int
+    public function store(IQueryBuilder $query): int
     {
 
-        $statement = $this->_executeQuery($query, $bindings);
+        $statement = $this->_executeQuery($query->getQuery(), $query->getBindings());
 
         return $this->connection->lastInsertId() ? $this->connection->lastInsertId() : $statement->rowCount();
     }

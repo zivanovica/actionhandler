@@ -4,6 +4,7 @@ namespace RequestHandler\Modules\Response;
 
 use RequestHandler\Exceptions\ResponseException;
 use RequestHandler\Modules\Entity\IModel;
+use RequestHandler\Modules\Entity\IRepository;
 
 /**
  * This is used to set up response data, such as status code, data, errors, headers etc..
@@ -240,7 +241,7 @@ class Response implements IResponse
 
         $returnValue = $value;
 
-        if ($value instanceof IModel) {
+        if ($value instanceof IModel || $value instanceof IRepository) {
 
             $returnValue = $value->toArray();
         } else if (is_array($value)) {

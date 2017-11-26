@@ -30,6 +30,8 @@ interface IRepository
      */
     public function find(string $query, array $bindings = []): ?IModel;
 
+    public function fill(array $models): void;
+
     /**
      *
      * Retrieves array of model instances that matched given search criteria
@@ -55,4 +57,9 @@ interface IRepository
      *
      */
     public function flush(): void;
+
+    /**
+     * @return array
+     */
+    public function toArray(): array;
 }
