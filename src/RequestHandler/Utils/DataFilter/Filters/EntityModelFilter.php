@@ -43,8 +43,11 @@ class EntityModelFilter implements IDataFilter
      * If value, field and model were already filtered, method will return model from $_cached property
      *
      * @param mixed $value
+     *
      * @return Model|null
+     *
      * @throws ModelFilterException
+     * @throws \ReflectionException
      */
     public function filter($value)
     {

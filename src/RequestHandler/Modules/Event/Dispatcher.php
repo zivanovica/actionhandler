@@ -80,7 +80,7 @@ class Dispatcher implements IDispatcher
 
         return function () use ($name, $index): bool {
 
-            if (false === isset($this->_subscription[$name]) || false === isset($this->_subscription[$name][$index])) {
+            if (false === isset($this->_subscription[$name][$index])) {
 
                 return false;
             }

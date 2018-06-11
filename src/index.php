@@ -1,22 +1,49 @@
 <?php
 
-use RequestHandler\Modules\{
-    Application\Application, Application\IApplication, Database\Database, Database\IDatabase, Event\Dispatcher, Event\IDispatcher, Middleware\IMiddlewareContainer, Middleware\MiddlewareContainer, Request\IRequest, Request\Request, Request\RequestFilter\IRequestFilter, Request\RequestFilter\RequestFilter, Response\IResponse, Response\Response, Router\IRouter, Router\Router
-};
-use RequestHandler\Modules\Event\{
-    Event, IEvent
-};
-use RequestHandler\Modules\Entity\{
-    IRepository, Repository
-};
-use RequestHandler\Utils\{
-    DataFilter\Filters\BoolFilter, DataFilter\Filters\EmailFilter, DataFilter\Filters\EntityModelFilter, DataFilter\Filters\FloatFilter, DataFilter\Filters\IntFilter, DataFilter\Filters\StringFilter, DataFilter\Filters\UIntFilter, DataFilter\Filters\WaterfallFilter, InputValidator\IInputValidator, InputValidator\InputValidator
-};
-use RequestHandler\Utils\InputValidator\Rules\{
-    RuleEmail, RuleEntityExists, RuleEnum, RuleEqual, RuleFieldSameAsOther, RuleMaximumLength, RuleMayNotExists, RuleMinimumLength, RuleRequired, RuleUniqueEntity
-};
+use RequestHandler\Modules\Application\Application;
+use RequestHandler\Modules\Application\IApplication;
+use RequestHandler\Modules\Database\Database;
+use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Modules\Event\Dispatcher;
+use RequestHandler\Modules\Event\IDispatcher;
+use RequestHandler\Modules\Middleware\IMiddlewareContainer;
+use RequestHandler\Modules\Middleware\MiddlewareContainer;
+use RequestHandler\Modules\Request\IRequest;
+use RequestHandler\Modules\Request\Request;
+use RequestHandler\Modules\Request\RequestFilter\IRequestFilter;
+use RequestHandler\Modules\Request\RequestFilter\RequestFilter;
+use RequestHandler\Modules\Response\IResponse;
+use RequestHandler\Modules\Response\Response;
+use RequestHandler\Modules\Router\IRouter;
+use RequestHandler\Modules\Router\Router;
+use RequestHandler\Modules\Event\Event;
+use RequestHandler\Modules\Event\IEvent;
+use RequestHandler\Modules\Entity\IRepository;
+use RequestHandler\Modules\Entity\Repository;
+use RequestHandler\Utils\DataFilter\Filters\BoolFilter;
+use RequestHandler\Utils\DataFilter\Filters\EmailFilter;
+use RequestHandler\Utils\DataFilter\Filters\EntityModelFilter;
+use RequestHandler\Utils\DataFilter\Filters\FloatFilter;
+use RequestHandler\Utils\DataFilter\Filters\IntFilter;
+use RequestHandler\Utils\DataFilter\Filters\StringFilter;
+use RequestHandler\Utils\DataFilter\Filters\UIntFilter;
+use RequestHandler\Utils\DataFilter\Filters\WaterfallFilter;
+use RequestHandler\Utils\InputValidator\IInputValidator;
+use RequestHandler\Utils\InputValidator\InputValidator;
+use RequestHandler\Utils\InputValidator\Rules\RuleEmail;
+use RequestHandler\Utils\InputValidator\Rules\RuleEntityExists;
+use RequestHandler\Utils\InputValidator\Rules\RuleEnum;
+use RequestHandler\Utils\InputValidator\Rules\RuleEqual;
+use RequestHandler\Utils\InputValidator\Rules\RuleFieldSameAsOther;
+use RequestHandler\Utils\InputValidator\Rules\RuleMaximumLength;
+use RequestHandler\Utils\InputValidator\Rules\RuleMayNotExists;
+use RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength;
+use RequestHandler\Utils\InputValidator\Rules\RuleRequired;
+use RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
+use RequestHandler\Utils\QueryBuilder\Builder;
+use RequestHandler\Utils\QueryBuilder\IBuilder;
 
 /**
  * TODO:
@@ -36,6 +63,7 @@ $interfaceMap = [
     IEvent::class => Event::class,
     IMiddlewareContainer::class => MiddlewareContainer::class,
     IRepository::class => Repository::class,
+    IBuilder::class => Builder::class,
     IInputValidator::class => InputValidator::class,
     BoolFilter::class => BoolFilter::class,
     EmailFilter::class => EmailFilter::class,
@@ -48,7 +76,6 @@ $interfaceMap = [
 ];
 
 foreach ($interfaceMap as $interface => $class) {
-
     ObjectFactory::register($interface, $class);
 }
 

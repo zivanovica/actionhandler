@@ -8,11 +8,10 @@
 
 namespace RequestHandler\Modules\Entity;
 
-
 use RequestHandler\Exceptions\RepositoryException;
 use RequestHandler\Modules\Database\IDatabase;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
-use RequestHandler\Utils\QueryBuilder\Builder;
+use RequestHandler\Utils\QueryBuilder\IBuilder;
 
 /**
  *
@@ -40,16 +39,14 @@ class Repository implements IRepository
 
     public function __construct(string $modelClass)
     {
-
         if (false === class_exists($modelClass)) {
-
             throw new RepositoryException(RepositoryException::ERR_CLASS_NOT_FOUND, $modelClass);
         }
 
         if (false === is_subclass_of($modelClass, IModel::class)) {
-
             throw new RepositoryException(
-                RepositoryException::ERR_CLASS_TYPE_MISMATCH, "Expected " . IModel::class . " got {$modelClass}"
+                RepositoryException::ERR_CLASS_TYPE_MISMATCH,
+                "Expected " . IModel::class . " got {$modelClass}"
             );
         }
 
@@ -70,7 +67,6 @@ class Repository implements IRepository
      */
     public function table(): string
     {
-
         return $this->_tableName;
     }
 
@@ -80,17 +76,18 @@ class Repository implements IRepository
      *
      * @param string $query
      * @param array $bindings
+     *
      * @return IModel|null
+     *
+     * @throws \ReflectionException
      */
     public function find(string $query, array $bindings = []): ?IModel
     {
-
         $query = "SELECT * FROM `{$this->table()}` WHERE {$query}";
 
         $result = $this->_db->fetch($query, $bindings);
 
         if (empty($result)) {
-
             return null;
         }
 
@@ -110,17 +107,19 @@ class Repository implements IRepository
      *
      * @param string $query
      * @param array $bindings
+     *
      * @return array
+     *
+     * @throws \ReflectionException
      */
     public function findAll(string $query, array $bindings = []): array
     {
-
-        $query = "SELECT * FROM `{$this->table()}` WHERE {$query};";;
+        $query = "SELECT * FROM `{$this->table()}` WHERE {$query};";
+        ;
 
         $results = $this->_db->fetchAll($query, $bindings);
 
         if (empty($results)) {
-
             return [];
         }
 
@@ -134,7 +133,6 @@ class Repository implements IRepository
             $model->hydrate($result);
 
             if (isset($this->_models[$model->primaryValue()])) {
-
                 $model = $this->_models[$model->primaryValue()];
             }
 
@@ -154,18 +152,16 @@ class Repository implements IRepository
      */
     public function persist(IModel $model): void
     {
-
         if (false === is_a($model, $this->_modelClass)) {
-
             $modelClass = get_class($model);
 
             throw new RepositoryException(
-                RepositoryException::ERR_CLASS_TYPE_MISMATCH, "Expected {$this->_modelClass} got {$modelClass}"
+                RepositoryException::ERR_CLASS_TYPE_MISMATCH,
+                "Expected {$this->_modelClass} got {$modelClass}"
             );
         }
 
         if (in_array($model, $this->_persistModels)) {
-
             return;
         }
 
@@ -174,13 +170,10 @@ class Repository implements IRepository
 
     public function fill(array $models): void
     {
-
         $primary = ObjectFactory::create($this->_modelClass)->primary();
 
         foreach ($models as $model) {
-
             if (false === isset($model[$primary])) {
-
                 continue;
             }
 
@@ -195,7 +188,6 @@ class Repository implements IRepository
      */
     public function flush(): void
     {
-
         $this->insert();
 
         $this->update();
@@ -203,17 +195,14 @@ class Repository implements IRepository
 
     public function toArray(): array
     {
-
         return $this->_toArray($this->_models);
     }
 
     private function _toArray(array $inputModels): array
     {
-
         $models = [];
 
         foreach ($inputModels as $model) {
-
             $models[] = $model->toArray();
         }
 
@@ -228,23 +217,21 @@ class Repository implements IRepository
 
 //            var_dump($model->isDirty());
         }
-
     }
 
     /**
      *
      * Inserts models that are queued for persist
      *
+     * @throws \ReflectionException
      */
     private function insert(): void
     {
-
         if (false === empty($this->_persistModels)) {
-
-            $query = ObjectFactory::create(Builder::class)
+            $query = ObjectFactory::create(IBuilder::class)
                 ->insert($this->_persistModels[0]->table(), true)
                 ->values(array_keys($this->_persistModels[0]->fields()), $this->_toArray($this->_persistModels))
-                ->build();
+                ->build([ IBuilder::ATTR_MULTI => 1 < count($this->_persistModels) ]);
 
             $this->_db->store($query);
 

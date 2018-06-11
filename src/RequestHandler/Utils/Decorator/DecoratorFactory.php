@@ -16,8 +16,11 @@ abstract class DecoratorFactory implements IDecoratorFactory
      * @param string $decoratorClassName
      * @param mixed $object
      * @param array $decoratorArgs
+     *
      * @return IDecorator
+     *
      * @throws DecoratorFactoryException
+     * @throws \ReflectionException
      */
     public static function create($decoratorClassName, $object, $decoratorArgs = [])
     {
@@ -51,9 +54,10 @@ abstract class DecoratorFactory implements IDecoratorFactory
      *
      * @param ITypedDecorator $decorator
      * @param mixed $object
+     *
      * @throws DecoratorFactoryException
      */
-    private static function _validateDecoratorObjectType(ITypedDecorator $decorator, $object)
+    private static function _validateDecoratorObjectType(ITypedDecorator $decorator, $object): void
     {
 
         if (false === is_object($object)) {

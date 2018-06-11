@@ -8,10 +8,8 @@
 
 namespace RequestHandler\Utils\QueryBuilder;
 
-
 interface IQueryBuilder
 {
-
     public function getQuery(): string;
 
     public function getBindings(): array;

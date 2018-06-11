@@ -23,7 +23,10 @@ class ObjectFactory implements IObjectFactory
      *
      * @param string $interface
      * @param array ...$arguments
+     *
      * @return mixed
+     *
+     * @throws \ReflectionException
      */
     public static function create(string $interface, ... $arguments)
     {
@@ -44,7 +47,10 @@ class ObjectFactory implements IObjectFactory
      *
      * @param string $interface
      * @param array ...$arguments
+     *
      * @return object
+     *
+     * @throws \ReflectionException
      */
     public static function createNew(string $interface, ... $arguments)
     {
@@ -88,7 +94,10 @@ class ObjectFactory implements IObjectFactory
      *
      * @param string $class
      * @param array $arguments
+     *
      * @return object
+     *
+     * @throws \ReflectionException
      */
     private static function getNewInstanceArgs(string $class, array $arguments = [])
     {
@@ -122,8 +131,11 @@ class ObjectFactory implements IObjectFactory
      *
      * @param null|\ReflectionMethod $reflectionMethod
      * @param array $parameters
+     *
      * @return array
+     *
      * @throws ObjectFactoryException
+     * @throws \ReflectionException
      */
     private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {

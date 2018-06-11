@@ -8,19 +8,16 @@
 
 namespace RequestHandler\Utils\QueryBuilder\Builders;
 
-
 use RequestHandler\Utils\QueryBuilder\IQueryBuilder;
 
 class InsertQueryBuilderBuilder implements IQueryBuilder
 {
-
     private $_query;
 
     private $_bindings;
 
-    public function __construct(string $table, array $fields, array $values, bool $multi)
+    public function __construct(string $table, array $fields, array $values, bool $multi = false)
     {
-
         $insertValues = $this->getInsertValues($values, $fields, $multi);
         $insertFields = implode('`,`', $fields);
 
@@ -30,31 +27,26 @@ class InsertQueryBuilderBuilder implements IQueryBuilder
 
     public function getQuery(): string
     {
-
         return $this->_query;
     }
 
     public function getBindings(): array
     {
-
         return $this->_bindings;
     }
 
     private function getInsertValues(array $values, array $fields, bool $multi): string
     {
-
         $fieldsCount = count($fields);
 
         $result = array_fill(0, $fieldsCount, '?');
         $glue = ',';
 
         if ($multi) {
-
             $result = [];
             $glue = '),(';
 
             foreach ($values as $value) {
-
                 $result[] = implode(',', array_fill(0, $fieldsCount, '?'));
             }
 
@@ -64,19 +56,17 @@ class InsertQueryBuilderBuilder implements IQueryBuilder
         return '(' . implode($glue, $result) . ')';
     }
 
-    private function getInsertBindings(array $vals, array $fields, bool $multi): array
+    private function getInsertBindings(array $values, array $fields, bool $multi): array
     {
-
         if (false === $multi) {
-
-            return $this->getInsertBindingValues($vals, $fields);
+            return $this->getInsertBindingValues($values, $fields);
         }
 
         $results = [];
 
-        foreach ($vals as $values) {
+        foreach ($values as $bindValues) {
 
-            $results = array_merge($results, $this->getInsertBindings($values, $fields, false));
+            $results = array_merge($results, $this->getInsertBindings($bindValues, $fields, false));
         }
 
         return $results;
@@ -84,7 +74,6 @@ class InsertQueryBuilderBuilder implements IQueryBuilder
 
     private function getInsertBindingValues(array $values, array $fields): array
     {
-
         $results = [];
 
         foreach ($fields as $field) {
