@@ -212,8 +212,11 @@ class Application implements IApplication
         if (false === $handler instanceof IHandle)
             throw new ApplicationException(ApplicationException::ERR_BAD_REQUEST_HANDLER, get_class($handler));
 
-        if ($this->executeValidator($handler) && $this->executeMiddlewares($handler)) {
-            $this->setRequestFilter($handler);
+        if (
+            $this->executeValidator($handler instanceof IValidate ? $handler : null) &&
+            $this->executeMiddlewares($handler instanceof IMiddleware ? $handler : null)
+        ) {
+            $this->setRequestFilter($handler instanceof IFilter ? $handler : null);
 
             $this->response = $handler->handle($this->request, $this->response);
         }
