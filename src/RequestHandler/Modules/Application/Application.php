@@ -88,7 +88,7 @@ class Application implements IApplication
 
         $this->dispatcher = $dispatcher;
 
-        $this->appConfig['debug'] = false === isset($this->appConfig['debug']) ? false : $this->appConfig['debug'];
+        $this->appConfig['debug'] = $this->appConfig['debug'] ?? false;
 
         $this->attributes = ['config' => $this->config];
     }
@@ -161,7 +161,7 @@ class Application implements IApplication
             $this->execute($this->router);
         } catch (\Throwable $exception) {
 
-            if (false === $this->appConfig['debug']) {
+            if ($this->appConfig['debug']) {
                 throw $exception;
             }
 
