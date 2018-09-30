@@ -139,7 +139,7 @@ class Router implements IRouter
     public function add(string $route, array $methods, string $handlerClass): IRouter
     {
 
-        list($regex, $parameters) = $this->_prepareRoute($route);
+        list($regex, $parameters) = $this->prepareRoute($route);
 
         $order = count($parameters);
 
@@ -179,7 +179,7 @@ class Router implements IRouter
 
             foreach ($routes as $routeData) {
 
-                $this->_currentRoute = $this->_route($method, $route, $routeData);
+                $this->_currentRoute = $this->getRoute($method, $route, $routeData);
 
                 if (null !== $this->_currentRoute) {
 
@@ -213,13 +213,13 @@ class Router implements IRouter
      * @param array $routes
      * @return IRoute|null
      */
-    private function _route(string $method, string $route, array $routes): ?IRoute
+    private function getRoute(string $method, string $route, array $routes): ?IRoute
     {
 
         foreach ($routes as $routeData) {
 
             /** @var IRoute $routeInstance */
-            $routeInstance = call_user_func_array([$this, '_getIRouteInstance'], $routeData);
+            $routeInstance = call_user_func_array([$this, 'getIRouteInstance'], $routeData);
 
             if (false === $routeInstance->valid($method, $route)) {
 
@@ -235,16 +235,14 @@ class Router implements IRouter
     }
 
     /**
-     *
-     * Creates instance of IRoute
-     *
-     * @param string $regex Route regular expression
-     * @param array $methods Allowed route methods
-     * @param array $parameters Dynamic route parameters
-     * @param string $handlerClass Route handler class name
+     * @param string $regex
+     * @param array $methods
+     * @param array $parameters
+     * @param string $handlerClass
      * @return IRoute
+     * @throws \ReflectionException
      */
-    private function _getIRouteInstance($regex, array $methods, array $parameters, string $handlerClass): IRoute
+    private function getIRouteInstance(string $regex, array $methods, array $parameters, string $handlerClass): IRoute
     {
 
         $app = ObjectFactory::create(IApplication::class);
@@ -253,35 +251,29 @@ class Router implements IRouter
         {
 
             /** @var string Expression used to match route */
-            private $_regex;
+            private $regex;
 
             /** @var array Acceptable request method for handler */
-            private $_methods;
+            private $methods;
 
             /** @var array Route parameters */
-            private $_parameters;
-
-            /** @var IHandle */
-            private $_handler;
+            private $parameters;
 
             /** @var string */
-            private $_handlerClass;
+            private $handlerClass;
 
             /** @var IApplication */
-            private $_application;
+            private $application;
 
-            public function __construct(IApplication $application, $regex, array $methods, array $parameters, string $handlerClass)
-            {
+            public function __construct(
+                IApplication $application, $regex, array $methods, array $parameters, string $handlerClass
+            ) {
 
-                $this->_application = $application;
-
-                $this->_regex = $regex;
-
-                $this->_methods = $methods;
-
-                $this->_handlerClass = $handlerClass;
-
-                $this->_parameters = $parameters;
+                $this->application = $application;
+                $this->regex = $regex;
+                $this->methods = $methods;
+                $this->handlerClass = $handlerClass;
+                $this->parameters = $parameters;
             }
 
             /**
@@ -292,13 +284,7 @@ class Router implements IRouter
              */
             public function handler(): IHandle
             {
-
-                if (false === is_a($this->_handler, $this->_handlerClass)) {
-
-                    $this->_handler = new $this->_handlerClass();
-                }
-
-                return $this->_handler;
+                return ObjectFactory::create($this->handlerClass);
             }
 
             /**
@@ -309,7 +295,7 @@ class Router implements IRouter
              */
             public function parameters(): array
             {
-                return $this->_parameters;
+                return $this->parameters;
             }
 
             /**
@@ -323,23 +309,23 @@ class Router implements IRouter
             public function valid(string $method, string $route): bool
             {
 
-                if (false === in_array($method, $this->_methods)) {
+                if (false === in_array($method, $this->methods)) {
 
                     return false;
                 }
 
                 $matches = [];
 
-                $found = (bool)preg_match_all($this->_regex, $route, $matches);
+                $found = (bool)preg_match_all($this->regex, $route, $matches);
 
                 if (false === $found) {
 
                     return false;
                 }
 
-                $parameters = $this->_parameters;
+                $parameters = $this->parameters;
 
-                $this->_parameters = [];
+                $this->parameters = [];
 
                 array_shift($matches);
 
@@ -347,7 +333,7 @@ class Router implements IRouter
 
                     foreach ($parameters as $offset => $parameter) {
 
-                        $this->_parameters[$parameter] = isset($matches[$offset][0]) ? $matches[$offset][0] : null;
+                        $this->parameters[$parameter] = isset($matches[$offset][0]) ? $matches[$offset][0] : null;
                     }
                 }
 
@@ -363,7 +349,7 @@ class Router implements IRouter
      * @param string $route
      * @return array
      */
-    private function _prepareRoute(string $route): array
+    private function prepareRoute(string $route): array
     {
 
         $matches = [];

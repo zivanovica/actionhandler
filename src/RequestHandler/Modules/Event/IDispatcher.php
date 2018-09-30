@@ -49,7 +49,7 @@ interface IDispatcher
      *
      * Prevent event with given name to be executed
      *
-     * @param int $handle
+     * @param int $handleId
      */
-    public function prevent(int $handle): void;
+    public function prevent(int $handleId): void;
 }

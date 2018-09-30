@@ -17,21 +17,13 @@ class Dispatcher implements IDispatcher
     private const PARAM_EVENT_DATA = 1;
 
     /** @var Event[] */
-    protected $_events;
+    protected $events = [];
 
     /** @var array */
-    protected $_prepared;
+    protected $prepared = [];
 
     /** @var array */
-    protected $_subscription;
-
-    public function __construct()
-    {
-
-        $this->_events = [];
-        $this->_prepared = [];
-        $this->_subscription = [];
-    }
+    protected $subscription = [];
 
     /**
      *
@@ -43,12 +35,12 @@ class Dispatcher implements IDispatcher
     public function register(Event $event): IDispatcher
     {
 
-        if (isset($this->_events[$event->getName()])) {
+        if (isset($this->events[$event->getName()])) {
 
             return $this;
         }
 
-        $this->_events[$event->getName()] = $event;
+        $this->events[$event->getName()] = $event;
 
         return $this;
     }
@@ -64,28 +56,27 @@ class Dispatcher implements IDispatcher
     public function subscribe(string $name, callable $callback): callable
     {
 
-        if (false === isset($this->_events[$name])) {
+        if (false === isset($this->events[$name])) {
 
             throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
         }
 
-        if (false === is_array($this->_subscription[$name])) {
+        if (false === is_array($this->subscription[$name])) {
 
-            $this->_subscription[$name] = [];
+            $this->subscription[$name] = [];
         }
 
-        $index = count($this->_subscription[$name]);
+        $index = count($this->subscription[$name]);
 
-        $this->_subscription[$name][$index] = $callback;
+        $this->subscription[$name][$index] = $callback;
 
         return function () use ($name, $index): bool {
 
-            if (false === isset($this->_subscription[$name][$index])) {
-
+            if (false === isset($this->subscription[$name][$index])) {
                 return false;
             }
 
-            $this->_subscription[$name][$index] = null;
+            $this->subscription[$name][$index] = null;
 
             return true;
         };
@@ -102,27 +93,20 @@ class Dispatcher implements IDispatcher
     public function trigger(string $name, ... $data): callable
     {
 
-        if (false === isset($this->_events[$name])) {
+        if (false === isset($this->events[$name])) {
 
             throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
         }
 
-        $index = count($this->_prepared);
+        $index = count($this->prepared);
 
-        $this->_prepared[$index] = [
+        $this->prepared[$index] = [
             Dispatcher::PARAM_EVENT_NAME => $name, Dispatcher::PARAM_EVENT_DATA => $data
         ];
 
-        return function () use ($index): bool {
+        return function () use ($index): void {
 
-            if (false === isset($this->_prepared[$index])) {
-
-                return false;
-            }
-
-            $this->_prepared[$index] = null;
-
-            return true;
+            $this->prevent($index);
         };
     }
 
@@ -134,7 +118,7 @@ class Dispatcher implements IDispatcher
 
         ob_start();
 
-        foreach ($this->_prepared as $eventData) {
+        foreach ($this->prepared as $eventData) {
 
             // Event prevented
             if (null === $eventData) {
@@ -143,19 +127,16 @@ class Dispatcher implements IDispatcher
             }
 
             /** @var Event $event */
-            $event = $this->_events[$eventData[Dispatcher::PARAM_EVENT_NAME]];
+            $event = $this->events[$eventData[Dispatcher::PARAM_EVENT_NAME]];
 
             call_user_func_array([$event, 'execute'], $eventData[Dispatcher::PARAM_EVENT_DATA]);
 
-            if (false === isset($this->_subscription[$eventData[Dispatcher::PARAM_EVENT_NAME]])) {
-
-                continue;
-            }
-
             /** @var callable $callback */
-            foreach ($this->_subscription[$eventData[Dispatcher::PARAM_EVENT_NAME]] as $callback) {
+            foreach ($this->subscription[$eventData[Dispatcher::PARAM_EVENT_NAME]] ?? [] as $callback) {
 
-                $callback($eventData[Dispatcher::PARAM_EVENT_DATA]);
+                if (is_callable($callback)) {
+                    $callback($eventData[Dispatcher::PARAM_EVENT_DATA]);
+                }
             }
         }
 
@@ -164,18 +145,18 @@ class Dispatcher implements IDispatcher
 
     /**
      *
-     * Prevent event with given name to be executed
+     * Prevent event with given handleId to be executed
      *
-     * @param int $handle
+     * @param int $handleId
      */
-    public function prevent(int $handle): void
+    public function prevent(int $handleId): void
     {
 
-        if (false === isset($this->_prepared[$handle])) {
+        if (false === isset($this->prepared[$handleId])) {
 
-            throw new DispatcherException(DispatcherException::ERR_BAD_EVENT_HANDLE, $handle);
+            throw new DispatcherException(DispatcherException::ERR_BAD_EVENT_HANDLE, $handleId);
         }
 
-        $this->_prepared[$handle] = null;
+        $this->prepared[$handleId] = null;
     }
 }

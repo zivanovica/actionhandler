@@ -35,28 +35,28 @@ class Application implements IApplication
     const DEFAULT_ACTION_IDENTIFIER = '_action';
 
     /** @var array */
-    private $_config;
+    private $config;
 
     /** @var array */
-    private $_dbConfig;
+    private $dbConfig;
 
     /** @var array */
-    private $_appConfig;
+    private $appConfig;
 
     /** @var IRequest */
-    private $_request;
+    private $request;
 
     /** @var Response */
-    private $_response;
+    private $response;
 
     /** @var IRouter */
-    private $_router;
+    private $router;
 
     /** @var IDispatcher */
-    private $_dispatcher;
+    private $dispatcher;
 
     /** @var array */
-    private $_attributes;
+    private $attributes;
 
     /**
      * @param string $configPath Path to configuration file
@@ -71,26 +71,26 @@ class Application implements IApplication
     )
     {
 
-        if (false === $this->_loadConfig($configPath)) {
+        if (false === $this->loadConfig($configPath)) {
 
             throw new ApplicationException(ApplicationException::ERR_BAD_CONFIG);
         }
 
-        $this->_appConfig = $this->_config['application'];
+        $this->appConfig = $this->config['application'];
 
-        $this->_dbConfig = $this->_config['database'];
+        $this->dbConfig = $this->config['database'];
 
-        $this->_router = $router;
+        $this->router = $router;
 
-        $this->_request = $request;
+        $this->request = $request;
 
-        $this->_response = $response;
+        $this->response = $response;
 
-        $this->_dispatcher = $dispatcher;
+        $this->dispatcher = $dispatcher;
 
-        $this->_appConfig['debug'] = false === isset($this->_appConfig['debug']) ? false : $this->_appConfig['debug'];
+        $this->appConfig['debug'] = false === isset($this->appConfig['debug']) ? false : $this->appConfig['debug'];
 
-        $this->_attributes = ['config' => $this->_config];
+        $this->attributes = ['config' => $this->config];
     }
 
     /**
@@ -102,7 +102,7 @@ class Application implements IApplication
     public function config(): array
     {
 
-        return $this->_config;
+        return $this->config;
     }
 
     /**
@@ -116,7 +116,7 @@ class Application implements IApplication
     public function setAttribute(string $name, $value): IApplication
     {
 
-        $this->_attributes[$name] = $value;
+        $this->attributes[$name] = $value;
 
         return $this;
     }
@@ -133,142 +133,114 @@ class Application implements IApplication
     public function getAttribute(string $name, $default = null, ?IDataFilter $filter = null)
     {
 
-        $attribute = isset($this->_attributes[$name]) ? $this->_attributes[$name] : $default;
+        $attribute = isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
 
         return null === $filter ? $attribute : $filter->filter($attribute);
     }
 
     /**
+     *
      * Executes handler for requested action
      *
      * @param \Closure $routeRegisterCallback
+     * @throws \ReflectionException
+     * @throws \Throwable
+     *
      */
     public function boot(\Closure $routeRegisterCallback): void
     {
 
-        $routeRegisterCallback($this->_router);
+        $routeRegisterCallback($this->router);
 
         ignore_user_abort(true);
 
         ObjectFactory::create(IDatabase::class);
 
-        if (false === $this->_appConfig['debug']) {
+        try {
 
-            try {
+            $this->execute($this->router);
+        } catch (\Throwable $exception) {
 
-                $this->_execute($this->_router);
-            } catch (\Throwable $exception) {
-
-                $this->_response->status(IResponseStatus::INTERNAL_ERROR)->errors([
-                    'message' => 'There were some errors',
-                    'code' => $exception->getCode(),
-                    'exception' => get_class($exception)
-                ]);
+            if (false === $this->appConfig['debug']) {
+                throw $exception;
             }
-        } else {
 
-            $this->_execute($this->_router);
+            $this->response->status(IResponseStatus::INTERNAL_ERROR)->errors([
+                'message' => 'There were some errors',
+                'code' => $exception->getCode(),
+                'exception' => get_class($exception)
+            ]);
         }
 
-        $this->_finishRequest();
+        $this->finishRequest();
 
-        $this->_dispatcher->fire();
+        $this->dispatcher->fire();
 
         return;
     }
 
     /**
-     * @param null|IFilter $handler
-     * @return void
+     * @param null|IFilter $filter
+     * @throws \ReflectionException
      */
-    private function _setRequestFilter($handler): void
+    private function setRequestFilter(?IFilter $filter): void
     {
 
-        if (false === $handler instanceof IFilter) {
-
+        if (null === $filter) {
             return;
         }
 
-        $this->_request->setFilter($handler->filter(ObjectFactory::create(IRequestFilter::class)));
+        $this->request->setFilter($filter->filter(ObjectFactory::create(IRequestFilter::class)));
     }
 
     /**
-     *
-     * Validates current url and if it is okay return IRoute associated to it
-     *
      * @param IRouter $router
-     * @return IRoute|null
+     * @throws \ReflectionException
      */
-    private function _validateAndGetRoute(IRouter $router): ?IRoute
+    private function execute(IRouter $router)
     {
+        $route = $this->request->query($this->appConfig['actionIdentifier'], '/');
 
-        $requestRoute = $this->_request->query($this->_appConfig['actionIdentifier'], '/');
+        $routeHandle = $router->route($this->request->method(), $route);
 
-        $route = $router->route($this->_request->method(), $requestRoute);
-
-        if (null === $route) {
-
-            $this->_response
-                ->status(IResponseStatus::NOT_FOUND)
-                ->errors(['action' => "Route '{$requestRoute}' not found"]);
-
-            return null;
+        if (false === $routeHandle instanceof IRoute) {
+            throw new ApplicationException(ApplicationException::ERR_INVALID_ROUTE, $route);
         }
 
-        return $route;
-    }
-
-    /**
-     *
-     * Executes everything
-     *
-     * @param IRouter $router
-     */
-    private function _execute(IRouter $router)
-    {
-        $route = $this->_validateAndGetRoute($router);
-
-        if (false === $route instanceof IRoute)
-            return;
-
-        $handler = $route->handler();
+        $handler = $routeHandle->handler();
 
         if (false === $handler instanceof IHandle)
             throw new ApplicationException(ApplicationException::ERR_BAD_REQUEST_HANDLER, get_class($handler));
 
-        if (false === $this->_executeValidator($handler))
-            return;
+        if ($this->executeValidator($handler) && $this->executeMiddlewares($handler)) {
+            $this->setRequestFilter($handler);
 
-        if (false === $this->_executeMiddlewares($handler))
-            return;
-
-        $this->_setRequestFilter($handler);
-
-        $this->_response = $handler->handle($this->_request, $this->_response);
+            $this->response = $handler->handle($this->request, $this->response);
+        }
     }
 
     /**
-     * @param null|IValidate $handler
+     * @param $handler
      * @return bool
+     * @throws \ReflectionException
      */
-    private function _executeValidator($handler): bool
+    private function executeValidator(?IValidate $handler): bool
     {
 
-        if (false === $handler instanceof IValidate) {
-
+        if (null === $handler) {
             return true;
         }
 
         /** @var IInputValidator $validator */
         $validator = ObjectFactory::create(IInputValidator::class);
 
-        $validator->setFields($this->_request->getAll());
+        $validator->setFields($this->request->getAll());
 
         $handler->validate($validator);
 
         if ($validator->hasErrors()) {
 
-            $this->_response
+            $this->response
                 ->status(IResponseStatus::BAD_REQUEST)
                 ->errors($validator->getErrors())
                 ->addError('_request.validate', 'Action did not pass validation.');
@@ -280,19 +252,20 @@ class Application implements IApplication
     }
 
     /**
-     * @param null|IMiddleware $handler
+     * @param $handler
      * @return bool
+     * @throws \ReflectionException
      */
-    private function _executeMiddlewares($handler): bool
+    private function executeMiddlewares(?IMiddleware $handler): bool
     {
 
-        if (false === $handler instanceof IMiddleware) {
+        if (null === $handler) {
 
             return true;
         }
 
         /** @var IMiddlewareContainer $middleware */
-        $middleware = ObjectFactory::create(IMiddlewareContainer::class, $this->_request, $this->_response);
+        $middleware = ObjectFactory::create(IMiddlewareContainer::class, $this->request, $this->response);
 
         $handler->middleware($middleware);
 
@@ -300,7 +273,7 @@ class Application implements IApplication
 
         if (false === $middleware->finished()) {
 
-            $this->_response->addError('_request.middleware', 'Middlewares did not finished.');
+            $this->response->addError('_request.middleware', 'Middlewares did not finished.');
 
             return false;
         }
@@ -315,7 +288,7 @@ class Application implements IApplication
      * @param string $configPath
      * @return bool
      */
-    private function _loadConfig(string $configPath): bool
+    private function loadConfig(string $configPath): bool
     {
 
         if (false === is_readable($configPath)) {
@@ -325,7 +298,7 @@ class Application implements IApplication
 
         $json = file_get_contents($configPath);
 
-        $this->_config = json_decode($json, true);
+        $this->config = json_decode($json, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
 
@@ -340,10 +313,10 @@ class Application implements IApplication
      * Will finish request with proper data/errors and status code
      *
      */
-    private function _finishRequest(): void
+    private function finishRequest(): void
     {
 
-        $response = $this->_response;
+        $response = $this->response;
 
         foreach ($response->getHeaders() as $header => $value) {
 
@@ -358,9 +331,7 @@ class Application implements IApplication
         ]);
 
         if (function_exists('fastcgi_finish_request')) {
-
             fastcgi_finish_request();
         }
     }
-
 }

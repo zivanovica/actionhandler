@@ -79,7 +79,10 @@ foreach ($interfaceMap as $interface => $class) {
     ObjectFactory::register($interface, $class);
 }
 
-ObjectFactory::create(IInputValidator::class)->addRules([
+/** @var IInputValidator $inputValidator */
+$inputValidator = ObjectFactory::create(IInputValidator::class);
+
+$inputValidator->addRules([
     new RuleEmail(),
     new RuleEntityExists(),
     new RuleEnum(),
