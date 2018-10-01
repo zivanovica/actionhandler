@@ -28,7 +28,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @throws \ReflectionException
      */
-    public static function create(string $interface, ... $arguments): \object
+    public static function create(string $interface, ... $arguments): object
     {
         $class = static::getInterfaceClass($interface);
 
@@ -50,7 +50,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @throws \ReflectionException
      */
-    public static function createNew(string $interface, ... $arguments): \object
+    public static function createNew(string $interface, ... $arguments): object
     {
         return static::getNewInstanceArgs(static::getInterfaceClass($interface), $arguments);
     }
@@ -105,7 +105,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @throws \ReflectionException
      */
-    private static function getNewInstanceArgs(string $class, array $arguments = []): \object
+    private static function getNewInstanceArgs(string $class, array $arguments = []): object
     {
 
         $reflection = new \ReflectionClass($class);
