@@ -130,12 +130,12 @@ class Database implements IDatabase
 
         if (false === $statement) {
 
-            throw new DatabaseException(DatabaseException::ERR_PREPARING_QUERY, "[{$statement->errorCode()}] {$query}");
+            throw new DatabaseException(DatabaseException::PREPARING_QUERY, "[{$statement->errorCode()}] {$query}");
         }
 
         if (false === $statement->execute($bindings)) {
 
-            throw new DatabaseException(DatabaseException::ERR_EXECUTING_QUERY, "[{$statement->errorCode()}] {$query}");
+            throw new DatabaseException(DatabaseException::EXECUTING_QUERY, "[{$statement->errorCode()}] {$query}");
         }
 
         return $statement;
@@ -156,7 +156,7 @@ class Database implements IDatabase
 
         if (false === isset($config['database'])) {
 
-            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'database');
+            throw new DatabaseException(DatabaseException::BAD_PARAMETERS, 'database');
         }
 
         $this->validateConnectionParameters($config['database']);
@@ -188,17 +188,17 @@ class Database implements IDatabase
 
         if (false === isset($config['username'])) {
 
-            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'username');
+            throw new DatabaseException(DatabaseException::BAD_PARAMETERS, 'username');
         }
 
         if (false === isset($config['password'])) {
 
-            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'password');
+            throw new DatabaseException(DatabaseException::BAD_PARAMETERS, 'password');
         }
 
         if (false === isset($config['dbname'])) {
 
-            throw new DatabaseException(DatabaseException::ERR_BAD_PARAMETERS, 'dbname');
+            throw new DatabaseException(DatabaseException::BAD_PARAMETERS, 'dbname');
         }
     }
 

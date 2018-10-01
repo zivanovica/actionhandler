@@ -171,7 +171,7 @@ class Response implements IResponse
 
         if (false === isset(Response::$_commonStatusCodes[$status])) {
 
-            throw new ResponseException(ResponseException::ERR_BAD_STATUS_CODE);
+            throw new ResponseException(ResponseException::BAD_STATUS_CODE);
         }
 
         $this->_status = $status;

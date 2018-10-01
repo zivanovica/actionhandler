@@ -22,9 +22,9 @@ interface IObjectFactory
      * Maps interface with corresponding class
      *
      * @param string $interface
-     * @param string $className
+     * @param string $implementation
      * @return void
      * @throws ObjectFactoryException
      */
-    public static function register(string $interface, string $className): void;
+    public static function register(string $interface, string $implementation): void;
 }

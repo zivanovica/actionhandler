@@ -52,7 +52,7 @@ use RequestHandler\Utils\QueryBuilder\IBuilder;
  *   - Implement database transactions
  */
 
-$interfaceMap = [
+ObjectFactory::set([
     IApplication::class => Application::class,
     IDatabase::class => Database::class,
     IRequest::class => Request::class,
@@ -73,11 +73,7 @@ $interfaceMap = [
     StringFilter::class => StringFilter::class,
     UIntFilter::class => UIntFilter::class,
     WaterfallFilter::class => WaterfallFilter::class,
-];
-
-foreach ($interfaceMap as $interface => $class) {
-    ObjectFactory::register($interface, $class);
-}
+]);
 
 /** @var IInputValidator $inputValidator */
 $inputValidator = ObjectFactory::create(IInputValidator::class);

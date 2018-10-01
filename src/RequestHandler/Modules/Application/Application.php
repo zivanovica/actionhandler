@@ -72,24 +72,16 @@ class Application implements IApplication
     {
 
         if (false === $this->loadConfig($configPath)) {
-
-            throw new ApplicationException(ApplicationException::ERR_BAD_CONFIG);
+            throw new ApplicationException(ApplicationException::BAD_CONFIG);
         }
 
         $this->appConfig = $this->config['application'];
-
         $this->dbConfig = $this->config['database'];
-
         $this->router = $router;
-
         $this->request = $request;
-
         $this->response = $response;
-
         $this->dispatcher = $dispatcher;
-
         $this->appConfig['debug'] = $this->appConfig['debug'] ?? false;
-
         $this->attributes = ['config' => $this->config];
     }
 
@@ -101,7 +93,6 @@ class Application implements IApplication
      */
     public function config(): array
     {
-
         return $this->config;
     }
 
@@ -115,7 +106,6 @@ class Application implements IApplication
      */
     public function setAttribute(string $name, $value): IApplication
     {
-
         $this->attributes[$name] = $value;
 
         return $this;
@@ -132,7 +122,6 @@ class Application implements IApplication
      */
     public function getAttribute(string $name, $default = null, ?IDataFilter $filter = null)
     {
-
         $attribute = isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
 
         return null === $filter ? $attribute : $filter->filter($attribute);
@@ -157,9 +146,9 @@ class Application implements IApplication
         ObjectFactory::create(IDatabase::class);
 
         try {
-
             $this->execute($this->router);
         } catch (\Throwable $exception) {
+
 
             if ($this->appConfig['debug']) {
                 throw $exception;
@@ -175,8 +164,6 @@ class Application implements IApplication
         $this->finishRequest();
 
         $this->dispatcher->fire();
-
-        return;
     }
 
     /**
@@ -201,20 +188,21 @@ class Application implements IApplication
     {
         $route = $this->request->query($this->appConfig['actionIdentifier'], '/');
 
+
         $routeHandle = $router->route($this->request->method(), $route);
 
         if (false === $routeHandle instanceof IRoute) {
-            throw new ApplicationException(ApplicationException::ERR_INVALID_ROUTE, $route);
+            throw new ApplicationException(ApplicationException::INVALID_ROUTE, $route);
         }
 
         $handler = $routeHandle->handler();
 
         if (false === $handler instanceof IHandle)
-            throw new ApplicationException(ApplicationException::ERR_BAD_REQUEST_HANDLER, get_class($handler));
+            throw new ApplicationException(ApplicationException::BAD_REQUEST_HANDLER, get_class($handler));
 
         if (
             $this->executeValidator($handler instanceof IValidate ? $handler : null) &&
-            $this->executeMiddlewares($handler instanceof IMiddleware ? $handler : null)
+            $this->executeMiddleware($handler instanceof IMiddleware ? $handler : null)
         ) {
             $this->setRequestFilter($handler instanceof IFilter ? $handler : null);
 
@@ -243,6 +231,8 @@ class Application implements IApplication
 
         if ($validator->hasErrors()) {
 
+
+
             $this->response
                 ->status(IResponseStatus::BAD_REQUEST)
                 ->errors($validator->getErrors())
@@ -259,11 +249,9 @@ class Application implements IApplication
      * @return bool
      * @throws \ReflectionException
      */
-    private function executeMiddlewares(?IMiddleware $handler): bool
+    private function executeMiddleware(?IMiddleware $handler): bool
     {
-
         if (null === $handler) {
-
             return true;
         }
 
@@ -275,7 +263,6 @@ class Application implements IApplication
         $middleware->next();
 
         if (false === $middleware->finished()) {
-
             $this->response->addError('_request.middleware', 'Middlewares did not finished.');
 
             return false;
@@ -295,7 +282,6 @@ class Application implements IApplication
     {
 
         if (false === is_readable($configPath)) {
-
             return false;
         }
 
@@ -304,7 +290,6 @@ class Application implements IApplication
         $this->config = json_decode($json, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-
             return false;
         }
 

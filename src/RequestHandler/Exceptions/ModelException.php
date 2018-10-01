@@ -6,13 +6,13 @@ use RequestHandler\Modules\Exception\BaseException;
 
 class ModelException extends BaseException
 {
-
-    const ERR_BAD_FIELD = 40001;
-    const ERR_MISSING_PRIMARY = 40002;
+    const
+        BAD_FIELD = 40001,
+        MISSING_PRIMARY = 40002;
 
     protected $_errors = [
-        ModelException::ERR_BAD_FIELD => 'Field is not valid',
-        ModelException::ERR_MISSING_PRIMARY => 'Primary key is required'
+        ModelException::BAD_FIELD => 'Field is not valid',
+        ModelException::MISSING_PRIMARY => 'Primary key is required'
     ];
 
 }

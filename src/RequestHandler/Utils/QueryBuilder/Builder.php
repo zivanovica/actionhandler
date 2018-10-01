@@ -86,13 +86,13 @@ class Builder implements IBuilder
             }
 
             throw new BuilderException(
-                BuilderException::ERR_BUILDER_OVERRIDE,
+                BuilderException::BUILDER_OVERRIDE,
                 "Expected {$expectedType} got {$this->_queryType}"
             );
         }
 
         if (IBuilder::QUERY_NONE !== $this->_queryType) {
-            throw new BuilderException(BuilderException::ERR_BUILDER_OVERRIDE, 'Query building started');
+            throw new BuilderException(BuilderException::BUILDER_OVERRIDE, 'Query building started');
         }
     }
 }

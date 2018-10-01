@@ -29,20 +29,49 @@ class Dispatcher implements IDispatcher
      *
      * Add new event to dispatcher
      *
-     * @param Event $event
+     * @param IEvent $event
      * @return IDispatcher
      */
-    public function register(Event $event): IDispatcher
+    public function register(IEvent $event): IDispatcher
     {
-
-        if (isset($this->events[$event->getName()])) {
-
-            return $this;
+        if (false === isset($this->events[$event->getName()])) {
+            $this->events[$event->getName()] = $event;
         }
 
-        $this->events[$event->getName()] = $event;
-
         return $this;
+    }
+
+    /**
+     *
+     * Adds event created using provided handler and name
+     *
+     * @param string $name
+     * @param callable $handle
+     * @return IDispatcher
+     */
+    public function registerCallable(string $name, callable $handle): IDispatcher
+    {
+        return $this->register(new class implements IEvent {
+
+            private $name;
+            private $handle;
+
+            public function __construct(string $name, callable $handle)
+            {
+                $this->name = $name;
+                $this->handle = $handle;
+            }
+
+            public function execute(... $data): ?bool
+            {
+                call_user_func_array($this->handle, $data);
+            }
+
+            public function getName(): string
+            {
+                return $this->name;
+            }
+        });
     }
 
     /**
@@ -58,7 +87,7 @@ class Dispatcher implements IDispatcher
 
         if (false === isset($this->events[$name])) {
 
-            throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
+            throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
         if (false === is_array($this->subscription[$name])) {
@@ -94,8 +123,7 @@ class Dispatcher implements IDispatcher
     {
 
         if (false === isset($this->events[$name])) {
-
-            throw new DispatcherException(DispatcherException::ERR_EVENT_NOT_FOUND, $name);
+            throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
         $index = count($this->prepared);
@@ -154,7 +182,7 @@ class Dispatcher implements IDispatcher
 
         if (false === isset($this->prepared[$handleId])) {
 
-            throw new DispatcherException(DispatcherException::ERR_BAD_EVENT_HANDLE, $handleId);
+            throw new DispatcherException(DispatcherException::BAD_EVENT_HANDLE, $handleId);
         }
 
         $this->prepared[$handleId] = null;

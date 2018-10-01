@@ -63,7 +63,7 @@ class EntityModelFilter implements IDataFilter
 
             if (null !== self::$_cached[$uniqueId] && false === self::$_cached[$uniqueId] instanceof IModel) {
 
-                throw new ModelFilterException(ModelFilterException::ERR_BAD_MODEL_CLASS, $this->_repositoryClassName);
+                throw new ModelFilterException(ModelFilterException::BAD_MODEL_CLASS, $this->_repositoryClassName);
             }
         }
 

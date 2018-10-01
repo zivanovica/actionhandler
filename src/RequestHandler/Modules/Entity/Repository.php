@@ -40,12 +40,12 @@ class Repository implements IRepository
     public function __construct(string $modelClass)
     {
         if (false === class_exists($modelClass)) {
-            throw new RepositoryException(RepositoryException::ERR_CLASS_NOT_FOUND, $modelClass);
+            throw new RepositoryException(RepositoryException::CLASS_NOT_FOUND, $modelClass);
         }
 
         if (false === is_subclass_of($modelClass, IModel::class)) {
             throw new RepositoryException(
-                RepositoryException::ERR_CLASS_TYPE_MISMATCH,
+                RepositoryException::CLASS_TYPE_MISMATCH,
                 "Expected " . IModel::class . " got {$modelClass}"
             );
         }
@@ -156,7 +156,7 @@ class Repository implements IRepository
             $modelClass = get_class($model);
 
             throw new RepositoryException(
-                RepositoryException::ERR_CLASS_TYPE_MISMATCH,
+                RepositoryException::CLASS_TYPE_MISMATCH,
                 "Expected {$this->_modelClass} got {$modelClass}"
             );
         }

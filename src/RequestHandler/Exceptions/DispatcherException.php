@@ -8,21 +8,21 @@
 
 namespace RequestHandler\Exceptions;
 
+use RequestHandler\Modules\Event\IEvent;
 use RequestHandler\Modules\Exception\BaseException;
 
 class DispatcherException extends BaseException
 {
-
-    const ERR_CLASS_NOT_FOUND = 100001;
-    const ERR_EVENT_TYPE_MISMATCH = 100002;
-    const ERR_EVENT_NOT_FOUND = 100003;
-    const ERR_BAD_EVENT_HANDLE = 100004;
+    const
+        CLASS_NOT_FOUND = 100001,
+        EVENT_TYPE_MISMATCH = 100002,
+        EVENT_NOT_FOUND = 100003,
+        BAD_EVENT_HANDLE = 100004;
 
     protected $_errors = [
-
-        DispatcherException::ERR_CLASS_NOT_FOUND => 'Event class not found',
-        DispatcherException::ERR_EVENT_TYPE_MISMATCH => 'Class does not implement ' . IListener::class,
-        DispatcherException::ERR_EVENT_NOT_FOUND => 'Unknown event',
-        DispatcherException::ERR_BAD_EVENT_HANDLE => 'Trying to prevent invalid event',
+        DispatcherException::CLASS_NOT_FOUND => 'Event class not found',
+        DispatcherException::EVENT_TYPE_MISMATCH => 'Class does not implement ' . IEvent::class,
+        DispatcherException::EVENT_NOT_FOUND => 'Unknown event',
+        DispatcherException::BAD_EVENT_HANDLE => 'Trying to prevent invalid event',
     ];
 }

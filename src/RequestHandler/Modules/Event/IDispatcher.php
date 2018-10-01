@@ -15,10 +15,20 @@ interface IDispatcher
      *
      * Add new event to dispatcher
      *
-     * @param Event $event
+     * @param IEvent $event
      * @return IDispatcher
      */
-    public function register(Event $event): IDispatcher;
+    public function register(IEvent $event): IDispatcher;
+
+    /**
+     *
+     * Adds event created using provided handler and name
+     *
+     * @param string $name
+     * @param callable $handle
+     * @return IDispatcher
+     */
+    public function registerCallable(string $name, callable $handle): IDispatcher;
 
     /**
      *

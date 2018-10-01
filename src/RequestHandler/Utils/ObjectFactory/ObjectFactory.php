@@ -12,10 +12,10 @@ class ObjectFactory implements IObjectFactory
 {
 
     /** @var array */
-    private static $_map = [];
+    private static $map = [];
 
     /** @var array */
-    private static $_instances = [];
+    private static $instances = [];
 
     /**
      *
@@ -24,21 +24,19 @@ class ObjectFactory implements IObjectFactory
      * @param string $interface
      * @param array ...$arguments
      *
-     * @return mixed
+     * @return \object
      *
      * @throws \ReflectionException
      */
-    public static function create(string $interface, ... $arguments)
+    public static function create(string $interface, ... $arguments): \object
     {
+        $class = static::getInterfaceClass($interface);
 
-        $class = static::_getInterfaceClass($interface);
-
-        if (empty(static::$_instances[$class])) {
-
-            static::$_instances[$class] = static::getNewInstanceArgs($class, $arguments);
+        if (empty(static::$instances[$class])) {
+            static::$instances[$class] = static::getNewInstanceArgs($class, $arguments);
         }
 
-        return static::$_instances[$class];
+        return static::$instances[$class];
     }
 
     /**
@@ -48,16 +46,13 @@ class ObjectFactory implements IObjectFactory
      * @param string $interface
      * @param array ...$arguments
      *
-     * @return object
+     * @return \object
      *
      * @throws \ReflectionException
      */
-    public static function createNew(string $interface, ... $arguments)
+    public static function createNew(string $interface, ... $arguments): \object
     {
-
-        $class = static::_getInterfaceClass($interface);
-
-        return static::getNewInstanceArgs($class, $arguments);
+        return static::getNewInstanceArgs(static::getInterfaceClass($interface), $arguments);
     }
 
     /**
@@ -65,27 +60,38 @@ class ObjectFactory implements IObjectFactory
      * Maps interface with corresponding class
      *
      * @param string $interface
-     * @param string $className
+     * @param string $implementation
      * @return void
      * @throws ObjectFactoryException
      */
-    public static function register(string $interface, string $className): void
+    public static function register(string $interface, string $implementation): void
     {
 
         if (false === (interface_exists($interface) || class_exists($interface))) {
-
-            throw new ObjectFactoryException(ObjectFactoryException::ERR_BAD_CLASS, $className);
+            throw new ObjectFactoryException(ObjectFactoryException::BAD_CLASS, $implementation);
         }
 
-        if (false === is_subclass_of($className, $interface) && 0 !== strcasecmp($className, $interface)) {
-
+        if (false === is_subclass_of($implementation, $interface) && 0 !== strcasecmp($implementation, $interface)) {
             throw new ObjectFactoryException(
-                ObjectFactoryException::ERR_INTERFACE_MISMATCH,
-                "{$className} does not implements {$interface}"
+                ObjectFactoryException::INTERFACE_MISMATCH,
+                "{$implementation} does not implements {$interface}"
             );
         }
 
-        static::$_map[$interface] = $className;
+        static::$map[$interface] = $implementation;
+    }
+
+    /**
+     *
+     * Map multiple interfaces to their class
+     *
+     * @param array $interfaceMap
+     */
+    public static function set(array $interfaceMap): void
+    {
+        foreach ($interfaceMap as $interface => $implementation) {
+            self::register($interface, $implementation);
+        }
     }
 
     /**
@@ -95,11 +101,11 @@ class ObjectFactory implements IObjectFactory
      * @param string $class
      * @param array $arguments
      *
-     * @return object
+     * @return \object
      *
      * @throws \ReflectionException
      */
-    private static function getNewInstanceArgs(string $class, array $arguments = [])
+    private static function getNewInstanceArgs(string $class, array $arguments = []): \object
     {
 
         $reflection = new \ReflectionClass($class);
@@ -156,7 +162,7 @@ class ObjectFactory implements IObjectFactory
             } else if (empty($parameters)) {
 
                 throw new ObjectFactoryException(
-                    ObjectFactoryException::ERR_UNRESOLVED_PARAMETER,
+                    ObjectFactoryException::UNRESOLVED_PARAMETER,
                     "{$parameter->getName()} for {$reflectionMethod->getDeclaringClass()->getName()}"
                 );
             } else if (false === empty($parameters)) {
@@ -176,14 +182,14 @@ class ObjectFactory implements IObjectFactory
      * @param string $interface
      * @return string
      */
-    private static function _getInterfaceClass(string $interface): string
+    private static function getInterfaceClass(string $interface): string
     {
 
-        $mapped = empty(static::$_map[$interface]) ? $interface : static::$_map[$interface];
+        $mapped = empty(static::$map[$interface]) ? $interface : static::$map[$interface];
 
         if (interface_exists($mapped)) {
 
-            return self::_getInterfaceClass($mapped);
+            return self::getInterfaceClass($mapped);
         } else if (class_exists($mapped)) {
 
             return $mapped;

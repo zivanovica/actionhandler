@@ -68,7 +68,7 @@ abstract class Model implements IModel
 
         if (false === isset($this->_fields[$name])) {
 
-            throw new ModelException(ModelException::ERR_BAD_FIELD, $name);
+            throw new ModelException(ModelException::BAD_FIELD, $name);
         }
 
         $rawFieldValue = isset($this->_attributes[$name]) ? $this->_attributes[$name] : $default;
@@ -92,7 +92,7 @@ abstract class Model implements IModel
 
         if (false === isset($this->_fields[$name])) {
 
-            throw new ModelException(ModelException::ERR_BAD_FIELD, $name);
+            throw new ModelException(ModelException::BAD_FIELD, $name);
         }
 
         $oldValue = $this->_attributes[$name];

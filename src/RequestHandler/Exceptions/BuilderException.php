@@ -14,10 +14,10 @@ use RequestHandler\Modules\Exception\BaseException;
 class BuilderException extends BaseException
 {
 
-    const ERR_BUILDER_OVERRIDE = 120001;
+    const BUILDER_OVERRIDE = 120001;
 
     protected $_errors = [
 
-        BuilderException::ERR_BUILDER_OVERRIDE => 'Cannot override builder'
+        BuilderException::BUILDER_OVERRIDE => 'Cannot override builder'
     ];
 }
