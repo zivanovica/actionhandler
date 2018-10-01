@@ -11,8 +11,10 @@ namespace RequestHandler\Modules\Template;
 /**
  * Very simple and easy to use PHP template engine.
  * Instead of working with fancy custom syntax, this engine relies on pure php and html
+ *
+ * TODO: Use proper exceptions
  */
-class Template
+class Template implements ITemplate
 {
 
     /**
@@ -103,6 +105,7 @@ class Template
      *
      * @param array $paths Array of paths to files that are treated as partial include of an template
      */
+
     public function partials(array $paths): void
     {
         foreach ($paths as $path) {
@@ -128,19 +131,21 @@ class Template
      *
      * Render single template into a string
      *
-     * @param string $template
+     * @param string $templatePath
      * @param array $data
      * @param bool $dataPerSection
      * @return string
      * @throws \ReflectionException
      */
-    public function render(string $template, array $data, bool $dataPerSection = false): string
+    public function render(string $templatePath, array $data, bool $dataPerSection = false): string
     {
-        if (false === is_readable($template)) {
-            throw new \RuntimeException("Unable to read template '{$template}'");
+        if (false === is_readable($templatePath)) {
+            throw new \RuntimeException("Unable to read template '{$templatePath}'");
         }
 
-        require_once $template;
+        $template = $this;
+
+        require_once $templatePath;
 
         if (null === $this->baseTemplate) {
             throw new \RuntimeException('Base Template not defined');

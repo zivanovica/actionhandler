@@ -20,6 +20,8 @@ use RequestHandler\Modules\Event\Event;
 use RequestHandler\Modules\Event\IEvent;
 use RequestHandler\Modules\Entity\IRepository;
 use RequestHandler\Modules\Entity\Repository;
+use RequestHandler\Modules\Template\ITemplate;
+use RequestHandler\Modules\Template\Template;
 use RequestHandler\Utils\DataFilter\Filters\BoolFilter;
 use RequestHandler\Utils\DataFilter\Filters\EmailFilter;
 use RequestHandler\Utils\DataFilter\Filters\EntityModelFilter;
@@ -64,6 +66,7 @@ ObjectFactory::set([
     IMiddlewareContainer::class => MiddlewareContainer::class,
     IRepository::class => Repository::class,
     IBuilder::class => Builder::class,
+    ITemplate::class => Template::class,
     IInputValidator::class => InputValidator::class,
     BoolFilter::class => BoolFilter::class,
     EmailFilter::class => EmailFilter::class,

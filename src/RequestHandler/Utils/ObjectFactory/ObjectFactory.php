@@ -184,17 +184,16 @@ class ObjectFactory implements IObjectFactory
      */
     private static function getInterfaceClass(string $interface): string
     {
-
-        $mapped = empty(static::$map[$interface]) ? $interface : static::$map[$interface];
-
-        if (interface_exists($mapped)) {
-
-            return self::getInterfaceClass($mapped);
-        } else if (class_exists($mapped)) {
-
-            return $mapped;
+        if (class_exists($interface)) {
+            return $interface;
         }
 
-        return $interface;
+        $mapped = static::$map[$interface] ?? null;
+
+        if (null === $mapped) {
+            throw new ObjectFactoryException(ObjectFactoryException::BAD_TYPE, $interface);
+        }
+
+        return $mapped;
     }
 }
