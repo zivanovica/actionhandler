@@ -97,6 +97,8 @@ class Template implements ITemplate
             throw new \RuntimeException("Unable to read partial '{$partialPath}'");
         }
 
+        $template = $this;
+
         $requireOnce ? require_once $partialPath : require $partialPath;
     }
 
