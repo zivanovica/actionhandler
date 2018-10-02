@@ -43,7 +43,7 @@ class Template implements ITemplate
      * @param string $sectionName Section that will contain provided content
      * @param callable $renderCallback Function whos retrun value will be used as section content
      */
-    public function sectionContent(string $sectionName, callable $renderCallback): void
+    public function section(string $sectionName, callable $renderCallback): void
     {
         if (empty($this->sections[$sectionName])) {
             $this->sections[$sectionName] = [];
