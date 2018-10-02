@@ -44,13 +44,13 @@ class Request implements IRequest
     public function __construct()
     {
         $this->method = filter_input(
-            INPUT_SERVER, FILTER_DEFAULT, ['options' => ['default' => 'GET']]
+            INPUT_SERVER, 'REQUEST_METHOD', FILTER_DEFAULT, ['options' => ['default' => 'GET']]
         );
 
-        $this->query = filter_input_array(INPUT_GET, FILTER_DEFAULT, ['options' => ['default' => []]]);
-        $this->data = filter_input_array(INPUT_POST, FILTER_DEFAULT, ['options' => ['default' => null]]);
+        $this->query = filter_input_array(INPUT_GET);
+        $this->data = filter_input_array(INPUT_POST);
 
-        if (null === $this->data) {
+        if (empty($this->data)) {
             parse_str(file_get_contents('php://input'), $this->data);
         }
 
@@ -76,7 +76,7 @@ class Request implements IRequest
      */
     public function query(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-        return $this->getFilterValue($key, isset($this->query[$key]) ? $this->query[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, $this->query[$key] ?? $default, $dataFilter);
     }
 
     /**
@@ -104,7 +104,7 @@ class Request implements IRequest
      */
     public function data(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-        return $this->getFilterValue($key, isset($this->data[$key]) ? $this->data[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, $this->data[$key] ?? $default, $dataFilter);
     }
 
     /**
@@ -159,9 +159,7 @@ class Request implements IRequest
      */
     public function get(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-        $all = $this->getAll();
-
-        return $this->getFilterValue($key, isset($all[$key]) ? $all[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, $this->getAll()[$key] ?? $default, $dataFilter);
     }
 
     /**
@@ -178,8 +176,10 @@ class Request implements IRequest
      */
     public function getAll(): array
     {
-        if (empty($this->all)) {
-            $this->all = array_merge($this->getParameters(), $this->query, $this->data);
+        if (false === is_array($this->all)) {
+            $this->all = array_merge(
+                $this->getParameters() ?? [], $this->query ?? [], $this->data ?? []
+            );
         }
 
         return $this->all;
