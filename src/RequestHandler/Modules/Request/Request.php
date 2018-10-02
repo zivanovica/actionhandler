@@ -19,19 +19,19 @@ class Request implements IRequest
 
 
     /** @var string Holds current method identifier e.g GET */
-    private $_method;
+    private $method;
 
     /** @var array Holds all query (GET) parameters */
-    private $_query;
+    private $query;
 
     /** @var array Holds all body data (POST) parameters */
-    private $_data;
+    private $data;
 
     /** @var Router */
-    private $_router;
+    private $router;
 
     /** @var IRequestFilter */
-    private $_filter;
+    private $filter;
 
     /**
      *
@@ -39,28 +39,22 @@ class Request implements IRequest
      *
      * @var array
      */
-    private $_all;
+    private $all;
 
     public function __construct()
     {
+        $this->method = filter_input(
+            INPUT_SERVER, FILTER_DEFAULT, ['options' => ['default' => 'GET']]
+        );
 
-        $this->_method = $_SERVER['REQUEST_METHOD'];
+        $this->query = filter_input_array(INPUT_GET, FILTER_DEFAULT, ['options' => ['default' => []]]);
+        $this->data = filter_input_array(INPUT_POST, FILTER_DEFAULT, ['options' => ['default' => null]]);
 
-        $query = filter_input_array(INPUT_GET);
-
-        $this->_query = null === $query ? [] : $query;
-
-        $data = filter_input_array(INPUT_POST);
-
-        if (empty($data) || false === is_array($data)) {
-
-            parse_str(file_get_contents('php://input'), $data);
+        if (null === $this->data) {
+            parse_str(file_get_contents('php://input'), $this->data);
         }
 
-        $this->_data = false === is_array($data) ? [] : $data;
-
-        $this->_router = ObjectFactory::create(IRouter::class);
-
+        $this->router = ObjectFactory::create(IRouter::class);
     }
 
     /**
@@ -68,8 +62,7 @@ class Request implements IRequest
      */
     public function method(): string
     {
-
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -83,7 +76,7 @@ class Request implements IRequest
      */
     public function query(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-        return $this->_getFilterValue($key, isset($this->_query[$key]) ? $this->_query[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, isset($this->query[$key]) ? $this->query[$key] : $default, $dataFilter);
     }
 
     /**
@@ -93,14 +86,11 @@ class Request implements IRequest
      * @param string $key
      * @param mixed|null $default
      * @param IDataFilter|null $dataFilter
-     * @return mixed
+     * @return null|mixed
      */
-    public function parameter(string $key, $default = null, ?IDataFilter $dataFilter = null)
+    public function parameter(string $key, $default = null, ?IDataFilter $dataFilter = null): ?array
     {
-
-        $parameters = $this->_router->currentRoute()->parameters();
-
-        return $this->_getFilterValue($key, isset($parameters[$key]) ? $parameters[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, $this->getParameters()[$key] ?? $default, $dataFilter);
     }
 
     /**
@@ -114,8 +104,7 @@ class Request implements IRequest
      */
     public function data(string $key, $default = null, ?IDataFilter $dataFilter = null)
     {
-
-        return $this->_getFilterValue($key, isset($this->_data[$key]) ? $this->_data[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, isset($this->data[$key]) ? $this->data[$key] : $default, $dataFilter);
     }
 
     /**
@@ -126,8 +115,7 @@ class Request implements IRequest
      */
     public function getData(): array
     {
-
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -138,8 +126,7 @@ class Request implements IRequest
      */
     public function getQuery(): array
     {
-
-        return $this->_query;
+        return $this->query;
     }
 
     /**
@@ -150,8 +137,9 @@ class Request implements IRequest
      */
     public function getParameters(): array
     {
+        $route = $this->router->currentRoute();
 
-        return $this->_router->currentRoute()->parameters();
+        return $route ? $route->parameters() : [];
     }
 
     /**
@@ -173,7 +161,7 @@ class Request implements IRequest
     {
         $all = $this->getAll();
 
-        return $this->_getFilterValue($key, isset($all[$key]) ? $all[$key] : $default, $dataFilter);
+        return $this->getFilterValue($key, isset($all[$key]) ? $all[$key] : $default, $dataFilter);
     }
 
     /**
@@ -190,13 +178,11 @@ class Request implements IRequest
      */
     public function getAll(): array
     {
-
-        if (empty($this->_all)) {
-
-            $this->_all = array_merge($this->getParameters(), $this->_query, $this->_data);
+        if (empty($this->all)) {
+            $this->all = array_merge($this->getParameters(), $this->query, $this->data);
         }
 
-        return $this->_all;
+        return $this->all;
     }
 
     /**
@@ -208,8 +194,7 @@ class Request implements IRequest
      */
     public function setFilter(IRequestFilter $filter): IRequest
     {
-
-        $this->_filter = $filter;
+        $this->filter = $filter;
 
         return $this;
     }
@@ -223,19 +208,16 @@ class Request implements IRequest
      * @param IDataFilter|null $additionalFilter
      * @return mixed|null
      */
-    private function _getFilterValue(string $field, $value = null, ?IDataFilter $additionalFilter = null)
+    private function getFilterValue(string $field, $value = null, ?IDataFilter $additionalFilter = null)
     {
-
         if ($additionalFilter) {
-
             $value = $additionalFilter->filter($value);
         }
 
-        if (null === $this->_filter || false === $this->_filter->hasFilter($field)) {
-
+        if (null === $this->filter || false === $this->filter->hasFilter($field)) {
             return $value;
         }
 
-        return $this->_filter->filter($field, $value);
+        return $this->filter->filter($field, $value);
     }
 }

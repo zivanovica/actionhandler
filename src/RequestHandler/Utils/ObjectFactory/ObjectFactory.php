@@ -30,13 +30,11 @@ class ObjectFactory implements IObjectFactory
      */
     public static function create(string $interface, ... $arguments): object
     {
-        $class = static::getInterfaceClass($interface);
-
-        if (empty(static::$instances[$class])) {
-            static::$instances[$class] = static::getNewInstanceArgs($class, $arguments);
+        if (empty(static::$instances[$interface])) {
+            static::$instances[$interface] = static::getNewInstanceArgs($interface, $arguments);
         }
 
-        return static::$instances[$class];
+        return static::$instances[$interface];
     }
 
     /**
@@ -52,7 +50,7 @@ class ObjectFactory implements IObjectFactory
      */
     public static function createNew(string $interface, ... $arguments): object
     {
-        return static::getNewInstanceArgs(static::getInterfaceClass($interface), $arguments);
+        return static::getNewInstanceArgs($interface, $arguments);
     }
 
     /**
@@ -107,6 +105,7 @@ class ObjectFactory implements IObjectFactory
      */
     private static function getNewInstanceArgs(string $class, array $arguments = []): object
     {
+        $class = self::getInterfaceClass($class);
 
         $reflection = new \ReflectionClass($class);
 
@@ -115,7 +114,6 @@ class ObjectFactory implements IObjectFactory
         $constructor = $reflection->getConstructor();
 
         if ($constructor instanceof \ReflectionMethod) {
-
             $constructor->setAccessible(true);
 
             $constructor->invokeArgs($instance, self::getDependencies($constructor, $arguments));
@@ -145,28 +143,21 @@ class ObjectFactory implements IObjectFactory
      */
     private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {
-
         $arguments = [];
 
         foreach ($reflectionMethod->getParameters() as $parameter) {
-
             if ($parameter->getClass()) {
-
                 $arguments[] = ObjectFactory::create($parameter->getClass()->getName());
             } else if (empty($parameters) && $parameter->isOptional()) {
-
                 $arguments[] = $parameter->getDefaultValue();
             } else if (empty($parameters) && $parameter->allowsNull()) {
-
                 $arguments[] = null;
             } else if (empty($parameters)) {
-
                 throw new ObjectFactoryException(
                     ObjectFactoryException::UNRESOLVED_PARAMETER,
                     "{$parameter->getName()} for {$reflectionMethod->getDeclaringClass()->getName()}"
                 );
             } else if (false === empty($parameters)) {
-
                 $arguments[] = array_shift($parameters);
             }
         }

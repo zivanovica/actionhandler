@@ -84,14 +84,11 @@ class Dispatcher implements IDispatcher
      */
     public function subscribe(string $name, callable $callback): callable
     {
-
         if (false === isset($this->events[$name])) {
-
             throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
         if (false === is_array($this->subscription[$name])) {
-
             $this->subscription[$name] = [];
         }
 
@@ -100,7 +97,6 @@ class Dispatcher implements IDispatcher
         $this->subscription[$name][$index] = $callback;
 
         return function () use ($name, $index): bool {
-
             if (false === isset($this->subscription[$name][$index])) {
                 return false;
             }
@@ -121,7 +117,6 @@ class Dispatcher implements IDispatcher
      */
     public function trigger(string $name, ... $data): callable
     {
-
         if (false === isset($this->events[$name])) {
             throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
@@ -133,7 +128,6 @@ class Dispatcher implements IDispatcher
         ];
 
         return function () use ($index): void {
-
             $this->prevent($index);
         };
     }
@@ -143,14 +137,11 @@ class Dispatcher implements IDispatcher
      */
     public function fire(): void
     {
-
         ob_start();
 
         foreach ($this->prepared as $eventData) {
-
             // Event prevented
             if (null === $eventData) {
-
                 continue;
             }
 
@@ -161,7 +152,6 @@ class Dispatcher implements IDispatcher
 
             /** @var callable $callback */
             foreach ($this->subscription[$eventData[Dispatcher::PARAM_EVENT_NAME]] ?? [] as $callback) {
-
                 if (is_callable($callback)) {
                     $callback($eventData[Dispatcher::PARAM_EVENT_DATA]);
                 }
@@ -179,9 +169,7 @@ class Dispatcher implements IDispatcher
      */
     public function prevent(int $handleId): void
     {
-
         if (false === isset($this->prepared[$handleId])) {
-
             throw new DispatcherException(DispatcherException::BAD_EVENT_HANDLE, $handleId);
         }
 

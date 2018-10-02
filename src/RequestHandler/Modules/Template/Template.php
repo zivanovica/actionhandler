@@ -158,7 +158,8 @@ class Template implements ITemplate
         $sections = $this->sections;
 
         foreach ($sections as $sectionName => $renderCallbacks) {
-            self::setSectionData($sectionName, $dataPerSection ? ($data[$sectionName] ?? []) : $data);
+            self::
+            setSectionData($sectionName, $dataPerSection ? ($data[$sectionName] ?? []) : $data);
 
             self::executeRenderCallbacks($sectionName, $renderCallbacks);
         }
