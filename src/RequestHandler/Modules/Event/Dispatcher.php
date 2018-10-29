@@ -9,6 +9,7 @@
 namespace RequestHandler\Modules\Event;
 
 use RequestHandler\Exceptions\DispatcherException;
+use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 
 class Dispatcher implements IDispatcher
 {
@@ -24,6 +25,21 @@ class Dispatcher implements IDispatcher
 
     /** @var array */
     protected $subscription = [];
+
+    /** Prevent direct instantiating */
+    private function __construct()
+    {
+        register_tick_function([&$this, 'executeEventQueue'], true);
+    }
+
+    public function executeEventQueue(): bool
+    {
+        echo 'firing events: ' . count($this->prepared ?? []) . '<br />';
+
+        $this->fire();
+
+        return true;
+    }
 
     /**
      *
@@ -51,27 +67,30 @@ class Dispatcher implements IDispatcher
      */
     public function registerCallable(string $name, callable $handle): IDispatcher
     {
-        return $this->register(new class implements IEvent {
-
-            private $name;
-            private $handle;
-
-            public function __construct(string $name, callable $handle)
+        return $this->register(
+            new class($name, $handle) implements IEvent
             {
-                $this->name = $name;
-                $this->handle = $handle;
-            }
 
-            public function execute(... $data): ?bool
-            {
-                call_user_func_array($this->handle, $data);
-            }
+                private $name;
+                private $handle;
 
-            public function getName(): string
-            {
-                return $this->name;
+                public function __construct(string $name, callable $handle)
+                {
+                    $this->name = $name;
+                    $this->handle = $handle;
+                }
+
+                public function execute(... $data): ?bool
+                {
+                    return call_user_func_array($this->handle, $data);
+                }
+
+                public function getName(): string
+                {
+                    return $this->name;
+                }
             }
-        });
+        );
     }
 
     /**
@@ -157,6 +176,8 @@ class Dispatcher implements IDispatcher
                 }
             }
         }
+
+        $this->prepared = [];
 
         ob_end_clean();
     }

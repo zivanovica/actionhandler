@@ -4,6 +4,8 @@ namespace RequestHandler\Utils\ObjectFactory;
 
 use RequestHandler\Exceptions\ObjectFactoryException;
 
+declare(ticks=1);
+
 /**
  *
  * @package Modules\Singleton
@@ -26,7 +28,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @return \object
      *
-     * @throws \ReflectionException
+     * @throws ObjectFactoryException
      */
     public static function create(string $interface, ... $arguments): object
     {
@@ -46,7 +48,7 @@ class ObjectFactory implements IObjectFactory
      *
      * @return \object
      *
-     * @throws \ReflectionException
+     * @throws ObjectFactoryException
      */
     public static function createNew(string $interface, ... $arguments): object
     {
@@ -71,8 +73,7 @@ class ObjectFactory implements IObjectFactory
 
         if (false === is_subclass_of($implementation, $interface) && 0 !== strcasecmp($implementation, $interface)) {
             throw new ObjectFactoryException(
-                ObjectFactoryException::INTERFACE_MISMATCH,
-                "{$implementation} does not implements {$interface}"
+                ObjectFactoryException::INTERFACE_MISMATCH, "{$implementation} => {$interface}"
             );
         }
 
@@ -100,14 +101,17 @@ class ObjectFactory implements IObjectFactory
      * @param array $arguments
      *
      * @return \object
-     *
-     * @throws \ReflectionException
+     * @throws ObjectFactoryException
      */
     private static function getNewInstanceArgs(string $class, array $arguments = []): object
     {
         $class = self::getInterfaceClass($class);
 
-        $reflection = new \ReflectionClass($class);
+        try {
+            $reflection = new \ReflectionClass($class);
+        } catch (\ReflectionException $exception) {
+            throw new ObjectFactoryException(ObjectFactoryException::CLASS_INSTANTIATING_FAILED, $class);
+        }
 
         $instance = $reflection->newInstanceWithoutConstructor();
 
@@ -139,7 +143,6 @@ class ObjectFactory implements IObjectFactory
      * @return array
      *
      * @throws ObjectFactoryException
-     * @throws \ReflectionException
      */
     private static function getDependencies(\ReflectionMethod $reflectionMethod, array $parameters = []): array
     {

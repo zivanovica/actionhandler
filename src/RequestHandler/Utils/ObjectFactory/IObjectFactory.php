@@ -14,6 +14,7 @@ interface IObjectFactory
      * @param string $interface
      * @param array ...$arguments
      * @return mixed
+     * @throws ObjectFactoryException
      */
     public static function create(string $interface, ... $arguments);
 

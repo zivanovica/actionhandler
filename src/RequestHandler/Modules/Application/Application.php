@@ -81,6 +81,7 @@ class Application implements IApplication
         $this->request = $request;
         $this->response = $response;
         $this->dispatcher = $dispatcher;
+
         $this->appConfig['debug'] = $this->appConfig['debug'] ?? false;
         $this->attributes = ['config' => $this->config];
     }
@@ -303,20 +304,15 @@ class Application implements IApplication
      */
     private function finishRequest(): void
     {
-
         $response = $this->response;
 
         foreach ($response->getHeaders() as $header => $value) {
-
             header("{$header}: {$value}");
         }
 
-        header('Content-Type: application/json', true, $response->getStatus());
+        header("Content-Type: {$response->getContentType()}", true, $response->getStatus());
 
-        echo json_encode([
-            'status' => $response->hasErrors() ? Response::STATUS_ERROR : Response::STATUS_SUCCESS,
-            'data' => $response->hasErrors() ? $response->getErrors() : $response->getData()
-        ]);
+        echo $response->getOutput();
 
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();

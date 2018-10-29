@@ -120,4 +120,23 @@ interface IResponse
      * @param $value
      */
     public function setHeader(string $header, $value): void;
+
+    /**
+     * Retrieve single header if exists
+     *
+     * @param string $header
+     * @return string|null
+     */
+    public function getHeader(string $header): ?string;
+
+    /**
+     * Retrieve response content type
+     *
+     * default: text/html; charset=utf-8
+     *
+     * @return string
+     */
+    public function getContentType(): string;
+
+    public function getOutput(): string;
 }

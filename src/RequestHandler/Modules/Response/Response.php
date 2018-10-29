@@ -15,29 +15,29 @@ use RequestHandler\Modules\Entity\IRepository;
  */
 class Response implements IResponse
 {
-
-
-    const STATUS_SUCCESS = 'succes';
-
+    const STATUS_SUCCESS = 'success';
     const STATUS_ERROR = 'error';
 
     /** @var array Array of all available status codes, filled dynamic when "Response" constructor is called */
-    private static $_commonStatusCodes;
+    private static $commonStatusCodes;
 
-    private $_status = 200;
+    protected $contentType = 'text/html; charset=utf-8';
 
-    private $_data = [];
+    protected $status = IResponseStatus::OK;
 
-    private $_errors = [];
+    protected $output = '';
 
-    private $_headers = [];
+    protected $data = [];
+
+    protected $errors = [];
+
+    protected $headers = [];
 
     private function __construct()
     {
+        $responseStatusReflection = new \ReflectionClass(IResponseStatus::class);
 
-        Response::$_commonStatusCodes = array_flip(
-            (new \ReflectionClass(IResponseStatus::class))->getConstants()
-        );
+        Response::$commonStatusCodes = array_flip($responseStatusReflection->getConstants());
     }
 
 
@@ -51,8 +51,7 @@ class Response implements IResponse
      */
     public function addData(string $key, $value): IResponse
     {
-
-        $this->_data[$key] = $this->getCleanDataValue($value);
+        $this->data[$key] = $this->getCleanDataValue($value);
 
         return $this;
     }
@@ -67,8 +66,7 @@ class Response implements IResponse
      */
     public function data(array $data): IResponse
     {
-
-        $this->_data = [];
+        $this->data = [];
 
         foreach ($data as $key => $value) {
 
@@ -86,8 +84,7 @@ class Response implements IResponse
      */
     public function getData(): array
     {
-
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -100,8 +97,7 @@ class Response implements IResponse
      */
     public function addError(string $error, string $message): IResponse
     {
-
-        $this->_errors[$error] = $message;
+        $this->errors[$error] = $message;
 
         return $this;
     }
@@ -115,8 +111,7 @@ class Response implements IResponse
      */
     public function errors(array $errors): IResponse
     {
-
-        $this->_errors = $errors;
+        $this->errors = $errors;
 
         return $this;
     }
@@ -129,8 +124,7 @@ class Response implements IResponse
      */
     public function getErrors(): array
     {
-
-        return $this->_errors;
+        return $this->errors;
     }
 
     /**
@@ -141,8 +135,7 @@ class Response implements IResponse
      */
     public function hasErrors(): bool
     {
-
-        return false === empty($this->_errors);
+        return false === empty($this->errors);
     }
 
     /**
@@ -154,8 +147,7 @@ class Response implements IResponse
      */
     public function hasError(string $error): bool
     {
-
-        return isset($this->_errors[$error]);
+        return isset($this->errors[$error]);
     }
 
     /**
@@ -168,13 +160,11 @@ class Response implements IResponse
      */
     public function status(int $status): IResponse
     {
-
-        if (false === isset(Response::$_commonStatusCodes[$status])) {
-
+        if (false === isset(Response::$commonStatusCodes[$status])) {
             throw new ResponseException(ResponseException::BAD_STATUS_CODE);
         }
 
-        $this->_status = $status;
+        $this->status = $status;
 
         return $this;
     }
@@ -187,8 +177,7 @@ class Response implements IResponse
      */
     public function getStatus(): int
     {
-
-        return $this->_status;
+        return $this->status;
     }
 
     /**
@@ -199,8 +188,7 @@ class Response implements IResponse
      */
     public function getHeaders(): array
     {
-
-        return $this->_headers;
+        return $this->headers;
     }
 
     /**
@@ -211,8 +199,11 @@ class Response implements IResponse
      */
     public function setHeaders(array $headers): void
     {
+        $this->headers = [];
 
-        $this->_headers = $headers;
+        foreach ($headers as $header => $value) {
+            $this->setHeader($header, $value);
+        }
     }
 
     /**
@@ -223,8 +214,27 @@ class Response implements IResponse
      */
     public function setHeader(string $header, $value): void
     {
+        $this->headers[$header] = $value;
+    }
 
-        $this->_headers[$header] = $value;
+    /**
+     * @inheritdoc
+     */
+    public function getHeader(string $header): ?string
+    {
+        return $this->headers[$header] ?? null;
+    }
+
+    public function getContentType(): string
+    {
+        return $this->contentType;
+    }
+
+    public function getOutput(): string
+    {
+        return json_encode([
+            $this->errors ? $this->errors : $this->data
+        ]);
     }
 
     /**
@@ -238,18 +248,14 @@ class Response implements IResponse
      */
     private function getCleanDataValue($value)
     {
-
         $returnValue = $value;
 
         if ($value instanceof IModel || $value instanceof IRepository) {
-
             $returnValue = $value->toArray();
         } else if (is_array($value)) {
-
             $returnValue = [];
 
             foreach ($value as $key => $val) {
-
                 $returnValue[$key] = $this->getCleanDataValue($val);
             }
         }

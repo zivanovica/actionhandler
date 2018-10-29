@@ -4,8 +4,12 @@ use RequestHandler\Modules\Application\Application;
 use RequestHandler\Modules\Application\IApplication;
 use RequestHandler\Modules\Database\Database;
 use RequestHandler\Modules\Database\IDatabase;
+use RequestHandler\Modules\Entity\IRepository;
+use RequestHandler\Modules\Entity\Repository;
 use RequestHandler\Modules\Event\Dispatcher;
+use RequestHandler\Modules\Event\Event;
 use RequestHandler\Modules\Event\IDispatcher;
+use RequestHandler\Modules\Event\IEvent;
 use RequestHandler\Modules\Middleware\IMiddlewareContainer;
 use RequestHandler\Modules\Middleware\MiddlewareContainer;
 use RequestHandler\Modules\Request\IRequest;
@@ -16,10 +20,6 @@ use RequestHandler\Modules\Response\IResponse;
 use RequestHandler\Modules\Response\Response;
 use RequestHandler\Modules\Router\IRouter;
 use RequestHandler\Modules\Router\Router;
-use RequestHandler\Modules\Event\Event;
-use RequestHandler\Modules\Event\IEvent;
-use RequestHandler\Modules\Entity\IRepository;
-use RequestHandler\Modules\Entity\Repository;
 use RequestHandler\Modules\Template\ITemplate;
 use RequestHandler\Modules\Template\Template;
 use RequestHandler\Utils\DataFilter\Filters\BoolFilter;
@@ -43,7 +43,8 @@ use RequestHandler\Utils\InputValidator\Rules\RuleMinimumLength;
 use RequestHandler\Utils\InputValidator\Rules\RuleRequired;
 use RequestHandler\Utils\InputValidator\Rules\RuleUniqueEntity;
 use RequestHandler\Utils\ObjectFactory\ObjectFactory;
-
+use RequestHandler\Utils\Observable\IObservable;
+use RequestHandler\Utils\Observable\Observable;
 use RequestHandler\Utils\QueryBuilder\Builder;
 use RequestHandler\Utils\QueryBuilder\IBuilder;
 
@@ -68,6 +69,7 @@ ObjectFactory::set([
     IBuilder::class => Builder::class,
     ITemplate::class => Template::class,
     IInputValidator::class => InputValidator::class,
+    IObservable::class => Observable::class,
     BoolFilter::class => BoolFilter::class,
     EmailFilter::class => EmailFilter::class,
     IntFilter::class => IntFilter::class,
