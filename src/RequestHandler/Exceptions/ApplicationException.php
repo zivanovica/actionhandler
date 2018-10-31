@@ -12,7 +12,7 @@ class ApplicationException extends BaseException
         BAD_REQUEST_HANDLER = 10003,
         INVALID_ROUTE = 10004;
 
-    protected $_errors = [
+    protected $errors = [
         ApplicationException::DUPLICATE_ACTION_HANDLER => 'Duplicate action',
         ApplicationException::BAD_CONFIG => 'Configuration file is not valid',
         ApplicationException::BAD_REQUEST_HANDLER => 'Given class does not implement IHandle interface',

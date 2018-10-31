@@ -15,7 +15,7 @@ class ObjectFactoryException extends BaseException
         CLASS_INSTANTIATING_FAILED = 80007;
 
 
-    protected $_errors = [
+    protected $errors = [
         ObjectFactoryException::BAD_CLASS => 'Invalid class name provided',
         ObjectFactoryException::INTERFACE_MISMATCH => 'Class does not implements required interface.',
         ObjectFactoryException::BAD_TYPE => 'Requested object is mapped with invalid type',

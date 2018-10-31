@@ -8,7 +8,7 @@ class ModelFilterException extends BaseException
 {
     const BAD_MODEL_CLASS = 60001;
 
-    protected $_errors = [
+    protected $errors = [
         ModelFilterException::BAD_MODEL_CLASS => 'Class doesn\'t extends Model'
     ];
 

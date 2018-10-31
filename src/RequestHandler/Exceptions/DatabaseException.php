@@ -11,7 +11,7 @@ class DatabaseException extends BaseException
         EXECUTING_QUERY = 50002,
         BAD_PARAMETERS = 50003;
 
-    protected $_errors = [
+    protected $errors = [
         DatabaseException::PREPARING_QUERY => 'Failed to prepare query',
         DatabaseException::EXECUTING_QUERY => 'Failed to execute query',
         DatabaseException::BAD_PARAMETERS => 'Missing required connection parameter'

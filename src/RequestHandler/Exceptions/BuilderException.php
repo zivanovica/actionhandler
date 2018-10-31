@@ -16,7 +16,7 @@ class BuilderException extends BaseException
 
     const BUILDER_OVERRIDE = 120001;
 
-    protected $_errors = [
+    protected $errors = [
 
         BuilderException::BUILDER_OVERRIDE => 'Cannot override builder'
     ];

@@ -19,7 +19,7 @@ class DispatcherException extends BaseException
         EVENT_NOT_FOUND = 100003,
         BAD_EVENT_HANDLE = 100004;
 
-    protected $_errors = [
+    protected $errors = [
         DispatcherException::CLASS_NOT_FOUND => 'Event class not found',
         DispatcherException::EVENT_TYPE_MISMATCH => 'Class does not implement ' . IEvent::class,
         DispatcherException::EVENT_NOT_FOUND => 'Unknown event',

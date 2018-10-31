@@ -12,7 +12,7 @@ abstract class BaseException extends \RuntimeException
 {
 
     /** @var array */
-    protected $_errors;
+    protected $errors;
 
     /**
      * AFrameworkException constructor.
@@ -23,7 +23,7 @@ abstract class BaseException extends \RuntimeException
     public function __construct(int $code, string $message = null, ?\Exception $previous = null)
     {
 
-        $exceptionMessage = (isset($this->_errors[$code]) ? $this->_errors[$code] : 'Unknown error') . ($message ? ": {$message}" : '');
+        $exceptionMessage = (isset($this->errors[$code]) ? $this->errors[$code] : 'Unknown error') . ($message ? ": {$message}" : '');
 
         parent::__construct($exceptionMessage, $code, $previous);
     }

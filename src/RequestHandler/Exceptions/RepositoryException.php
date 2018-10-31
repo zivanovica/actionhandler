@@ -17,7 +17,7 @@ class RepositoryException extends BaseException
         CLASS_NOT_FOUND = 110001,
         CLASS_TYPE_MISMATCH = 110002;
 
-    protected $_errors = [
+    protected $errors = [
 
         RepositoryException::CLASS_NOT_FOUND => 'Model class not found',
         RepositoryException::CLASS_TYPE_MISMATCH => 'Invalid class type'

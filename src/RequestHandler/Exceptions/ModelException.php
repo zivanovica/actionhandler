@@ -10,7 +10,7 @@ class ModelException extends BaseException
         BAD_FIELD = 40001,
         MISSING_PRIMARY = 40002;
 
-    protected $_errors = [
+    protected $errors = [
         ModelException::BAD_FIELD => 'Field is not valid',
         ModelException::MISSING_PRIMARY => 'Primary key is required'
     ];

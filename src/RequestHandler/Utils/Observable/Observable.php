@@ -8,6 +8,8 @@
 
 namespace RequestHandler\Utils\Observable;
 
+use RequestHandler\Exceptions\ObservableException;
+
 class Observable implements IObservable
 {
     /** @var mixed */
@@ -16,14 +18,20 @@ class Observable implements IObservable
     /** @var array */
     private $subscriptions = [];
 
+    /** @var string */
+    private $valueType;
+
     /**
      * Observable constructor.
      * @param mixed $initialValue
+     * @param null|string $valueType
      * @param null|callable $trigger
      */
-    public function __construct($initialValue, ?callable $trigger = null)
+    public function __construct($initialValue, ?string $valueType = null, ?callable $trigger = null)
     {
-        $this->value = $initialValue;
+        $this->valueType = $valueType;
+
+        $this->set($initialValue);
 
         if ($trigger) {
             $this->subscriptions[] = $trigger;
@@ -35,9 +43,18 @@ class Observable implements IObservable
      */
     public function set($value): void
     {
-        [$value, $this->value] = [$this->value, $value];
+        if (null === $this->valueType || null === $value || $value instanceof $this->valueType) {
 
-        $this->trigger($value);
+            [$value, $this->value] = [$this->value, $value];
+
+            $this->trigger($value);
+
+            return;
+        }
+
+        $type = is_object($value) ? get_class($value) : gettype($value);
+
+        throw new ObservableException(ObservableException::INVALID_VALUE_TYPE, "Expect {$this->valueType} got {$type}");
     }
 
     /**
