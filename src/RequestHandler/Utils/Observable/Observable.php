@@ -13,9 +13,6 @@ class Observable implements IObservable
     /** @var mixed */
     private $value;
 
-    /** @var string */
-    private $objectId;
-
     /** @var array */
     private $subscriptions = [];
 
@@ -27,7 +24,6 @@ class Observable implements IObservable
     public function __construct($initialValue, ?callable $trigger = null)
     {
         $this->value = $initialValue;
-        $this->objectId = spl_object_hash($this);
 
         if ($trigger) {
             $this->subscriptions[] = $trigger;
@@ -81,7 +77,7 @@ class Observable implements IObservable
      */
     public function clear(): void
     {
-        $this->subscriptions[$this->objectId] = [];
+        $this->subscriptions = [];
     }
 
     /**
@@ -89,12 +85,8 @@ class Observable implements IObservable
      */
     private function trigger($oldValue = null): void
     {
-        if (empty($this->subscriptions)) {
-            return;
-        }
-
         /** @var callable $callback */
-        foreach ($this->subscriptions as $callback) {
+        foreach ($this->subscriptions ?? [] as $callback) {
             $callback($this->value, $oldValue);
         }
     }
