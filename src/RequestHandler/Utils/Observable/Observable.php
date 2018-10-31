@@ -55,19 +55,15 @@ class Observable implements IObservable
     /**
      * @inheritdoc
      */
-    public function getId(): string
+    public function subscribe(callable $callback, ?string $id = null): callable
     {
-        return $this->objectId;
-    }
+        $index = $id ?? count($this->subscriptions);
 
-    /**
-     * @inheritdoc
-     */
-    public function subscribe(callable $callback, ?string $id = null): bool
-    {
-        $this->subscriptions[$id ?? count($this->subscriptions)] = $callback;
+        $this->subscriptions[$index] = $callback;
 
-        return true;
+        return function () use ($index) {
+            $this->unsubscribe($index);
+        };
     }
 
     /**

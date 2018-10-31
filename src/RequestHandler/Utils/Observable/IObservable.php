@@ -30,9 +30,9 @@ interface IObservable
      *
      * @param callable $callback
      * @param null|string $id
-     * @return bool
+     * @return callable Unsubscribe function
      */
-    public function subscribe(callable $callback, ?string $id = null): bool;
+    public function subscribe(callable $callback, ?string $id = null): callable;
 
     /**
      * Remove subscription trigger with provided id
