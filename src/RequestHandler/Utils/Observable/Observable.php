@@ -12,6 +12,7 @@ use RequestHandler\Exceptions\ObservableException;
 
 class Observable implements IObservable
 {
+
     /** @var mixed */
     private $value;
 
@@ -25,17 +26,12 @@ class Observable implements IObservable
      * Observable constructor.
      * @param mixed $initialValue
      * @param null|string $valueType
-     * @param null|callable $trigger
      */
-    public function __construct($initialValue, ?string $valueType = null, ?callable $trigger = null)
+    public function __construct($initialValue, ?string $valueType = null)
     {
         $this->valueType = $valueType;
 
         $this->set($initialValue);
-
-        if ($trigger) {
-            $this->subscriptions[] = $trigger;
-        }
     }
 
     /**
@@ -44,17 +40,18 @@ class Observable implements IObservable
     public function set($value): void
     {
         if (null === $this->valueType || null === $value || $value instanceof $this->valueType) {
-
             [$value, $this->value] = [$this->value, $value];
 
-            $this->trigger($value);
+            $this->trigger(ObservableEvent::EVENT_MODIFIED, $value);
 
             return;
         }
 
         $type = is_object($value) ? get_class($value) : gettype($value);
 
-        throw new ObservableException(ObservableException::INVALID_VALUE_TYPE, "Expect {$this->valueType} got {$type}");
+        throw new ObservableException(
+            ObservableException::INVALID_VALUE_TYPE, "Expect {$this->valueType} got {$type}"
+        );
     }
 
     /**
@@ -62,49 +59,76 @@ class Observable implements IObservable
      */
     public function get()
     {
+        $this->trigger(ObservableEvent::EVENT_ACCESSED, $this->value);
+
         return $this->value;
     }
 
     /**
      * @inheritdoc
      */
-    public function subscribe(callable $callback, ?string $id = null): callable
+    public function subscribe(callable $callback, ?int $event = ObservableEvent::EVENT_MODIFIED): callable
     {
-        $index = $id ?? count($this->subscriptions);
+        if (false === is_array($this->subscriptions[$event] ?? null)) {
+            $this->subscriptions[$event] = [];
+        }
 
-        $this->subscriptions[$index] = $callback;
+        $index = count($this->subscriptions[$event]);
+        $this->subscriptions[$event][$index] = $callback;
 
-        return function () use ($index) {
-            $this->unsubscribe($index);
+        return function () use ($event, $index) {
+            $this->unsubscribe($event, $index);
         };
     }
 
     /**
      * @inheritdoc
      */
-    public function unsubscribe(string $id): void
+    public function clear(?int $event = null): void
     {
-        if (isset($this->subscriptions[$id])) {
-            unset($this->subscriptions[$id]);
-        }
-    }
+        if (isset($this->subscriptions[$event])) {
+            $this->subscriptions[$event] = [];
 
-    /**
-     * @inheritdoc
-     */
-    public function clear(): void
-    {
+            return;
+        }
+
         $this->subscriptions = [];
     }
 
     /**
      * @inheritdoc
      */
-    private function trigger($oldValue = null): void
+    private function unsubscribe(int $event,int $index): void
     {
-        /** @var callable $callback */
-        foreach ($this->subscriptions ?? [] as $callback) {
-            $callback($this->value, $oldValue);
+        if (isset($this->subscriptions[$event][$index])) {
+            unset($this->subscriptions[$event][$index]);
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    private function trigger(string $event, $oldValue = null): void
+    {
+        if (empty($this->subscriptions[$event])) {
+            return;
+        }
+
+        /** @var callable $callback */
+        foreach ($this->subscriptions[$event] as $callback) {
+            if (false === is_callable($callback)) {
+                continue;
+            }
+
+            $callback($oldValue, $this);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __toString()
+    {
+        return (string) $this->get();
     }
 }

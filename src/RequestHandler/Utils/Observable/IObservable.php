@@ -29,20 +29,22 @@ interface IObservable
      * Register callback that will be triggered when ever observable value changes
      *
      * @param callable $callback
-     * @param null|string $id
+     * @param null|int $event
      * @return callable Unsubscribe function
      */
-    public function subscribe(callable $callback, ?string $id = null): callable;
-
-    /**
-     * Remove subscription trigger with provided id
-     *
-     * @param string $id
-     */
-    public function unsubscribe(string $id): void;
+    public function subscribe(callable $callback, ?int $event = 0): callable;
 
     /**
      * Clear all subscription trigger callbacks
+     *
+     * @param null|int $event
      */
-    public function clear(): void;
+    public function clear(?int $event = null): void;
+
+    /**
+     * Return string value of observable value
+     *
+     * @return string
+     */
+    public function __toString();
 }
