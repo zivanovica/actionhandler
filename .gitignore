@@ -1,0 +1,14 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+vendor/
+.idea
+*.iml
+.DS_Store
+public/*
+
+docker/storage/mysql/*
+docker/storage/redis/*
+docker/storage/mongodb/*
+
+!docker/storage/mysql/.gitkeep
+!docker/storage/redis/.gitkeep
+!docker/storage/mongodb/.gitkeep

@@ -1,0 +1,1 @@
+[Documentation Link](https://bitbucket.org/zivanovica/actionhandler/wiki/Home)
