@@ -34,8 +34,6 @@ class Dispatcher implements IDispatcher
 
     public function executeEventQueue(): bool
     {
-        echo 'firing events: ' . count($this->prepared ?? []) . '<br />';
-
         $this->fire();
 
         return true;
@@ -107,7 +105,7 @@ class Dispatcher implements IDispatcher
             throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
-        if (false === is_array($this->subscription[$name])) {
+        if (false === is_array($this->subscription[$name] ?? null)) {
             $this->subscription[$name] = [];
         }
 
