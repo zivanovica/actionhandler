@@ -68,7 +68,7 @@ class Dispatcher implements IDispatcher
     public function registerCallable(string $name, callable $handle): IDispatcher
     {
         return $this->register(
-            new class($name, $handle) implements IEvent
+            new class ($name, $handle) implements IEvent
             {
 
                 private $name;
@@ -80,7 +80,7 @@ class Dispatcher implements IDispatcher
                     $this->handle = $handle;
                 }
 
-                public function execute(... $data): ?bool
+                public function execute(...$data): ?bool
                 {
                     return call_user_func_array($this->handle, $data);
                 }
@@ -134,13 +134,13 @@ class Dispatcher implements IDispatcher
      * @param array ...$data
      * @return callable
      */
-    public function trigger(string $name, ... $data): callable
+    public function trigger(string $name, ...$data): callable
     {
         if (false === isset($this->events[$name])) {
             throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
-        $index = count($this->prepared);
+        $index = array_key_last($this->prepared) + 1;
 
         $this->prepared[$index] = [
             Dispatcher::PARAM_EVENT_NAME => $name, Dispatcher::PARAM_EVENT_DATA => $data
@@ -158,21 +158,16 @@ class Dispatcher implements IDispatcher
     {
         ob_start();
 
-        foreach ($this->prepared as $eventData) {
-            // Event prevented
-            if (null === $eventData) {
-                continue;
-            }
-
+        foreach ($this->prepared as [Dispatcher::PARAM_EVENT_NAME => $name, Dispatcher::PARAM_EVENT_DATA => $data]) {
             /** @var Event $event */
-            $event = $this->events[$eventData[Dispatcher::PARAM_EVENT_NAME]];
+            $event = $this->events[$name];
 
-            call_user_func_array([$event, 'execute'], $eventData[Dispatcher::PARAM_EVENT_DATA]);
+            call_user_func_array([$event, 'execute'], $data);
 
             /** @var callable $callback */
-            foreach ($this->subscription[$eventData[Dispatcher::PARAM_EVENT_NAME]] ?? [] as $callback) {
+            foreach ($this->subscription[$name] ?? [] as $callback) {
                 if (is_callable($callback)) {
-                    $callback($eventData[Dispatcher::PARAM_EVENT_DATA]);
+                    $callback($data);
                 }
             }
         }
@@ -191,9 +186,9 @@ class Dispatcher implements IDispatcher
     public function prevent(int $handleId): void
     {
         if (false === isset($this->prepared[$handleId])) {
-            throw new DispatcherException(DispatcherException::BAD_EVENT_HANDLE, $handleId);
+            throw new DispatcherException(DispatcherException::BAD_EVENT_HANDLE, "{$handleId}");
         }
 
-        $this->prepared[$handleId] = null;
+        unset($this->prepared[$handleId]);
     }
 }

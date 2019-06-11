@@ -13,10 +13,10 @@ class Event implements IEvent
 {
 
     /** @var \Closure */
-    private $_callback;
+    private $callback;
 
     /** @var string */
-    private $_name;
+    private $name;
 
     /**
      * Event constructor.
@@ -25,9 +25,7 @@ class Event implements IEvent
      */
     public function __construct(string $name, callable $callback)
     {
-
-        $this->_callback = \Closure::fromCallable($callback);
-        $this->_name = $name;
+        [$this->callback, $this->name] = [$callback, $name];
     }
 
     /**
@@ -37,12 +35,11 @@ class Event implements IEvent
      * @param array ...$data
      * @return bool|null
      */
-    public function execute(... $data): ?bool
+    public function execute(...$data): ?bool
     {
-
         array_unshift($data, $this);
 
-        return call_user_func_array([$this->_callback, 'call'], $data);
+        return call_user_func_array([\Closure::fromCallable($this->callback), 'call'], $data);
     }
 
     /**
@@ -53,7 +50,6 @@ class Event implements IEvent
      */
     public function getName(): string
     {
-
-        return $this->_name;
+        return $this->name;
     }
 }
