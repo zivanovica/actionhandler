@@ -109,7 +109,7 @@ class Dispatcher implements IDispatcher
             $this->subscription[$name] = [];
         }
 
-        $index = count($this->subscription[$name]);
+        $index = (array_key_last($this->subscription[$name]) ?? -1) + 1;
 
         $this->subscription[$name][$index] = $callback;
 
@@ -118,7 +118,7 @@ class Dispatcher implements IDispatcher
                 return false;
             }
 
-            $this->subscription[$name][$index] = null;
+            unset($this->subscription[$name][$index]);
 
             return true;
         };
@@ -138,7 +138,7 @@ class Dispatcher implements IDispatcher
             throw new DispatcherException(DispatcherException::EVENT_NOT_FOUND, $name);
         }
 
-        $index = array_key_last($this->prepared) + 1;
+        $index = (array_key_last($this->prepared) ?? -1) + 1;
 
         $this->prepared[$index] = [
             Dispatcher::PARAM_EVENT_NAME => $name, Dispatcher::PARAM_EVENT_DATA => $data

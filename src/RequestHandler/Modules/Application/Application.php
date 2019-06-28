@@ -32,7 +32,7 @@ use RequestHandler\Utils\ObjectFactory\ObjectFactory;
 class Application implements IApplication
 {
 
-    const DEFAULT_ACTION_IDENTIFIER = '_action';
+    const DEFAULT_ACTION_IDENTIFIER = 'action';
 
     /** @var array */
     private $config;
@@ -56,7 +56,7 @@ class Application implements IApplication
     private $dispatcher;
 
     /** @var array */
-    private $attributes;
+    private $attributes = [];
 
     /**
      * @param string $configPath Path to configuration file
@@ -67,23 +67,28 @@ class Application implements IApplication
      * @throws ApplicationException
      */
     private function __construct(
-        string $configPath, IRouter $router, IRequest $request, IResponse $response, IDispatcher $dispatcher
-    )
-    {
+        string $configPath,
+        IRouter $router,
+        IRequest $request,
+        IResponse $response,
+        IDispatcher $dispatcher
+    ) {
 
         if (false === $this->loadConfig($configPath)) {
             throw new ApplicationException(ApplicationException::BAD_CONFIG);
         }
 
-        $this->appConfig = $this->config['application'];
-        $this->dbConfig = $this->config['database'];
-        $this->router = $router;
-        $this->request = $request;
-        $this->response = $response;
-        $this->dispatcher = $dispatcher;
+        [
+            'application' => $this->appConfig, 'database' => $this->dbConfig
+        ] = $this->config;
 
         $this->appConfig['debug'] = $this->appConfig['debug'] ?? false;
-        $this->attributes = ['config' => $this->config];
+
+        [
+            $this->router, $this->request, $this->response, $this->dispatcher
+        ] = [$router, $request, $response, $dispatcher];
+
+        $this->setAttribute('config', $this->config);
     }
 
     /**
@@ -139,7 +144,6 @@ class Application implements IApplication
      */
     public function boot(\Closure $routeRegisterCallback): void
     {
-
         $routeRegisterCallback($this->router);
 
         ignore_user_abort(true);
@@ -149,22 +153,20 @@ class Application implements IApplication
         try {
             $this->execute($this->router);
         } catch (\Throwable $exception) {
-
-
-            if ($this->appConfig['debug']) {
+            if ($this->appConfig['debug'] ?? false) {
                 throw $exception;
             }
 
-            $this->response->status(IResponseStatus::INTERNAL_ERROR)->errors([
-                'message' => 'There were some errors',
-                'code' => $exception->getCode(),
-                'exception' => get_class($exception)
-            ]);
+            $this->response
+                ->status(IResponseStatus::INTERNAL_ERROR)
+                ->errors([
+                    'message' => 'There were some errors',
+                    'code' => $exception->getCode(),
+                    'exception' => get_class($exception)
+                ]);
         }
 
         $this->finishRequest();
-
-        $this->dispatcher->fire();
     }
 
     /**
@@ -173,7 +175,6 @@ class Application implements IApplication
      */
     private function setRequestFilter(?IFilter $filter): void
     {
-
         if (null === $filter) {
             return;
         }
@@ -189,7 +190,6 @@ class Application implements IApplication
     {
         $route = $this->request->query($this->appConfig['actionIdentifier'], '/');
 
-
         $routeHandle = $router->route($this->request->method(), $route);
 
         if (false === $routeHandle instanceof IRoute) {
@@ -198,8 +198,9 @@ class Application implements IApplication
 
         $handler = $routeHandle->handler();
 
-        if (false === $handler instanceof IHandle)
+        if (false === $handler instanceof IHandle) {
             throw new ApplicationException(ApplicationException::BAD_REQUEST_HANDLER, get_class($handler));
+        }
 
         if (
             $this->executeValidator($handler instanceof IValidate ? $handler : null) &&
@@ -237,7 +238,7 @@ class Application implements IApplication
             $this->response
                 ->status(IResponseStatus::BAD_REQUEST)
                 ->errors($validator->getErrors())
-                ->addError('_request.validate', 'Action did not pass validation.');
+                ->addError('request.validate', 'Action did not pass validation.');
 
             return false;
         }
@@ -264,7 +265,7 @@ class Application implements IApplication
         $middleware->next();
 
         if (false === $middleware->finished()) {
-            $this->response->addError('_request.middleware', 'Middlewares did not finished.');
+            $this->response->addError('request.middleware', 'Middlewares did not finished.');
 
             return false;
         }
@@ -317,5 +318,7 @@ class Application implements IApplication
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
+
+        $this->dispatcher->fire();
     }
 }

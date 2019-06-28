@@ -66,20 +66,17 @@ class MiddlewareContainer implements IMiddlewareContainer
      */
     public function next(): void
     {
-
         /** @var IMiddlewareHandler $middleware */
         $middleware = array_shift($this->_middlewares);
 
         if (null === $middleware && empty($this->_middlewares)) {
-
             $this->_finished = true;
 
             return;
         }
 
         if (false === $middleware instanceof IMiddlewareHandler) {
-
-            throw new MiddlewareException(MiddlewareException::BAD_MIDDLEWARE, $middleware);
+            throw new MiddlewareException(MiddlewareException::BAD_MIDDLEWARE, get_class($middleware));
         }
 
         $middleware->handle($this->_request, $this->_response, $this);

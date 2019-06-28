@@ -1,0 +1,27 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace RequestHandler\Utils\Collection\Hash;
+
+/**
+ *
+ * @author Coa
+ */
+interface IHash extends \ArrayAccess, \Iterator
+{
+
+    /**
+     * @return string Data type name of key
+     */
+    public function getKeyType(): string;
+
+    /**
+     * @return string Data type name of value
+     */
+    public function getValueType(): string;
+}
