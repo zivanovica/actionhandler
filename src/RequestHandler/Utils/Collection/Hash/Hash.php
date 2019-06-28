@@ -46,7 +46,8 @@ class Hash implements IHash
      * @param string $valueType
      * @param int $capacity
      */
-    public function __construct(string $keyType, string $valueType, int $capacity = PHP_INT_MAX)
+    public function __construct(
+        string $keyType = \object::class, string $valueType = \object::class, int $capacity = PHP_INT_MAX)
     {
         $this->keyType = $keyType;
         $this->valueType = $valueType;
@@ -101,13 +102,18 @@ class Hash implements IHash
      */
     private function getOffsetIdentifier($offset): string
     {
-        return $this->primitive[self::KEY] ? ((string) $offset) : spl_object_hash($offset);
+        $keyType = self::getDataType($offset);
+
+        return ($this->primitive[self::KEY] || (\object::class === $this->keyType && self::isPrimitiveType($keyType))) ?
+            (string) $offset :
+            spl_object_hash($offset)
+        ;
     }
 
     /**
      *
      * @param type $value
-     * @param string $keyType
+     * @param string $type
      * @param bool $isPrimitive
      * @param string $errorMessage
      * @return void
@@ -115,7 +121,11 @@ class Hash implements IHash
      */
     private static function validateType($value, string $type, bool $isPrimitive, string $errorMessage): void
     {
-        $checkingType = self::getDataType($value);
+        if (\object::class === $type) {
+            return;
+        }
+
+        $checkingType = $isPrimitive ? self::getDataType($value) : $value;
 
         if (
             (false === $isPrimitive && false === $value instanceof $type) ||

@@ -56,7 +56,7 @@ class Application implements IApplication
     private $dispatcher;
 
     /** @var array */
-    private $attributes = [];
+    private $attributes;
 
     /**
      * @param string $configPath Path to configuration file
@@ -72,7 +72,8 @@ class Application implements IApplication
         IRequest $request,
         IResponse $response,
         IDispatcher $dispatcher
-    ) {
+    )
+    {
 
         if (false === $this->loadConfig($configPath)) {
             throw new ApplicationException(ApplicationException::BAD_CONFIG);
@@ -80,13 +81,15 @@ class Application implements IApplication
 
         [
             'application' => $this->appConfig, 'database' => $this->dbConfig
-        ] = $this->config;
+            ] = $this->config;
 
         $this->appConfig['debug'] = $this->appConfig['debug'] ?? false;
 
         [
             $this->router, $this->request, $this->response, $this->dispatcher
-        ] = [$router, $request, $response, $dispatcher];
+            ] = [$router, $request, $response, $dispatcher];
+
+        $this->attributes = new \RequestHandler\Utils\Collection\Hash\Hash(\string::class, \object::class);
 
         $this->setAttribute('config', $this->config);
     }
@@ -160,10 +163,10 @@ class Application implements IApplication
             $this->response
                 ->status(IResponseStatus::INTERNAL_ERROR)
                 ->errors([
-                    'message' => 'There were some errors',
-                    'code' => $exception->getCode(),
-                    'exception' => get_class($exception)
-                ]);
+                  'message' => 'There were some errors',
+                  'code' => $exception->getCode(),
+                  'exception' => get_class($exception)
+            ]);
         }
 
         $this->finishRequest();
@@ -321,4 +324,5 @@ class Application implements IApplication
 
         $this->dispatcher->fire();
     }
+
 }
