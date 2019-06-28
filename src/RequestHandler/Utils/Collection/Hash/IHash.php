@@ -12,7 +12,7 @@ namespace RequestHandler\Utils\Collection\Hash;
  *
  * @author Coa
  */
-interface IHash extends \ArrayAccess, \Iterator
+interface IHash extends \ArrayAccess, \Iterator, \Countable
 {
 
     /**
@@ -24,4 +24,12 @@ interface IHash extends \ArrayAccess, \Iterator
      * @return string Data type name of value
      */
     public function getValueType(): string;
+
+    /**
+     *
+     * @return \RequestHandler\Utils\Collection\Hash\IHash
+     */
+    public function filter(callable $filter): IHash;
+
+    public function map(callable $map): IHash;
 }

@@ -49,6 +49,10 @@ class Hash implements IHash
     public function __construct(
         string $keyType = \object::class, string $valueType = \object::class, int $capacity = PHP_INT_MAX)
     {
+        if (0 > $capacity) {
+            throw new \RuntimeException('Capacity may not be less than 0');
+        }
+
         $this->keyType = $keyType;
         $this->valueType = $valueType;
 
@@ -61,8 +65,7 @@ class Hash implements IHash
         $this->capacity = $capacity;
 
         $this->primitive = [
-          Hash::KEY => Hash::isPrimitiveType($this->keyType),
-          Hash::VALUE => Hash::isPrimitiveType($this->valueType)
+          Hash::KEY => Hash::isPrimitiveType($this->keyType), Hash::VALUE => Hash::isPrimitiveType($this->valueType)
         ];
     }
 
@@ -80,6 +83,30 @@ class Hash implements IHash
     public function getValueType(): string
     {
         return $this->valueType;
+    }
+
+    public function filter(callable $filter): IHash
+    {
+        $hash = new Hash($this->getKeyType(), $this->getValueType());
+
+        foreach ($this as $key => $value) {
+            if (true === $filter($key, $value)) {
+                $hash[$key] = $value;
+            }
+        }
+
+        return $hash;
+    }
+
+    public function map(callable $map): IHash
+    {
+        $hash = new Hash($this->getKeyType(), $this->getValueType());
+
+        foreach ($this as $key => $value) {
+            $hash[$key] = $map($key, $value);
+        }
+
+        return $hash;
     }
 
     /**
@@ -100,7 +127,7 @@ class Hash implements IHash
      * @param mixed $offset
      * @return string Offset assoc key
      */
-    private function getOffsetIdentifier($offset): string
+    private function getKeyIdentifier($offset): string
     {
         $keyType = self::getDataType($offset);
 
@@ -135,6 +162,10 @@ class Hash implements IHash
         }
     }
 
+    /**
+     * @param mixed $variable
+     * @return string Data type
+     */
     public static function getDataType($variable): string
     {
         $type = gettype($variable);
@@ -144,7 +175,7 @@ class Hash implements IHash
 
     public function offsetUnset($offset): void
     {
-        $key = $this->getOffsetIdentifier($offset);
+        $key = $this->getKeyIdentifier($offset);
 
         unset($this->values[$key], $this->keys[$key]);
 
@@ -153,58 +184,42 @@ class Hash implements IHash
 
     public function offsetExists($offset): bool
     {
-        return isset($this->values[$this->getOffsetIdentifier($offset)]);
+        return isset($this->values[$this->getKeyIdentifier($offset)]);
     }
 
     public function offsetGet($offset)
     {
-        return $this->values[$this->getOffsetIdentifier($offset)] ?? null;
+        return $this->values[$this->getKeyIdentifier($offset)] ?? null;
     }
 
-    public function offsetSet($offset, $value): void
+    public function offsetSet($key, $value): void
     {
-        $keyType = self::getDataType($offset);
+        if (count($this->values) >= $this->capacity) {
+            throw new \RuntimeException("Maximum capacity of '{$this->capacity}' reached.");
+        }
+
+        if (null === $key) {
+            throw new \RuntimeException('Key must be provided.');
+        }
+
+        $keyType = self::getDataType($key);
 
         self::validateType(
-            $offset,
-            $this->keyType,
-            $this->primitive[self::KEY],
+            $key, $this->keyType, $this->primitive[self::KEY],
             "Invalid key data type. Expected {$this->keyType} got {$keyType}"
         );
 
         $valueType = self::getDataType($value);
 
         self::validateType(
-            $value,
-            $this->valueType,
-            $this->primitive[self::VALUE],
+            $value, $this->valueType, $this->primitive[self::VALUE],
             "Invalid value data type. Expected {$this->valueType} got {$valueType}"
         );
-//
-//        if (
-//            (false === $this->primitive[self::KEY] && false === $offset instanceof $this->keyType) ||
-//            ($this->primitive[self::KEY] && $keyType !== $this->keyType)
-//        ) {
-//            throw new \RuntimeException("Invalid key data type. Expected {$this->keyType} got {$keyType}");
-//        }
-//
-//        $valueType = self::getDataType($value);
-//
-//        if (
-//            (false === $this->primitive[self::VALUE] && false === $value instanceof $this->valueType) ||
-//            ($this->primitive[self::VALUE] && $valueType !== $this->valueType)
-//        ) {
-//            throw new \RuntimeException("Invalid value data type. Expected {$this->valueType} got {$valueType}");
-//        }
 
-        if (count($this->values) >= $this->capacity) {
-            throw new \RuntimeException("Maximum capacity of '{$this->capacity}' reached.");
-        }
+        $keyId = $this->getKeyIdentifier($key);
 
-        $key = $this->getOffsetIdentifier($offset);
-
-        $this->keys[$key] = $offset;
-        $this->values[$key] = $value;
+        $this->keys[$keyId] = $key;
+        $this->values[$keyId] = $value;
     }
 
     public function current()
@@ -212,6 +227,9 @@ class Hash implements IHash
         return current($this->values);
     }
 
+    /**
+     * @return mixed Original key instead of object hash
+     */
     public function key()
     {
         return $this->keys[key($this->values)];
@@ -230,6 +248,11 @@ class Hash implements IHash
     public function valid(): bool
     {
         return isset($this->values[key($this->values)]);
+    }
+
+    public function count(): int
+    {
+        return count($this->values);
     }
 
 }
