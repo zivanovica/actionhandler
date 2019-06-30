@@ -17,5 +17,11 @@ use RequestHandler\Utils\Collection\Hash\IHash;
 interface IArrayList extends IHash
 {
 
+    /**
+     * Sort list using user defined method.
+     *
+     * @param callable $sort
+     * @return void
+     */
     public function sort(callable $sort): void;
 }

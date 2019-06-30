@@ -23,25 +23,31 @@ class ArrayList extends Hash implements IArrayList
         parent::__construct(\int::class, $valueType, $capacity);
     }
 
+    /**
+     * Sort list using user defined method.
+     *
+     * @param callable $sort
+     * @return void
+     */
     public function sort(callable $sort): void
     {
         $values = $this->toArray();
 
-        foreach ($values as $index => $value) {
-            $sorting = $sort($value, $index);
+        uasort($values, $sort);
 
-            if (1 === $sorting) {
-                [$values[$index + 1], $values[$index]] = [$value, $values[$index + 1]];
-            } else if (-1 === $sorting) {
-                [$values[$index - 1], $values[$index]] = [$value, $values[$index - 1]];
-            }
-        }
-        /**
-         * @todo FINISH THIS PROPERLY!
-         */
-//        $this->values = $
+        $this->values = $values;
+        $this->keys = array_keys($values);
     }
 
+    /**
+     * Unlike "Hash", array list may not have key when defining a value.
+     * Therefor we first determine is key provided or not, if not then we
+     * generate next list key and execute inherited method for setting.
+     *
+     * @param type $key
+     * @param type $value
+     * @return void
+     */
     public function offsetSet($key, $value): void
     {
         if (null === $key) {
