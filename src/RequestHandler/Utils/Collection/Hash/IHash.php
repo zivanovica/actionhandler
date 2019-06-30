@@ -33,5 +33,7 @@ interface IHash extends \ArrayAccess, \Iterator, \Countable
 
     public function map(callable $map): IHash;
 
+    public function remove(callable $remove): void;
+
     public function toArray(): array;
 }

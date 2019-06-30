@@ -90,7 +90,7 @@ class Hash implements IHash
         $hash = new Hash($this->getKeyType(), $this->getValueType());
 
         foreach ($this as $key => $value) {
-            if (true === $filter($key, $value)) {
+            if (true === $filter($value, $key, $this)) {
                 $hash[$key] = $value;
             }
         }
@@ -103,10 +103,23 @@ class Hash implements IHash
         $hash = new Hash($this->getKeyType(), $this->getValueType());
 
         foreach ($this as $key => $value) {
-            $hash[$key] = $map($key, $value);
+            $hash[$key] = $map($value, $key, $this);
         }
 
         return $hash;
+    }
+
+    public function remove(callable $remove): void
+    {
+        $removingKeys = [];
+
+        foreach ($this as $key => $value) {
+            $remove($value, $key, $this) && $removingKeys[] = $key;
+        }
+
+        foreach ($removingKeys as $key) {
+            unset($this[$key]);
+        }
     }
 
     /**
@@ -133,8 +146,7 @@ class Hash implements IHash
 
         return ($this->primitive[self::KEY] || (\object::class === $this->keyType && self::isPrimitiveType($keyType))) ?
             (string) $offset :
-            spl_object_hash($offset)
-        ;
+            (is_bool($offset) ? 'bool(' . ($offset ? 'true' : 'false') . ')' : spl_object_hash($offset));
     }
 
     /**
@@ -183,8 +195,6 @@ class Hash implements IHash
         $key = $this->getKeyIdentifier($offset);
 
         unset($this->values[$key], $this->keys[$key]);
-
-        $this->rewind();
     }
 
     public function offsetExists($offset): bool
@@ -258,6 +268,20 @@ class Hash implements IHash
     public function count(): int
     {
         return count($this->values);
+    }
+
+    public function __debugInfo()
+    {
+        $debugInfo = [];
+
+        foreach ($this->keys as $key => $actualKey) {
+            $type = self::getDataType($actualKey);
+            $name = is_object($actualKey) ? get_class($actualKey) . "({$key})}" : $key;
+
+            $debugInfo["{$type} {$name}"] = $this->values[$key];
+        }
+
+        return $debugInfo;
     }
 
 }
