@@ -65,7 +65,7 @@ class Hash implements IHash
         $this->capacity = $capacity;
 
         $this->primitive = [
-          Hash::KEY => Hash::isPrimitiveType($this->keyType), Hash::VALUE => Hash::isPrimitiveType($this->valueType)
+          self::KEY => self::isPrimitive($this->keyType), self::VALUE => self::isPrimitive($this->valueType)
         ];
     }
 
@@ -85,6 +85,12 @@ class Hash implements IHash
         return $this->valueType;
     }
 
+    /**
+     * Retrieve new hash list containing only keys/values for which callback function returned "true"
+     *
+     * @param callable $filter
+     * @return \RequestHandler\Utils\Collection\Hash\IHash
+     */
     public function filter(callable $filter): IHash
     {
         $hash = new Hash($this->getKeyType(), $this->getValueType());
@@ -98,6 +104,12 @@ class Hash implements IHash
         return $hash;
     }
 
+    /**
+     * Retrieve new hash list of same type, containing values that are returned from callback function.
+     *
+     * @param callable $map
+     * @return \RequestHandler\Utils\Collection\Hash\IHash
+     */
     public function map(callable $map): IHash
     {
         $hash = new Hash($this->getKeyType(), $this->getValueType());
@@ -109,6 +121,12 @@ class Hash implements IHash
         return $hash;
     }
 
+    /**
+     * This method will remove all key/values for which callback method return "true"
+     *
+     * @param callable $remove
+     * @return void
+     */
     public function remove(callable $remove): void
     {
         $removingKeys = [];
@@ -128,7 +146,7 @@ class Hash implements IHash
      * @param string $type
      * @return bool
      */
-    public static function isPrimitiveType(string $type): bool
+    public static function isPrimitive(string $type): bool
     {
         return self::$primitiveTypess[$type] ?? false;
     }
@@ -144,7 +162,7 @@ class Hash implements IHash
     {
         $keyType = self::getDataType($offset);
 
-        return ($this->primitive[self::KEY] || (\object::class === $this->keyType && self::isPrimitiveType($keyType))) ?
+        return ($this->primitive[self::KEY] || (\object::class === $this->keyType && self::isPrimitive($keyType))) ?
             (string) $offset :
             (is_bool($offset) ? 'bool(' . ($offset ? 'true' : 'false') . ')' : spl_object_hash($offset));
     }
@@ -270,6 +288,11 @@ class Hash implements IHash
         return count($this->values);
     }
 
+    /**
+     * Overriding default action when "var_dump" or "print_r" are executed upon this object.
+     *
+     * @return array
+     */
     public function __debugInfo()
     {
         $debugInfo = [];
