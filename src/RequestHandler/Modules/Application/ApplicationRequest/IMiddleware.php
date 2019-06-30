@@ -10,7 +10,7 @@ use RequestHandler\Modules\Middleware\IMiddlewareContainer;
  * "Middleware" class before request handler is executed. If there are some unfinished (not executed) middlewares, script will prevent
  * request handler to be executed, and finish request (send response)
  *
- * @package Core\Libs\Application
+ * @package \RequestHandler\Modules\Application\ApplicationRequest
  */
 interface IMiddleware
 {

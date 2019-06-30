@@ -9,7 +9,7 @@ use RequestHandler\Modules\Response\IResponse;
  *
  * Implementing this interface to some class will tell "Application" that this class is request handler and it contain "handle" method
  *
- * @package Core\Libs\Application
+ * @package \RequestHandler\Modules\Application\ApplicationRequest
  */
 interface IHandle
 {
