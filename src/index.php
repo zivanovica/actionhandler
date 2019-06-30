@@ -54,44 +54,36 @@ use RequestHandler\Utils\QueryBuilder\IBuilder;
  *   - Implement PSR-7 Http Messaging
  *   - Implement database transactions
  */
-
 ObjectFactory::set([
-    IApplication::class => Application::class,
-    IDatabase::class => Database::class,
-    IRequest::class => Request::class,
-    IRequestFilter::class => RequestFilter::class,
-    IResponse::class => Response::class,
-    IRouter::class => Router::class,
-    IDispatcher::class => Dispatcher::class,
-    IEvent::class => Event::class,
-    IMiddlewareContainer::class => MiddlewareContainer::class,
-    IRepository::class => Repository::class,
-    IBuilder::class => Builder::class,
-    ITemplate::class => Template::class,
-    IInputValidator::class => InputValidator::class,
-    IObservable::class => Observable::class,
-    BoolFilter::class => BoolFilter::class,
-    EmailFilter::class => EmailFilter::class,
-    IntFilter::class => IntFilter::class,
-    FloatFilter::class => FloatFilter::class,
-    EntityModelFilter::class => EntityModelFilter::class,
-    StringFilter::class => StringFilter::class,
-    UIntFilter::class => UIntFilter::class,
-    WaterfallFilter::class => WaterfallFilter::class,
+  IApplication::class => Application::class,
+  IBuilder::class => Builder::class,
+  IDatabase::class => Database::class,
+  IDispatcher::class => Dispatcher::class,
+  IEvent::class => Event::class,
+  IInputValidator::class => InputValidator::class,
+  IMiddlewareContainer::class => MiddlewareContainer::class,
+  IObservable::class => Observable::class,
+  IRepository::class => Repository::class,
+  IRequest::class => Request::class,
+  IRequestFilter::class => RequestFilter::class,
+  IResponse::class => Response::class,
+  IRouter::class => Router::class,
+  ITemplate::class => Template::class,
+  BoolFilter::class => BoolFilter::class,
+  EmailFilter::class => EmailFilter::class,
+  IntFilter::class => IntFilter::class,
+  FloatFilter::class => FloatFilter::class,
+  EntityModelFilter::class => EntityModelFilter::class,
+  StringFilter::class => StringFilter::class,
+  UIntFilter::class => UIntFilter::class,
+  WaterfallFilter::class => WaterfallFilter::class,
 ]);
 
 /** @var IInputValidator $inputValidator */
 $inputValidator = ObjectFactory::create(IInputValidator::class);
 
 $inputValidator->addRules([
-    new RuleEmail(),
-    new RuleEntityExists(),
-    new RuleEnum(),
-    new RuleEqual(),
-    new RuleFieldSameAsOther(),
-    new RuleMaximumLength(),
-    new RuleMinimumLength(),
-    new RuleMayNotExists(),
-    new RuleRequired(),
-    new RuleUniqueEntity()
+  new RuleEmail(), new RuleEntityExists(), new RuleEnum(), new RuleEqual(),
+  new RuleFieldSameAsOther(), new RuleMaximumLength(), new RuleMinimumLength(),
+  new RuleMayNotExists(), new RuleRequired(), new RuleUniqueEntity()
 ]);
