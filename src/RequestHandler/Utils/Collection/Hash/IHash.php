@@ -32,4 +32,6 @@ interface IHash extends \ArrayAccess, \Iterator, \Countable
     public function filter(callable $filter): IHash;
 
     public function map(callable $map): IHash;
+
+    public function toArray(): array;
 }

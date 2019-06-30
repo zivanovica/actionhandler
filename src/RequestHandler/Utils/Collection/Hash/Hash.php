@@ -173,6 +173,11 @@ class Hash implements IHash
         return $type === 'integer' ? \int::class : $type;
     }
 
+    public function toArray(): array
+    {
+        return $this->values;
+    }
+
     public function offsetUnset($offset): void
     {
         $key = $this->getKeyIdentifier($offset);
