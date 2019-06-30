@@ -173,23 +173,17 @@ class Hash implements IHash
      * @param string $type
      * @param bool $isPrimitive
      * @param string $errorMessage
-     * @return void
-     * @throws \RuntimeException
+     * @return bool
      */
-    private static function validateType($value, string $type, bool $isPrimitive, string $errorMessage): void
+    private static function isValidType($value, string $type, bool $isPrimitive): bool
     {
         if (\object::class === $type) {
-            return;
+            return true;
         }
 
         $checkingType = $isPrimitive ? self::getDataType($value) : $value;
 
-        if (
-            (false === $isPrimitive && false === $value instanceof $type) ||
-            ($isPrimitive && $checkingType !== $type)
-        ) {
-            throw new \RuntimeException($errorMessage);
-        }
+        return (false === $isPrimitive && $value instanceof $type) || ($isPrimitive && $checkingType === $type);
     }
 
     /**
@@ -225,6 +219,15 @@ class Hash implements IHash
         return $this->values[$this->getKeyIdentifier($offset)] ?? null;
     }
 
+    /**
+     * Validates offset key and offset value.
+     * If types are correct no exception will be thrown
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return void
+     * @throws \RuntimeException
+     */
     public function offsetSet($key, $value): void
     {
         if (count($this->values) >= $this->capacity) {
@@ -235,24 +238,21 @@ class Hash implements IHash
             throw new \RuntimeException('Key must be provided.');
         }
 
-        $keyType = self::getDataType($key);
+        [$keyType, $valueType] = [self::getDataType($key), self::getDataType($value)];
 
-        self::validateType(
-            $key, $this->keyType, $this->primitive[self::KEY],
-            "Invalid key data type. Expected {$this->keyType} got {$keyType}"
-        );
+        [self::KEY => $primitiveKey, self::VALUE => $primitiveValue] = $this->primitive;
 
-        $valueType = self::getDataType($value);
+        if (false === self::isValidType($key, $this->keyType, $primitiveKey)) {
+            throw new \RuntimeException("Invalid key type. Expected {$this->keyType} got {$keyType}");
+        }
 
-        self::validateType(
-            $value, $this->valueType, $this->primitive[self::VALUE],
-            "Invalid value data type. Expected {$this->valueType} got {$valueType}"
-        );
+        if (false === self::isValidType($value, $this->valueType, $primitiveValue)) {
+            throw new \RuntimeException("Invalid value type. Expected {$this->valueType} got {$valueType}");
+        }
 
         $keyId = $this->getKeyIdentifier($key);
 
-        $this->keys[$keyId] = $key;
-        $this->values[$keyId] = $value;
+        [$this->keys[$keyId], $this->values[$keyId]] = [$key, $value];
     }
 
     public function current()
@@ -299,7 +299,7 @@ class Hash implements IHash
 
         foreach ($this->keys as $key => $actualKey) {
             $type = self::getDataType($actualKey);
-            $name = is_object($actualKey) ? get_class($actualKey) . "({$key})}" : $key;
+            $name = is_object($actualKey) ? get_class($actualKey) . "({$key})" : $key;
 
             $debugInfo["{$type} {$name}"] = $this->values[$key];
         }
